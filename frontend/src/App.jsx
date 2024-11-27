@@ -1,12 +1,12 @@
-import MainPage from './components/MainPage';
-
+// import MainPage from './components/MainPage';
+import ProductsPage from './components/ProductsPage'
 
 function App() {
   return (
     <div className="App">
-      <MainPage />
+      <ProductsPage />
     </div>
   );
 }
 
-export default App
+export default App;
