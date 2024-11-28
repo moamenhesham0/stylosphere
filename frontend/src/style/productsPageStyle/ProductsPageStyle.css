@@ -141,7 +141,7 @@
 }
 
 .view-details-btn {
-    background-color: #28a745;
+    background-color: #2c2c2c;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -157,5 +157,5 @@
 }
 
 .view-details-btn:hover {
-    background-color: #218838;
+    background-color: #797979;
 }

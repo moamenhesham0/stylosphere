@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class StyloSphereBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(StyloSphereBackendApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(StyloSphereBackendApplication.class, args);
+    }
 }
+
+

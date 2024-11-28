@@ -12,9 +12,11 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    @Autowired
     private ProductRepository productRepository;
-
+    @Autowired
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
     // Endpoint to get all products
     @GetMapping("/api/products")
     public List<Product> getAllProducts() {
