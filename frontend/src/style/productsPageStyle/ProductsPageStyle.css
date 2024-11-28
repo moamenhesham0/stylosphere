@@ -1,0 +1,161 @@
+/* productsPageStyle/ProductsPageStyle.css */
+
+/* Main container for the page */
+.products-page {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Banner Styling with Image Background */
+.banner {
+    position: relative;
+    background-image: url('/assets/banner.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    margin-bottom: 20px;  /* Space between banner and products section */
+    border-radius: 8px;
+}
+
+.banner-text {
+    position: relative;
+    z-index: 1;
+}
+
+.banner h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.banner p {
+    font-size: 1.5em;
+    font-weight: 300;
+}
+
+/* Header for the Products Page */
+.products-page-header {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Sidebar with filters */
+.products-container {
+    display: flex;
+}
+
+.filters {
+    width: 200px;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.filter-category {
+    margin-bottom: 20px;
+}
+
+.filter-category h3 {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.filter-category input[type="range"] {
+    width: 100%;
+}
+
+.filter-category select {
+    width: 100%;
+    padding: 5px;
+    font-size: 1em;
+}
+
+/* Sorting toolbar */
+.product-list-container {
+    flex: 1;
+}
+
+.sorting-toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.sort-dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sort-dropdown select {
+    padding: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* Grid for displaying products */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.product-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-details span {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.view-details-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.view-details-btn .icon {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+}
+
+.view-details-btn:hover {
+    background-color: #218838;
+}
