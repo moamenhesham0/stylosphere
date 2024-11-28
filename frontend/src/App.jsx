@@ -1,5 +1,6 @@
 import MainPage from './components/MainPage';
 
+import ShoppingCart from './components/cart';
 
 function App() {
   return (
