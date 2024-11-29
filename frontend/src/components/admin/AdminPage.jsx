@@ -1,9 +1,12 @@
 import '../../style/mainPageStyle/adminPageStyle/AdminPageStyle.css';
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "../admin/Dash";
+import ProductHandler from "../admin/ProductHandler";
 import Permission from "../admin/Permission";
 import Dash from "../admin/Dash";
+import ProfileAdmin from "../admin/ProfileAdmin";
+
+
 
 
 function AdminPage() {
@@ -42,7 +45,10 @@ function AdminPage() {
             <nav>
               <ul>
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link to="/ProfileAdmin">Profile</Link>
+                </li>
+                <li>
+                  <Link to="/ProductHandler">Your Products</Link>
                 </li>
                 <li>
                   <Link to="/Permission">Permission</Link>
@@ -63,7 +69,8 @@ function AdminPage() {
           {/* Main Content */}
           <div className="content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/ProfileAdmin" element={<ProfileAdmin />} />
+              <Route path="/ProductHandler" element={<ProductHandler/>} />
               <Route path="/Permission" element={<Permission />} />
               <Route path="/Dash" element={<Dash />} />
             </Routes>
