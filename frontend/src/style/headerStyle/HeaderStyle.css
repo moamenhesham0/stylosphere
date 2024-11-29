@@ -1,0 +1,62 @@
+/* Header Container */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #dcdcdc; /* Dark background for the header */
+    color: white;
+}
+
+/* Logo */
+.logo img {
+    height: 150px; /* Adjust the height to fit the header */
+    width: 200px; /* Maintain aspect ratio */
+    display:block; /* Prevents extra spacing */
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    gap: 20px;
+}
+
+/* Generic Navigation Items */
+.nav-item {
+    text-decoration: none;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: #c3ad71; /* This color for hover effect */
+    color: #222;
+}
+
+/* Sign In Button Styling */
+.signin-btn {
+    text-decoration: none;
+    color: #c3ad71; /* Use the uploaded color for text */
+    background-color: #e6cd8b;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 8px 20px;
+    border: 2px solid #c3ad71; /* Border with the uploaded color */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+}
+
+.signin-btn:hover {
+    background-color: #867652; /* Highlight background on hover */
+    color: #222; /* Text color change on hover */
+}
+
+
+
+
+

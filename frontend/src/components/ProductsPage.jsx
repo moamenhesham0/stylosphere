@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
-import '../style/productsPageStyle/ProductsPageStyle.css';
+import Header from './Header'; // Assuming the header component is imported here
+import '../style/productsPageStyle/ProductsPageStyle.css'; // Make sure the CSS file is correct
 
 const ProductsPage = () => {
     const [sortType, setSortType] = useState('name'); // 'price' or 'name'
@@ -31,13 +32,13 @@ const ProductsPage = () => {
 
     return (
         <div className="products-page">
+
             {/* Banner Section with Image Background */}
             <div className="banner">
                 <div className="banner-text">
-                    <h1>Special Offers on Our Best Products</h1>
-                    <p>Check out the latest deals and discounts on our products.</p>
                 </div>
             </div>
+
             <div className="products-container">
                 {/* Left Sidebar for Filters */}
                 <div className="filters">
@@ -89,15 +90,24 @@ const ProductsPage = () => {
                                 </div>
                                 <div className="product-details">
                                     <span>{product.name}</span>
-                                    <span>{`$${product.price}`}</span>
+                                    <span>${product.price}</span>
                                     <Link 
-                                        to={`/product/${product.id}`} 
+                                        to={`/product/${product.id}`}  // Adjusted the Link path here for routing
                                         state={{ product }} // Pass product data to ProductPage through state
                                         className="view-details-btn"
                                     >
                                         <img src="/assets/button icons/details.svg" alt="View Details" className="icon" />
                                         View Details
                                     </Link>
+                                    <button
+                                        onClick={() => {
+                                            console.log(`Added ${product.name} to cart`);
+                                            // Here, you would connect this to your cart system (e.g., Context or Redux)
+                                        }}
+                                        className="add-to-cart-btn"
+                                    >
+                                        Add to Cart
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -109,3 +119,4 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+

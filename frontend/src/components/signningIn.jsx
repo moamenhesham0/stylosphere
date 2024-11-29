@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../style/mainPageStyle/sinningInStyle.css';
 
 const SignIn = () => {
@@ -19,7 +20,7 @@ const SignIn = () => {
         
         <button className="submit">Sign In</button>
         <p className="signin">
-          Don't have an account? <a href="#">Sign up</a>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
       </form>
     </div>
