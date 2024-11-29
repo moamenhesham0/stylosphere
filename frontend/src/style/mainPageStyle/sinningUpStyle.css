@@ -1,4 +1,3 @@
-
 .styled-wrapper {
   display: flex;
   justify-content: center; /* Horizontally centers the form */
@@ -12,13 +11,13 @@
   flex-direction: column;
   gap: 10px;
   max-width: 350px;
+  width: 100%; /* Ensure it scales to fit its container */
   background-color: #fff;
   padding: 20px;
   border-radius: 20px;
   position: relative;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
-
 
 .title {
   font-size: 28px;
@@ -80,14 +79,16 @@
 
 .form label {
   position: relative;
+  width: 100%; /* Ensure labels take full width */
 }
 
 .form label .input {
-  width: 100%;
-  padding: 10px 0px 20px 0px;
+  width: 100%; /* Makes the input fill the width of its container */
+  padding: 10px 0px 20px 10px; /* Adjusted padding for better alignment */
   outline: 0;
   border: 1px solid rgba(105, 105, 105, 0.397);
   border-radius: 10px;
+  box-sizing: border-box; /* Prevents padding from affecting width */
 }
 
 .form label .input + span {
@@ -124,7 +125,8 @@
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  transform: 0.3s ease;
+  transition: 0.3s ease;
+  width: 100%; /* Ensure the submit button also fills its container */
 }
 
 .submit:hover {
@@ -142,3 +144,4 @@
     opacity: 0;
   }
 }
+

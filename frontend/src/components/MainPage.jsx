@@ -114,6 +114,8 @@ function MainPage() {
             <footer className="footer">
                 <div className="footer-left">
                     <h2>StyloSphere</h2>
+                    <p>muhannd and Elashmawy made by Moamen</p>
+                    <br/>
                     <p>Made by <a href="#">Muhannd</a></p>
                     <br/>
                     <p>AI Made by <a href="#">Elashmawy</a></p>
