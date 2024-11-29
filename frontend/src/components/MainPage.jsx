@@ -115,6 +115,8 @@ function MainPage() {
                 <div className="footer-left">
                     <h2>StyloSphere</h2>
                     <p>Made by <a href="#">Muhannd</a></p>
+                    <br/>
+                    <p>AI Made by <a href="#">Elashmawy</a></p>
                 </div>
                 <div className="footer-right">
                     <div className="footer-section">
