@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ProductsPage from './components/ProductsPage'; // Import ProductsPage
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import ProductsPage from './components/ProductsPage';
 import ProductPage from './components/ProductPage';
 import SignIn from './components/signningIn';
 import SignUp from './components/signningUp';
@@ -8,30 +8,43 @@ import ShoppingCart from './components/cart';
 import Header from './components/Header';
 import MainPage from './components/MainPage';
 import AdminPage from './components/admin/AdminPage';
+import Dash from './components/admin/Dash';
+import Permission from './components/admin/Permission';
+import ProfileAdmin from './components/admin/ProfileAdmin';
 
+const AppContent = () => {
+    const location = useLocation();
 
-const App = () => {
+    // Check if the current path starts with "/admin"
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
     return (
-        <Router>
-            
-            <Header />
+        <>
+            {/* Render Header only if not on admin routes */}
+            {!isAdminRoute && <Header />}
             <Routes>
                 <Route path="/" element={<MainPage />} />
-                <Route path="/shop" element={<ProductsPage />} /> {/* Add the /shop route */}
+                <Route path="/shop" element={<ProductsPage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/cart" element={<ShoppingCart />} />
-                <Route path="/admin" element={<AdminPage/>} />
-                
+                <Route path="/admin" element={<AdminPage />}>
+                    <Route path="ProfileAdmin" element={<ProfileAdmin />} />
+                    <Route path="Permission" element={<Permission />} />
+                    <Route path="Dash" element={<Dash />} />
+                </Route>
             </Routes>
-            
+        </>
+    );
+};
+
+const App = () => {
+    return (
+        <Router>
+            <AppContent />
         </Router>
     );
 };
 
 export default App;
-
-
-
-
