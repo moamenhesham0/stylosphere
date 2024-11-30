@@ -103,7 +103,7 @@
   }
   
   .progress-fill {
-    background: #007bff;
+    background: #c3ad71;
     height: 100%;
     border-radius: 10px;
     transition: width 0.3s;
@@ -136,7 +136,7 @@
   }
   
   .link:hover {
-    color: #007bff;
+    color: #c3ad71;
   }
   
   .icon {

@@ -15,9 +15,7 @@ function MainPage() {
                 <div className='page-main-one-img'>
                     <img src={mainPagepng} alt="Main Page" />
                     <p className="overlay-text">
-                        Welcome to your marketing journey where creativity meets strategy. We're
-                        here to help you navigate the ever-changing landscape, turning possibilities
-                        into powerful results.
+                        
                     </p>
                 </div>
             </div>

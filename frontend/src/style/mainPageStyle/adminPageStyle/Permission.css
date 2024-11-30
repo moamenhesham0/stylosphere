@@ -23,7 +23,7 @@
   .section h2 {
     margin-bottom: 20px;
     font-size: 1.5rem;
-    color: #007bff;
+    color: #c3ad71;
   }
   
   /* Input Styling */
@@ -39,13 +39,13 @@
   
   .section input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #c3ad71;
   }
   
   /* Button Styling */
   .section button {
     padding: 12px 20px;
-    background-color: #007bff;
+    background-color: #c3ad71;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -55,7 +55,7 @@
   }
   
   .section button:hover {
-    background-color: #0056b3;
+    background-color: #c3ad71;
     transform: scale(1.05);
   }
   
@@ -128,7 +128,7 @@
   .popup-content button {
     margin: 5px;
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: #c3ad71;
     color: white;
     border: none;
     border-radius: 6px;
@@ -137,7 +137,7 @@
   }
   
   .popup-content button:hover {
-    background-color: #0056b3;
+    background-color: #c3ad71;
   }
   
   .popup-content button.close {

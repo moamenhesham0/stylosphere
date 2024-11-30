@@ -1,10 +1,10 @@
 
 .styled-wrapper {
     display: flex;
-    justify-content: center; /* Horizontally centers the form */
-    align-items: center;    /* Vertically centers the form */
-    min-height: 100vh;      /* Full viewport height */
-    background-color: #f0f0f0; /* Optional: Light background for better contrast */
+    justify-content: center; 
+    align-items: center;    
+    min-height: 100vh;      
+    background-color: #f0f0f0; 
   }
   
   .form {

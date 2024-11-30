@@ -16,12 +16,12 @@ const ProductsPage = () => {
         { id: 6, name: 'Product F', price: 120, type: 'Sweater', description: 'Warm and comfy sweater', image: '/assets/products images/product-f.jpg' },
     ];
 
-    // Sort products by price
+    
     const sortProductsByPrice = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
     };
 
-    // Sort products by name
+
     const sortProductsByName = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
     };
@@ -30,9 +30,39 @@ const ProductsPage = () => {
         ? sortProductsByPrice(sortOrder)
         : sortProductsByName(sortOrder);
 
+    const [searchInput, setSearchInput] = useState("");
+
+    const handleInputChange = (e) => {
+        setSearchInput(e.target.value);
+    };
+
+    const handleSearch = () => {
+        console.log("Search Input:", searchInput); 
+    };
+
     return (
         <div className="products-page">
-
+            <div className="search-bar-container">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchInput}
+                    onChange={handleInputChange}
+                    className="search-input"
+                />
+                <button className="search-button" onClick={handleSearch}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                    className="search-icon"
+                >
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zm-5.442.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
+                </svg>
+                </button>
+            </div>
             {/* Banner Section with Image Background */}
             <div className="banner">
                 <div className="banner-text">
@@ -100,10 +130,11 @@ const ProductsPage = () => {
                                         <img src="/assets/button icons/details.svg" alt="View Details" className="icon" />
                                         View Details
                                     </Link>
+                                    <div style={{padding: "3px"}}></div>
                                     <button
                                         onClick={() => {
                                             console.log(`Added ${product.name} to cart`);
-                                            // Here, you would connect this to your cart system (e.g., Context or Redux)
+                                            
                                         }}
                                         className="add-to-cart-btn"
                                     >

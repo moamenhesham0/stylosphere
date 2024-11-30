@@ -15,12 +15,10 @@ import ProfileAdmin from './components/admin/ProfileAdmin';
 const AppContent = () => {
     const location = useLocation();
 
-    // Check if the current path starts with "/admin"
     const isAdminRoute = location.pathname.startsWith('/admin');
 
     return (
         <>
-            {/* Render Header only if not on admin routes */}
             {!isAdminRoute && <Header />}
             <Routes>
                 <Route path="/" element={<MainPage />} />

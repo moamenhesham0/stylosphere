@@ -14,12 +14,11 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validate email and password
     if (email === validEmail && password === validPassword) {
-      // Navigate to the dashboard or another page on success
+     
       navigate('/admin');
     } else {
-      // Display an error message if the credentials are invalid
+      
       setError('Invalid email or password');
     }
   };

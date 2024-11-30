@@ -20,7 +20,7 @@ function Dash() {
         {
           label: "Total Income",
           data: [300, 400, 350, 200, 150, 100, 250, 300, 350, 400, 380, 420],
-          backgroundColor: "#1560bd",
+          backgroundColor: "#c3ad71",
         },
       ],
     };

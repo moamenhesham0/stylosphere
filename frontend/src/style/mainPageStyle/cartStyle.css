@@ -27,7 +27,7 @@ body {
 }
 
 .header .logo:hover {
-    color: #000; /* Darker shade on hover */
+    color: #000; 
 }
 
 .nav {
@@ -43,7 +43,7 @@ body {
 }
 
 .nav a:hover {
-    color: #000; /* Darker shade on hover */
+    color: #000; 
 }
 
 .cart {
@@ -87,12 +87,12 @@ body {
 
 .quantity-btn, .remove-btn {
     border: none;
-    color: #000000; /* White text */
+    color: #000000; 
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 16px;
-    font-family: Arial, sans-serif; /* Ensure same font for all buttons */
+    font-family: Arial, sans-serif; 
 }
 
 .quantity-btn:hover, .remove-btn:hover {
@@ -101,7 +101,7 @@ body {
 
 .cart-item-price {
     font-size: 18px;
-    margin-left: 20px; /* Add space to the left of the price */
+    margin-left: 20px; 
 }
 
 .cart-summary {
@@ -125,6 +125,6 @@ body {
     border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
-    display: block; /* Ensure it respects parent alignment */
-    margin-left: auto; /* Push the button to the right */
+    display: block; 
+    margin-left: auto; 
 }

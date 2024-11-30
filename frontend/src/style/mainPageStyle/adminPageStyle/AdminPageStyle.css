@@ -1,15 +1,15 @@
 .app {
     display: flex;
     height: 100vh;
-    overflow: hidden; /* Prevents content overflow during resizing */
+    overflow: hidden; 
   }
   
   .sidebar {
     background-color: #20232a;
     color: white;
     padding: 20px;
-    min-width: 150px; /* Matches the minimum width in JavaScript */
-    max-width: 400px; /* Matches the maximum width in JavaScript */
+    min-width: 150px; 
+    max-width: 400px; 
   }
   
   .sidebar ul {
@@ -34,7 +34,7 @@
   
   .resizer {
     width: 5px;
-    cursor: ew-resize; /* East-west resizing cursor */
+    cursor: ew-resize; 
     background-color: #444;
     position: relative;
   }
@@ -42,7 +42,7 @@
   .content {
     flex: 1;
     padding: 20px;
-    overflow: auto; /* Ensures content scrolls if it overflows */
+    overflow: auto; 
   }
 
 .profile-image img{
@@ -54,4 +54,19 @@
 .profile-image {
   padding-top: 20px;
   padding-bottom: 30px;
+}
+
+.logo-admin {
+  position: absolute; 
+  bottom: 20px; 
+  left: 20px;
+  width: 100%; 
+  text-align: left; 
+}
+
+.logo-admin img {
+  height: 90px; 
+  width: auto; 
+  display: inline-block;
+  cursor: pointer;
 }
