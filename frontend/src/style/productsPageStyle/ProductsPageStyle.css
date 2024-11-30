@@ -11,7 +11,7 @@
 /* Banner Styling with Image Background */
 .banner {
     position: relative;
-    background-image: url('/assets/banner.jpg'); /* Replace with your image path */
+    background-image: url('/assets/banner.png'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     color: white;

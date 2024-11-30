@@ -19,6 +19,7 @@
 .nav {
     display: flex;
     gap: 20px;
+    padding-right: 30px;
 }
 
 /* Generic Navigation Items */
@@ -49,6 +50,7 @@
     border-radius: 5px;
     transition: background-color 0.3s, color 0.3s;
     text-align: center;
+
 }
 
 .signin-btn:hover {
@@ -131,30 +133,6 @@
     text-align: left;
     margin-bottom: 10px;
 }
-
-/* Input area */
-form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-input {
-    flex-grow: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-}
-
-button {
-    padding: 10px 15px;
-    background-color: #c09f6a;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
 
 
 

@@ -1,24 +1,58 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import '../style/mainPageStyle/sinningInStyle.css';
 
 const SignIn = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+ 
+  const validEmail = "muhannd@gmail.com";
+  const validPassword = "123456";
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validate email and password
+    if (email === validEmail && password === validPassword) {
+      // Navigate to the dashboard or another page on success
+      navigate('/admin');
+    } else {
+      // Display an error message if the credentials are invalid
+      setError('Invalid email or password');
+    }
+  };
+
   return (
     <div className="styled-wrapper">
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <p className="title">Sign In</p>
         <p className="message">Welcome back! Please log in to your account.</p>
-        
+        {error && <p className="error">{error}</p>}
+
         <label>
-          <input required placeholder type="email" className="input" />
+          <input
+            required
+            type="email"
+            className="input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <span>Email</span>
         </label>
         <label>
-          <input required placeholder type="password" className="input" />
+          <input
+            required
+            type="password"
+            className="input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <span>Password</span>
         </label>
-        
-        <button className="submit">Sign In</button>
+
+        <button type="submit" className="submit">Sign In</button>
         <p className="signin">
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>

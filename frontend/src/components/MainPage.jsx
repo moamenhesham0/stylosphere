@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/Header'; // Import the Header component
 import mainPagepng from '../images/mainPageImg/mainPage.png';
-import aboutuspng from '../images/mainPageImg/aboutUs1.png';
+import aboutuspng from '../images/mainPageImg/aboutUs2.png';
 import '../style/mainPageStyle/MainPageStyle.css';
 
 function MainPage() {
@@ -114,11 +114,11 @@ function MainPage() {
             <footer className="footer">
                 <div className="footer-left">
                     <h2>StyloSphere</h2>
-                    <p>muhannd and Elashmawy made by Moamen</p>
+                    <p>muhannd, ahmedAli, Moamen, farag and yousef </p>
                     <br/>
-                    <p>Made by <a href="#">Muhannd</a></p>
+                    <p>Made by Muhannd</p>
                     <br/>
-                    <p>AI Made by <a href="#">Elashmawy</a></p>
+                    <p>AI Made by ahmedAli & moamen</p>
                 </div>
                 <div className="footer-right">
                     <div className="footer-section">

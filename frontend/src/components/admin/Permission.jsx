@@ -111,17 +111,7 @@ function Permission() {
       </div>
 
       {/* Product Review Section */}
-      <div className="section">
-        <h2>Product Review</h2>
-        <p>
-          <strong>Most Selling Product:</strong> {mostSellingProduct.name} (
-          {mostSellingProduct.sales} sales)
-        </p>
-        <p>
-          <strong>Least Selling Product:</strong> {leastSellingProduct.name} (
-          {leastSellingProduct.sales} sales)
-        </p>
-      </div>
+
 
       {permissionsPopup && (
         <div className="popup">

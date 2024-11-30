@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import '../style/headerStyle/HeaderStyle.css';
 
 function Header() {
@@ -11,7 +11,9 @@ function Header() {
         setShowChatbot(!showChatbot);
     };
 
+    const location = useLocation();
     // Send message to Flask backend
+
     const sendMessage = async (message) => {
         try {
             const response = await fetch("http://127.0.0.1:5000/chat", {
@@ -49,8 +51,13 @@ function Header() {
             <div className="nav">
                 <Link to="/shop" className="nav-item">Shop</Link>
                 <Link to="/cart" className="nav-item">Cart</Link>
-                {/* Sign In Button */}
-                <Link to="/signup" className="signin-btn">Sign Up</Link>
+                
+                {location.pathname === "/signin" ? (
+                    <Link to="/signup" className="signin-btn">Sign Up</Link>
+                ) : (
+                    <Link to="/signin" className="signin-btn">Sign In</Link>
+
+                )}
             </div>
 
             {/* Floating Chatbot Button */}

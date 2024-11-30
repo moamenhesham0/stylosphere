@@ -7,10 +7,13 @@ import SignUp from './components/signningUp';
 import ShoppingCart from './components/cart';
 import Header from './components/Header';
 import MainPage from './components/MainPage';
+import AdminPage from './components/admin/AdminPage';
+
 
 const App = () => {
     return (
         <Router>
+            
             <Header />
             <Routes>
                 <Route path="/" element={<MainPage />} />
@@ -19,7 +22,10 @@ const App = () => {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/cart" element={<ShoppingCart />} />
+                <Route path="/admin" element={<AdminPage/>} />
+                
             </Routes>
+            
         </Router>
     );
 };

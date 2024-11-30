@@ -36,6 +36,7 @@ const ProductsPage = () => {
             {/* Banner Section with Image Background */}
             <div className="banner">
                 <div className="banner-text">
+            
                 </div>
             </div>
 

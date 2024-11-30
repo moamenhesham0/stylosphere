@@ -42,19 +42,23 @@ function AdminPage() {
             className="sidebar"
             style={{ width: `${sidebarWidth}px` }}
           >
+             <div className="profile-image">
+            <img src="https://via.placeholder.com/100" alt="Profile Picture" />
+            </div>
+
             <nav>
               <ul>
                 <li>
-                  <Link to="/ProfileAdmin">Profile</Link>
+                  <Link to="/admin/ProfileAdmin">Profile</Link>
                 </li>
                 <li>
-                  <Link to="/ProductHandler">Your Products</Link>
+                  <Link to="/admin/ProductHandler">Your Products</Link>
                 </li>
                 <li>
-                  <Link to="/Permission">Permission</Link>
+                  <Link to="/admin/Permission">Permission</Link>
                 </li>
                 <li>
-                  <Link to="/Dash">Dash Board</Link>
+                  <Link to="/admin/Dash">Dash Board</Link>
                 </li>
               </ul>
             </nav>
@@ -69,10 +73,10 @@ function AdminPage() {
           {/* Main Content */}
           <div className="content">
             <Routes>
-              <Route path="/ProfileAdmin" element={<ProfileAdmin />} />
-              <Route path="/ProductHandler" element={<ProductHandler/>} />
-              <Route path="/Permission" element={<Permission />} />
-              <Route path="/Dash" element={<Dash />} />
+              <Route path="/admin/ProfileAdmin" element={<ProfileAdmin />} />
+              <Route path="/admin/ProductHandler" element={<ProductHandler/>} />
+              <Route path="/admin/Permission" element={<Permission />} />
+              <Route path="/admin/Dash" element={<Dash />} />
             </Routes>
           </div>
         </div>
