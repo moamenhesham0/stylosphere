@@ -1,43 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import '../style/headerStyle/HeaderStyle.css';
 
 function Header() {
-    const [showChatbot, setShowChatbot] = useState(false);
-    const [chatMessages, setChatMessages] = useState([]);
-    const [userMessage, setUserMessage] = useState("");
-
-    const toggleChatbot = () => {
-        setShowChatbot(!showChatbot);
-    };
-
     const location = useLocation();
-    // Send message to Flask backend
 
-    const sendMessage = async (message) => {
-        try {
-            const response = await fetch("http://127.0.0.1:5000/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ message: message }),
-            });
-            const data = await response.json();
-            setChatMessages([...chatMessages, { from: "user", text: message }, { from: "bot", text: data.reply }]);
-        } catch (error) {
-            console.error("Error sending message:", error);
+    useEffect(() => {
+        // Create and append Botpress script
+        const scriptBotpress = document.createElement('script');
+        scriptBotpress.src = "https://cdn.botpress.cloud/webchat/v2.2/inject.js";  // Botpress WebChat script
+        scriptBotpress.async = true;
+
+        // Create and append Botpress configuration script
+        const scriptConfig = document.createElement('script');
+        scriptConfig.src = "https://files.bpcontent.cloud/2024/11/30/08/20241130082416-J4QA7KKK.js";  // Your configuration file
+        scriptConfig.async = true;
+
+        // Load both scripts
+        document.body.appendChild(scriptBotpress);
+        document.body.appendChild(scriptConfig);
+
+        // Cleanup on component unmount
+        return () => {
+            document.body.removeChild(scriptBotpress);
+            document.body.removeChild(scriptConfig);
+        };
+    }, []);
+
+    // Function to open the chat when the floating button is clicked
+    const openChat = () => {
+        if (window.botpressWebChat) {
+            window.botpressWebChat.open();  // This triggers the chat to open
         }
-    };
-
-    const handleInputChange = (event) => {
-        setUserMessage(event.target.value);
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        sendMessage(userMessage);
-        setUserMessage("");  // Clear input field
     };
 
     return (
@@ -56,54 +50,10 @@ function Header() {
                     <Link to="/signup" className="signin-btn">Sign Up</Link>
                 ) : (
                     <Link to="/signin" className="signin-btn">Sign In</Link>
-
                 )}
             </div>
-
-            {/* Floating Chatbot Button */}
-            <button onClick={toggleChatbot} className="chatbot-btn-floating">
-                <img src = '/assets/chat.svg' className='chatbot-img'></img>
-            </button>
-
-            {/* Chatbot Modal */}
-            {showChatbot && (
-                <div className="chatbot-modal">
-                    <div className="chatbot-content">
-                        <button onClick={toggleChatbot} className="close-btn">
-                            &times;
-                        </button>
-
-                        {/* Chatbot Messages */}
-                        <div className="chatbox">
-                            {chatMessages.map((message, index) => (
-                                <div key={index} className={message.from}>
-                                    <p>{message.text}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Message Input */}
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                value={userMessage}
-                                onChange={handleInputChange}
-                                placeholder="Type a message..."
-                            />
-                            <button type="submit">Send</button>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
 
 export default Header;
-
-
-
-
-
-
-
