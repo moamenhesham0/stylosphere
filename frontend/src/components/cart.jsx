@@ -4,7 +4,17 @@ import '../style/mainPageStyle/cartStyle.css';
 
 const ShoppingCart = () => {
   // For simplicity, let's assume the cart is an array of products stored in localStorage
-  const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+// Fetch cart items specific to ShoppingCart from localStorage
+  const cartItems = JSON.parse(localStorage.getItem('shoppingCartItems')) || [];
+
+  localStorage.setItem(
+    'shoppingCartItems',
+    JSON.stringify([
+        { name: "Apple iPhone", price: 999.99, image: "https://via.placeholder.com/150" },
+        { name: "Samsung Galaxy", price: 899.99, image: "https://via.placeholder.com/150" }
+    ])
+);
+
 
   return (
     <div className="container">

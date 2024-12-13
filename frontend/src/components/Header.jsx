@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../style/headerStyle/HeaderStyle.css';
+import { Avatar } from "@mui/material"
 
 function Header() {
     const location = useLocation();
-
+    const userLogin = true;
+    
     useEffect(() => {
        
         const scriptBotpress = document.createElement('script');
@@ -40,13 +42,27 @@ function Header() {
             </Link>
 
             <div className="nav">
+                <div className='shop-cart'>
                 <Link to="/shop" className="nav-item">Shop</Link>
                 <Link to="/cart" className="nav-item">Cart</Link>
-                
-                {location.pathname === "/signin" ? (
-                    <Link to="/signup" className="signin-btn">Sign Up</Link>
+                </div>
+                {userLogin ? (
+                    <div className="profile">
+                        <Link to="/userProfile">
+                        <Avatar
+                            alt="User Profile"
+                            src="/assets/profilePic.svg"
+                            className="profile-pic"
+                        />
+
+                        </Link>
+                    </div>
                 ) : (
-                    <Link to="/signin" className="signin-btn">Sign In</Link>
+                    location.pathname === "/signin" ? (
+                        <Link to="/signup" className="signin-btn">Sign Up</Link>
+                    ) : (
+                        <Link to="/signin" className="signin-btn">Sign In</Link>
+                    )
                 )}
             </div>
         </div>

@@ -11,7 +11,7 @@ import AdminPage from './components/admin/AdminPage';
 import Dash from './components/admin/Dash';
 import Permission from './components/admin/Permission';
 import ProfileAdmin from './components/admin/ProfileAdmin';
-
+import UserProfile from './components/user/UserProfile';
 const AppContent = () => {
     const location = useLocation();
 
@@ -27,6 +27,7 @@ const AppContent = () => {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/cart" element={<ShoppingCart />} />
+                <Route path="/userProfile" element={<UserProfile />} />
                 <Route path="/admin" element={<AdminPage />}>
                     <Route path="ProfileAdmin" element={<ProfileAdmin />} />
                     <Route path="Permission" element={<Permission />} />

@@ -1,0 +1,150 @@
+.profileUser-container {
+    display: flex;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .profileUser-left {
+    background: #f9fbfd;
+    padding: 30px;
+    width: 250px;
+    text-align: center;
+  }
+  
+  .profileUser-left img {
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+  
+  .profileUser-left h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+  
+  .profileUser-left p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .profileUser-left .buttons .btn {
+    display: block;
+    margin: 5px 0px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn.follow {
+    background: #007bff;
+    color: #fff;
+  }
+  
+  .btn.message {
+    background: #17a2b8;
+    color: #fff;
+  }
+  
+
+  
+  .profileUser-right {
+    padding: 40px;
+    width: 100%;
+  }
+  
+  .user-info h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+  
+  .user-info p {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  
+  .progress-fill {
+    background: #007bff;
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  
+  .project-status {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+  
+  .project-status h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .progress-bar {
+    margin-bottom: 20px;
+  }
+  
+  .progress-bar span {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .progress {
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 10px;
+    width: 100%;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  
+  .progress-fill {
+    background: #c3ad71;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s;
+  }
+  
+  .progress-input {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding-top: 20px;
+  }
+
+  
+  .link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .link:hover {
+    color: #c3ad71;
+  }
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+   
+  .userPurchases h2{
+    color: #c3ad71;
+  }

@@ -58,9 +58,22 @@
     color: #222; /* Text color change on hover */
 }
 
+.profile-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
 
+.profile{
+    padding-right: 20px;
+}
 
-
+.shop-cart{
+    align-content: center;
+   
+}
 
 
 
