@@ -41,4 +41,15 @@ public class CustomerService {
         // Add checkout logic here (e.g., clear cart, process payment)
         System.out.println("Customer checked out with payment method: " + customer.getPaymentMethod());
     }
+
+    public boolean signUp(Customer customer) {
+        // Check if the email is already in use
+        if (customerRepository.findByEmail(customer.getEmail()) != null) {
+            return false; // Email already exists
+        }
+        
+        // Save the new customer to the database
+        customerRepository.save(customer);
+        return true;
+    }
 }

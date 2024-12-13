@@ -25,6 +25,14 @@ public class CustomerController {
                 : ResponseEntity.badRequest().body("Invalid email or password.");
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody Customer customer) {
+    boolean success = customerService.signUp(customer);
+    return success
+            ? ResponseEntity.ok("Sign-up successful! You can now log in.")
+            : ResponseEntity.badRequest().body("Sign-up failed. Email may already be in use.");
+}
+
     // Search products
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
