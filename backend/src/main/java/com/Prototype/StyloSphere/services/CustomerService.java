@@ -20,7 +20,7 @@ public class CustomerService {
     private OrderRepository orderRepository;
 
     // Log in
-    public boolean logIn(String email, String password) {
+    public boolean signIn(String email, String password) {
         Customer customer = customerRepository.findByEmail(email);
         return customer != null && customer.getPassword().equals(password);
     }
