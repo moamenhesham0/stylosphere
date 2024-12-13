@@ -13,7 +13,7 @@ const ProductsPage = () => {
         { id: 3, name: 'Jeans', price: 150, type: 'Jacket', description: 'Premium denim jeans', image: '/assets/products images/jeans.jpg' },
         { id: 4, name: 'Sweater', price: 200, type: 'T-shirt', description: 'Cozy winter sweater', image: '/assets/products images/sweater.webp' },
         { id: 5, name: 'T-shirt', price: 80, type: 'Dress', description: 'Stylish t-shirt with graphic print', image: '/assets/products images/t-shirt.webp' },
-        { id: 6, name: 'Product F', price: 120, type: 'Sweater', description: 'Warm and comfy sweater', image: '/assets/products images/product-f.jpg' },
+        
     ];
 
     
