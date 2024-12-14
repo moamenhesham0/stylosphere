@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
-import Header from './Header'; // Assuming the header component is imported here
-import '../style/productsPageStyle/ProductsPageStyle.css'; // Make sure the CSS file is correct
+import { Link } from 'react-router-dom';
+import Header from './Header';
+import '../style/productsPageStyle/ProductsPageStyle.css';
 
 const ProductsPage = () => {
-    const [sortType, setSortType] = useState('name'); // 'price' or 'name'
-    const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+    const [sortType, setSortType] = useState('name');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [searchInput, setSearchInput] = useState('');
+    const [image, setImage] = useState(null); // Track the image for AI
+    const [clothingType, setClothingType] = useState(''); // Store the clothing type response
 
     const products = [
         { id: 1, name: 'Short', price: 100, type: 'Shirt', description: 'Comfortable cotton shorts', image: '/assets/products images/short.jpg' },
@@ -13,14 +16,47 @@ const ProductsPage = () => {
         { id: 3, name: 'Jeans', price: 150, type: 'Jacket', description: 'Premium denim jeans', image: '/assets/products images/jeans.jpg' },
         { id: 4, name: 'Sweater', price: 200, type: 'T-shirt', description: 'Cozy winter sweater', image: '/assets/products images/sweater.webp' },
         { id: 5, name: 'T-shirt', price: 80, type: 'Dress', description: 'Stylish t-shirt with graphic print', image: '/assets/products images/t-shirt.webp' },
-        
     ];
 
-    
+    const handleInputChange = (e) => {
+        setSearchInput(e.target.value);
+    };
+
+    const handleSearch = () => {
+        console.log('Search Input:', searchInput);
+    };
+
+    // Function to handle image upload and send it to Flask API
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            sendImageToAI(file);
+        }
+    };
+
+    // Function to send image to Flask API and get the clothing type
+    const sendImageToAI = (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch('http://localhost:5000/api/ai', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                setClothingType(data.type); // Assuming the AI sends the type as 'type'
+            })
+            .catch(error => {
+                console.error('Error sending image to AI:', error);
+            });
+    };
+
+    // Sorting logic remains unchanged
     const sortProductsByPrice = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
     };
-
 
     const sortProductsByName = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
@@ -29,16 +65,6 @@ const ProductsPage = () => {
     const sortedProducts = sortType === 'price'
         ? sortProductsByPrice(sortOrder)
         : sortProductsByName(sortOrder);
-
-    const [searchInput, setSearchInput] = useState("");
-
-    const handleInputChange = (e) => {
-        setSearchInput(e.target.value);
-    };
-
-    const handleSearch = () => {
-        console.log("Search Input:", searchInput); 
-    };
 
     return (
         <div className="products-page">
@@ -51,27 +77,35 @@ const ProductsPage = () => {
                     className="search-input"
                 />
                 <button className="search-button" onClick={handleSearch}>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                    className="search-icon"
-                >
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zm-5.442.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
-                </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                        className="search-icon"
+                    >
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zm-5.442.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
+                    </svg>
                 </button>
+
+                {/* Image upload */}
+                <div className="image-upload">
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    id="file-input"
+                />
+                <label htmlFor="file-input">AI detection</label>
+                {image && <p>Image uploaded successfully!</p>}
             </div>
-            {/* Banner Section with Image Background */}
-            <div className="banner">
-                <div className="banner-text">
-            
-                </div>
             </div>
 
+            {/* Display the clothing type received from AI */}
+            {clothingType && <div className="clothing-type">Clothing Type: {clothingType}</div>}
+
             <div className="products-container">
-                {/* Left Sidebar for Filters */}
                 <div className="filters">
                     <div className="filter-category">
                         <h3>Price Range</h3>
@@ -90,10 +124,8 @@ const ProductsPage = () => {
                     </div>
                 </div>
 
-                {/* Product List with Sorting Options */}
                 <div className="product-list-container">
                     <div className="sorting-toolbar">
-                        {/* Single Sort Dropdown */}
                         <div className="sort-dropdown">
                             <label>Sort by</label>
                             <select
@@ -112,7 +144,6 @@ const ProductsPage = () => {
                         </div>
                     </div>
 
-                    {/* Display Sorted Products in Grid */}
                     <div className="products-grid">
                         {sortedProducts.map(product => (
                             <div key={product.id} className="product-item">
@@ -122,24 +153,29 @@ const ProductsPage = () => {
                                 <div className="product-details">
                                     <span>{product.name}</span>
                                     <span>${product.price}</span>
-                                    <Link 
-                                        to={`/product/${product.id}`}  // Adjusted the Link path here for routing
-                                        state={{ product }} // Pass product data to ProductPage through state
+                                    <Link
+                                        to={`/product/${product.id}`}
+                                        state={{ product }}
                                         className="view-details-btn"
                                     >
                                         <img src="/assets/button icons/details.svg" alt="View Details" className="icon" />
                                         View Details
                                     </Link>
-                                    <div style={{padding: "3px"}}></div>
+                                    <div style={{ padding: "3px" }}></div>
                                     <button
                                         onClick={() => {
+                                            if (!image) {
+                                                alert('Please upload an image first!');
+                                                return;
+                                            }
                                             console.log(`Added ${product.name} to cart`);
-                                            
                                         }}
                                         className="add-to-cart-btn"
+                                        disabled={!image} // Disable button if no image is uploaded
                                     >
                                         Add to Cart
                                     </button>
+                                    {!image && <p>Please upload an image first to proceed.</p>}
                                 </div>
                             </div>
                         ))}
@@ -151,4 +187,5 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
 

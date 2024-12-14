@@ -238,3 +238,51 @@
 .search-button:active {
     background-color: #ffffff;
 }
+.image-upload {
+    position: relative;
+    display: inline-block;
+    font-family: 'Arial', sans-serif;
+}
+
+.image-upload input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
+.image-upload label {
+    background: linear-gradient(45deg, #8B4513, #FFD700); /* Brown to Gold gradient */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-align: center;
+}
+
+.image-upload label:hover {
+    background: linear-gradient(45deg, #6A2D0E, #D4AF37); /* Darker brown to light gold */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.image-upload label:active {
+    transform: translateY(1px); /* Button press effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-upload p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #28a745;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+
+
+
+
