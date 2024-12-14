@@ -1,10 +1,12 @@
 import '../../style/UserProfileStyle/UserProfileStyle.css';
 import React, { useEffect, useState } from "react";
-
+import { useUser } from './UserContext';
 function UserProfile() {
-    const [userName, setUserName] = useState("user name");
+  const { user } = useUser();
+  console.log(user.name);
+    const [userName, setUserName] = useState(user.name);
     const [userAdress, setUserAdress] = useState("Bay Area, San Francisco, CA");
-    const [userEmail, setUserEmail] = useState("username@gmail.com");
+    const [userEmail, setUserEmail] = useState(user.email);
     const [userphone, setUserPhone] = useState("(239) 816-9029");
     const [usermobile, setUserMobile] = useState("(320) 380-4539");
     const [cartItems, setCartItems] = useState([]);

@@ -34,7 +34,10 @@ public class CustomerService {
     public void placeOrder(Order order) {
         orderRepository.save(order);
     }
-
+    public Customer getCustomer(String email)
+    {
+        return customerRepository.findByEmail(email);
+    }
     // Checkout
     public void checkOut(Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));

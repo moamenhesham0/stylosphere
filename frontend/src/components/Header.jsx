@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect , useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useUser } from './user/UserContext';
 import '../style/headerStyle/HeaderStyle.css';
-import { Avatar } from "@mui/material"
-
+import { Avatar } from "@mui/material";
 function Header() {
+    const { user} = useUser();
     const location = useLocation();
-    const userLogin = true;
+    const [userLogin, setUserlogin] = useState(false);
+    useEffect(() => {
+        setUserlogin(user.userStatus);
+      }, [user.userStatus]); 
     
     useEffect(() => {
        
@@ -27,7 +31,7 @@ function Header() {
         };
     }, []);
 
-  
+    
     const openChat = () => {
         if (window.botpressWebChat) {
             window.botpressWebChat.open(); 

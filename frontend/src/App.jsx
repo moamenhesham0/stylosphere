@@ -12,12 +12,13 @@ import Dash from './components/admin/Dash';
 import Permission from './components/admin/Permission';
 import ProfileAdmin from './components/admin/ProfileAdmin';
 import UserProfile from './components/user/UserProfile';
+import { UserProvider } from './components/user/UserContext';
 const AppContent = () => {
     const location = useLocation();
-
     const isAdminRoute = location.pathname.startsWith('/admin');
 
     return (
+        
         <>
             {!isAdminRoute && <Header />}
             <Routes>
@@ -40,9 +41,14 @@ const AppContent = () => {
 
 const App = () => {
     return (
+        <UserProvider>
         <Router>
+            
             <AppContent />
+            
         </Router>
+        </UserProvider>
+        
     );
 };
 

@@ -20,22 +20,31 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    // Log in
-    @PostMapping("/signin")
-public ResponseEntity<Map<String, String>> signIn(@RequestBody Map<String, String> loginDetails) {
+// Log in
+@PostMapping("/signin")
+public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, String> loginDetails) {
     String email = loginDetails.get("email");
     String password = loginDetails.get("password");
 
     boolean authenticated = customerService.signIn(email, password);
 
     if (authenticated) {
+        Customer user = customerService.getCustomer(email);
         // Return JSON response for successful sign-in
-        return ResponseEntity.ok(Map.of("message", "Sign-in successful!", "status", "SUCCESS"));
+        return ResponseEntity.ok(Map.of(
+                "message", "Sign-in successful!",
+                "status", "SUCCESS",
+                "user", user // The user object will be automatically serialized to JSON
+            ));
     } else {
         // Return JSON response for failed sign-in
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email or password", "status", "FAILURE"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+            "message", "Invalid email or password",
+            "status", "FAILURE"
+        ));
     }
 }
+
 
     @PostMapping("/signup")
 public ResponseEntity<Map<String, String>> signUp(@RequestBody Customer customer) {

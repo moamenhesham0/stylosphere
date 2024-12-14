@@ -1,25 +1,50 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../style/mainPageStyle/sinningInStyle.css';
+import { useUser } from './user/UserContext';
 
 const SignIn = () => {
+  const {user} = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { updateUser } = useUser(); // Access `updateUser` from context
 
- 
-  const validEmail = "test@gmail.com";
-  const validPassword = "123456";
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email === validEmail && password === validPassword) {
-     
-      navigate('/admin');
-    } else {
-      
-      setError('Invalid email or password');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/customers/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+
+        // Update context with user details
+        updateUser({
+          email: data.user.email,
+          name: data.user.name,
+          userStatus: true, // Set user as logged in
+        });
+        console.log(user.email); // Debugging: check response structure
+
+        navigate('/userProfile'); // Redirect to user profile page
+      } else if (response.status === 401) {
+        const errorData = await response.json();
+        setError(errorData.message); // Display error message
+      } else {
+        setError('An unexpected error occurred. Please try again later.');
+      }
+    } catch (err) {
+      console.error('Error during sign-in:', err);
+      setError('Could not connect to the server. Please check your connection.');
     }
   };
 

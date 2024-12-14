@@ -40,6 +40,17 @@ public class Customer extends User {
     public String getRole() {
         return "Customer";
     }
+    @Override
+    public String toString() {
+        return "{" +
+               "name:" + this.getName() + "," +
+               "email:" + this.getEmail() + "," +
+               "address:," +
+               "phone:," +
+               "mobile:," +
+               "cart:{}" +
+               "}";
+    }
 
     // Method to log in
     public boolean logIn(String email, String password) {
