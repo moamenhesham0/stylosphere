@@ -4,24 +4,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.*;
 
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String description;
+    private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
+    private byte[] image; // Store image as a byte array
 
     public Product() {
     }
 
-    public Product(String name, String description, double price) {
+    public Product(String name, String description, double price, byte[] image) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.image = image;
     }
 
     // Getters and Setters
@@ -56,4 +61,22 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public void addTag(String tag) {
+        this.tags.add(tag);
+    }
+
+    public Set<String> getTags() {
+        return this.tags;
+    }
 }
+
+

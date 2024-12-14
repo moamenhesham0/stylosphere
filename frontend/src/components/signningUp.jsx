@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../style/mainPageStyle/sinningUpStyle.css';
+import { useUser } from './user/UserContext'; // Make sure this provides the correct context
 
 const SignUp = () => {
+  const { user, updateUser } = useUser(); // Ensure updateUser is destructured
+  const navigate = useNavigate(); // Initialize the navigate hook
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -53,8 +56,15 @@ const SignUp = () => {
       const responseData = await response.json();
   
       if (response.ok) {
+        // Successfully signed up, now update the user context and redirect
+        updateUser({
+          email: formData.email,
+          name: `${formData.firstname} ${formData.lastname}`, // Include the full name
+          userStatus: true, // Mark the user as logged in
+        });
         console.log('Success response from backend:', responseData);
         setSuccess(responseData.message);
+        navigate('/'); // Redirect to the home page or dashboard
       } else {
         console.error('Error response from backend:', responseData);
         setError(responseData.message);
@@ -141,3 +151,4 @@ const SignUp = () => {
 };
 
 export default SignUp;
+

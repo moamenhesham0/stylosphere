@@ -17,39 +17,46 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Create a new product
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
-    }
-
-    // Get all products
+    // Endpoint to get all products
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    // Get a product by id
+    // Endpoint to get a product by ID
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
         return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Update a product by id
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
-        Product updated = productService.updateProduct(id, updatedProduct);
-        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
+    // Endpoint to add a new product
+    @PostMapping
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        Product savedProduct = productService.saveProduct(product);
+        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
-    // Delete a product by id
+    // Endpoint to delete a product
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Endpoint to get products by color
+    @GetMapping("/filter/color/{color}")
+    public List<Product> getProductsByColor(@PathVariable String color) {
+        return productService.getProductsByColor(color);
+    }
+
+    // Endpoint to get products by tag
+    @GetMapping("/filter/tag/{tag}")
+    public List<Product> getProductsByTag(@PathVariable String tag) {
+        return productService.getProductsByTag(tag);
+    }
 }
+
+
 
 

@@ -14,9 +14,14 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    // Create a new product
-    public Product createProduct(Product product) {
+    // Save a product
+    public Product saveProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    // Get a product by ID
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
     // Get all products
@@ -24,24 +29,11 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    // Get a product by id
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
-    }
-
-    // Update an existing product
-    public Product updateProduct(Long id, Product updatedProduct) {
-        if (productRepository.existsById(id)) {
-            updatedProduct.setId(id);
-            return productRepository.save(updatedProduct);
-        }
-        return null;
-    }
-
-    // Delete a product
+    // Delete a product by ID
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 }
+
 
 

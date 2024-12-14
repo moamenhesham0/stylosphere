@@ -32,7 +32,9 @@ def predict():
         predicted_label = class_names[predicted_class]
 
         # Return the result as JSON
-        return jsonify({
+        if predicted_label == "dress":
+                return None
+        return jsonify({      
             'type': predicted_label
         })
 
