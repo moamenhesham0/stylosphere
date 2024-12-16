@@ -47,7 +47,6 @@ public ResponseEntity<Map<String, String>> signUp(@RequestBody Customer user) {
         
         return ResponseEntity.ok(Map.of("message", "Sign-up successful"));
     } else {
-        
         return ResponseEntity.badRequest().body(Map.of("message", "Sign-up failed. Email may already be in use."));
     }
 }
@@ -55,16 +54,14 @@ public ResponseEntity<Map<String, String>> signUp(@RequestBody Customer user) {
 @PostMapping("/photo-upload")
 public ResponseEntity<Map<String,String>> uploadUserImage(@RequestBody Map<String,String> userImage)
 {
-    final String email = userImage.get("email");
-    final byte[] image = Base64.getDecoder().decode(userImage.get("image"));
+    String email = userImage.get("email");
+    String image = userImage.get("image");
     User user = userService.getUser(email);
     if(user != null){
         user.setUserImage(image);
         return ResponseEntity.ok(Map.of("status" , "Success"));
     }else
         return ResponseEntity.badRequest().body(Map.of("status" , "Failed"));
-
-
 }
 
   

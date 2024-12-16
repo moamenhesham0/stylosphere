@@ -29,7 +29,7 @@ public class Product {
     private String description;
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
-
+    private int quantity ;
 
 
 
@@ -99,6 +99,16 @@ public class Product {
     public void setColor(String color)
     {
         this.color = color.toLowerCase();
+    }
+
+
+    public void setQuantity(int quantity)
+    {
+        this.quantity = quantity;
+    }
+    public int getQuantity()
+    {
+        return this.quantity;
     }
 }
 

@@ -9,13 +9,15 @@ const ProductsPage = () => {
     const [searchInput, setSearchInput] = useState('');
     const [image, setImage] = useState(null); // Track the image for AI
     const [clothingType, setClothingType] = useState(''); // Store the clothing type response
+    const [price, setPrice] = useState(100); // Track the price range
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState('');
 
-    const products = [
-        { id: 1, name: 'Short', price: 100, type: 'Shirt', description: 'Comfortable cotton shorts', image: '/assets/products images/short.jpg' },
-        { id: 2, name: 'Jacket', price: 50, type: 'Jeans', description: 'Stylish jacket for all seasons', image: '/assets/products images/jacket.webp' },
-        { id: 3, name: 'Jeans', price: 150, type: 'Jacket', description: 'Premium denim jeans', image: '/assets/products images/jeans.jpg' },
-        { id: 4, name: 'Sweater', price: 200, type: 'T-shirt', description: 'Cozy winter sweater', image: '/assets/products images/sweater.webp' },
-        { id: 5, name: 'T-shirt', price: 80, type: 'Dress', description: 'Stylish t-shirt with graphic print', image: '/assets/products images/t-shirt.webp' },
+    
+
+
+    let products = [
+        // Your product data here
     ];
 
     const handleInputChange = (e) => {
@@ -34,7 +36,13 @@ const ProductsPage = () => {
             sendImageToAI(file);
         }
     };
-
+    const handleTagClick = (tag) => {
+        setSelectedTags(prevTags => 
+            prevTags.includes(tag) 
+                ? prevTags.filter(t => t !== tag) 
+                : [...prevTags, tag]
+        );
+    };
     // Function to send image to Flask API and get the clothing type
     const sendImageToAI = (file) => {
         const formData = new FormData();
@@ -91,15 +99,15 @@ const ProductsPage = () => {
 
                 {/* Image upload */}
                 <div className="image-upload">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    id="file-input"
-                />
-                <label htmlFor="file-input">AI detection</label>
-                {image && <p>Image uploaded successfully!</p>}
-            </div>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        id="file-input"
+                    />
+                    <label htmlFor="file-input">AI detection</label>
+                    {image && <p>Image uploaded successfully!</p>}
+                </div>
             </div>
 
             {/* Display the clothing type received from AI */}
@@ -107,20 +115,42 @@ const ProductsPage = () => {
 
             <div className="products-container">
                 <div className="filters">
+                    {/* Price Range Slider */}
                     <div className="filter-category">
                         <h3>Price Range</h3>
-                        <input type="range" min="0" max="200" step="10" />
+                        <input
+                            type="range"
+                            min="0"
+                            max="200"
+                            step="10"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className="price-range"
+                        />
+                        <div className="price-display">Price: ${price}</div>
                     </div>
+
+                    {/* Tags Grid */}
                     <div className="filter-category">
-                        <h3>Type</h3>
-                        <select>
-                            <option value="Shirt">Shirt</option>
-                            <option value="Jeans">Jeans</option>
-                            <option value="Jacket">Jacket</option>
-                            <option value="T-shirt">T-shirt</option>
-                            <option value="Dress">Dress</option>
-                            <option value="Sweater">Sweater</option>
-                        </select>
+                        <h3>Tags</h3>
+                        <div className="tag-grid">
+                            {['Casual', 'Formal', 'Sale', 'Trending', 'New', 'Summer'].map(tag => (
+                                <label key={tag} className="tag-label">
+                                    <input
+                                        type="checkbox"
+                                        value={tag}
+                                        checked={selectedTags.includes(tag)}
+                                        onChange={() => handleTagClick(tag)}
+                                        className="tag-checkbox" // Keep the class for styling
+                                    />
+                                    <span
+                                        className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                                    >
+                                        {tag}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

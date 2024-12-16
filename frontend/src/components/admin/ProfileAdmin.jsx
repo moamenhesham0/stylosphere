@@ -1,6 +1,5 @@
 import '../../style/mainPageStyle/adminPageStyle/AdminProfileStyle.css';
 import React, { useEffect, useState } from "react";
-
 function ProfileAdmin() {
     const [adminName, setAdminName] = useState("user name");
     const [aboutAdmin, setAboutAdmin] = useState("full stack");

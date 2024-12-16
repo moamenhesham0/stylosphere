@@ -17,7 +17,7 @@ public abstract class User {
     private String name;
     private String email;
     private String password;
-    private byte[] userImage;
+    private String userImage;
 
     public User() {
     }
@@ -62,11 +62,11 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setUserImage(byte[] image)
+    public void setUserImage(String image)
     {
         this.userImage = image;
     }
-    public byte[] getUserImage()
+    public String getUserImage()
     {
         return this.userImage;
     }
