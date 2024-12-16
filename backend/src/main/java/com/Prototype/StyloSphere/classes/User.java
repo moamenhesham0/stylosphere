@@ -2,15 +2,22 @@ package com.Prototype.StyloSphere.classes;
 
 import jakarta.persistence.*;
 
-@MappedSuperclass
+@Entity
+@Table(name = "Users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    
+    
     private String name;
     private String email;
     private String password;
+    
 
     public User() {
     }
@@ -21,9 +28,11 @@ public abstract class User {
         this.password = password;
     }
 
-    
+    public String getType() {
+        return this.getClass().getSimpleName().toLowerCase();
+    }
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -31,7 +40,7 @@ public abstract class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -39,7 +48,7 @@ public abstract class User {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -47,12 +56,10 @@ public abstract class User {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public abstract String getRole();
 }

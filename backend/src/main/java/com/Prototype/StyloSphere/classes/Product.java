@@ -4,9 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.*;
 
+
+import java.util.*;
+import jakarta.persistence.Table;
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -18,6 +21,7 @@ public class Product {
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
     private byte[] image; // Store image as a byte array
+    private String color;
 
     public Product() {
     }
@@ -76,6 +80,15 @@ public class Product {
 
     public Set<String> getTags() {
         return this.tags;
+    }
+
+    public String getColor()
+    {
+        return this.color;
+    }
+    public void setColor(String color)
+    {
+        this.color = color.toLowerCase();
     }
 }
 

@@ -1,12 +1,15 @@
 import React, { useEffect , useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from './user/UserContext';
 import '../style/headerStyle/HeaderStyle.css';
 import { Avatar } from "@mui/material";
 function Header() {
-    const { user} = useUser();
+    const { user , updateUser } = useUser();
     const location = useLocation();
     const [userLogin, setUserlogin] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const toggleMenu = () => setIsOpen((prev) => !prev);
+    const navigate = useNavigate();
     useEffect(() => {
         setUserlogin(user.userStatus);
       }, [user.userStatus]); 
@@ -31,6 +34,15 @@ function Header() {
         };
     }, []);
 
+    const logOut= () => {
+        updateUser({
+            email: '',
+            name: '',
+            type: '',
+            userStatus: false, // Set user as logged in
+          });
+          navigate("/");
+      };
     
     const openChat = () => {
         if (window.botpressWebChat) {
@@ -51,16 +63,34 @@ function Header() {
                 <Link to="/cart" className="nav-item">Cart</Link>
                 </div>
                 {userLogin ? (
-                    <div className="profile">
-                        <Link to="/userProfile">
-                        <Avatar
-                            alt="User Profile"
-                            src="/assets/profilePic.svg"
-                            className="profile-pic"
-                        />
-
-                        </Link>
-                    </div>
+                    (
+                        <div className="profile-menu">
+                          <div className="profile-icon" onClick={toggleMenu}>
+                            <Avatar
+                              alt="User Profile"
+                              src="/assets/profilePic.svg"
+                              className="profile-pic"
+                            />
+                          </div>
+                          {isOpen && (
+                            <div className="dropdown-menu">
+                              <Link
+                                to={
+                                  user.type.toLowerCase() === "customer"
+                                    ? "/userProfile"
+                                    : "/ProfileAdmin"
+                                }
+                                className="dropdown-item"
+                              >
+                                Profile
+                              </Link>
+                              <div className="dropdown-item" onClick={() => { logOut(); toggleMenu(); }}>
+                                Log Out
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )
                 ) : (
                     location.pathname === "/signin" ? (
                         <Link to="/signup" className="signin-btn">Sign Up</Link>

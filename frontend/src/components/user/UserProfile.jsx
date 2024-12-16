@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useUser } from './UserContext';
 function UserProfile() {
   const { user } = useUser();
-  console.log(user.name);
     const [userName, setUserName] = useState(user.name);
-    const [userAdress, setUserAdress] = useState("Bay Area, San Francisco, CA");
+    const [userAdress, setUserAdress] = useState("N/A");
     const [userEmail, setUserEmail] = useState(user.email);
-    const [userphone, setUserPhone] = useState("(239) 816-9029");
-    const [usermobile, setUserMobile] = useState("(320) 380-4539");
+    const [userphone, setUserPhone] = useState("N/A");
+    const [usermobile, setUserMobile] = useState("N/A");
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {

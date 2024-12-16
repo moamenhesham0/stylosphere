@@ -31,11 +31,12 @@ const SignIn = () => {
         updateUser({
           email: data.user.email,
           name: data.user.name,
+          type: data.user.type,
           userStatus: true, // Set user as logged in
         });
         console.log(user.email); // Debugging: check response structure
 
-        navigate('/userProfile'); // Redirect to user profile page
+        navigate('/'); // Redirect to user profile page
       } else if (response.status === 401) {
         const errorData = await response.json();
         setError(errorData.message); // Display error message
