@@ -59,6 +59,7 @@ public ResponseEntity<Map<String,String>> uploadUserImage(@RequestBody Map<Strin
     User user = userService.getUser(email);
     if(user != null){
         user.setUserImage(image);
+        userService.saveUser(user);
         return ResponseEntity.ok(Map.of("status" , "Success"));
     }else
         return ResponseEntity.badRequest().body(Map.of("status" , "Failed"));

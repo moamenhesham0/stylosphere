@@ -31,6 +31,10 @@ public class UserService {
         return user != null && user.getPassword().equals(password);
     }
 
+    public void saveUser(User user)
+    {
+        userRepository.save(user);
+    }
     
 
     public boolean signUp(Customer customer) {
