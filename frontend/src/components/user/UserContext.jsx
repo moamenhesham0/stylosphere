@@ -1,19 +1,23 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    email: '',
-    name: '',
-    userStatus: false,
+  // Initialize user state from localStorage (if available)
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : { email: '', name: '', type: '', userStatus: false };
   });
 
+  // Update user data and store it in localStorage
   const updateUser = (details) => {
-    setUser((prev) => ({
-      ...prev,
+    const updatedUser = {
+      ...user,
       ...details,
-    }));
+    };
+    setUser(updatedUser);
+    // Store the updated user information in localStorage
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
   return (
@@ -30,6 +34,7 @@ export const useUser = () => {
   }
   return context;
 };
+
 
 
 
