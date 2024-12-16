@@ -74,7 +74,7 @@ function Header() {
                             />
                           </div>
                           {isOpen && (
-                            <div className="dropdown-menu">
+                            <div className="dropdown-menu" onClick={toggleMenu}>
                               <Link
                                 to={
                                   user.type === "admin"

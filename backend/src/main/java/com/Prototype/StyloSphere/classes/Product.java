@@ -1,13 +1,22 @@
 package com.Prototype.StyloSphere.classes;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 
 import java.util.*;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -20,22 +29,23 @@ public class Product {
     private String description;
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
-    private byte[] image; // Store image as a byte array
+
+
+
+
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Lob
+    @Column(name = "image_data")
+    private List<byte[]> image; // Store images as a list of byte arrays
     private String color;
 
-    public Product() {
-    }
+    
 
-    public Product(String name, String description, double price, byte[] image) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.image = image;
-    }
 
-    // Getters and Setters
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -43,7 +53,7 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -51,7 +61,7 @@ public class Product {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -59,18 +69,18 @@ public class Product {
     }
 
     public double getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public byte[] getImage() {
-        return image;
+    public List<byte[]> getImage() {
+        return this.image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(List<byte[]> image) {
         this.image = image;
     }
 
