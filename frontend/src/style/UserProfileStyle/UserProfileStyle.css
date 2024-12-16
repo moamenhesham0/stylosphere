@@ -8,35 +8,63 @@
   }
   
   .profileUser-left {
-    background: #f9fbfd;
+    background: linear-gradient(145deg, #f9fbfd, #e2e8f0);  /* Soft gradient background */
     padding: 30px;
     width: 250px;
     text-align: center;
-  }
-  
-  .profileUser-left img {
-    border-radius: 50%;
-    margin-bottom: 15px;
-  }
-  
-  .profileUser-left h2 {
+    border-radius: 12px;  /* Rounded corners for the profile section */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */
+    transition: transform 0.3s ease;  /* Smooth transform transition */
+}
+
+
+
+.profileUser-left img {
+  width: 100px;  /* Fixed width */
+  height: 100px;  /* Fixed height */
+  border-radius: 50%;  /* Circular shape */
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;  /* Smooth transition for the image */
+}
+
+.profileUser-left img:hover {
+    transform: scale(1.1);  /* Slight zoom effect on hover */
+}
+
+.profileUser-left h2 {
     font-size: 22px;
     margin-bottom: 5px;
-  }
-  
-  .profileUser-left p {
+    font-family: 'Arial', sans-serif;  /* Modern font */
+    color: #333;  /* Dark text for good contrast */
+    font-weight: 600;  /* Bold for a more prominent appearance */
+}
+
+.profileUser-left p {
     font-size: 14px;
     margin-bottom: 15px;
-  }
-  
-  .profileUser-left .buttons .btn {
+    color: #666;  /* Softer text color for secondary information */
+    font-family: 'Arial', sans-serif;  /* Modern font */
+}
+
+.profileUser-left .buttons .btn {
     display: block;
     margin: 5px 0px;
     padding: 10px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
-  }
+    background: #4CAF50;  /* Green button background */
+    color: white;  /* White text */
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.profileUser-left .buttons .btn:hover {
+    background: #45a049;  /* Darker green on hover */
+    transform: translateY(-2px);  /* Slightly lift the button on hover */
+}
+
   
   .btn.follow {
     background: #007bff;

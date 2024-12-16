@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Base64;
 
 
 import java.util.Map;
@@ -50,6 +50,21 @@ public ResponseEntity<Map<String, String>> signUp(@RequestBody Customer user) {
         
         return ResponseEntity.badRequest().body(Map.of("message", "Sign-up failed. Email may already be in use."));
     }
+}
+
+@PostMapping("/photo-upload")
+public ResponseEntity<Map<String,String>> uploadUserImage(@RequestBody Map<String,String> userImage)
+{
+    final String email = userImage.get("email");
+    final byte[] image = Base64.getDecoder().decode(userImage.get("image"));
+    User user = userService.getUser(email);
+    if(user != null){
+        user.setUserImage(image);
+        return ResponseEntity.ok(Map.of("status" , "Success"));
+    }else
+        return ResponseEntity.badRequest().body(Map.of("status" , "Failed"));
+
+
 }
 
   

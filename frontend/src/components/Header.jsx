@@ -40,6 +40,7 @@ function Header() {
             name: '',
             type: '',
             userStatus: false, // Set user as logged in
+            image: '',
           });
           navigate("/");
       };
@@ -68,7 +69,7 @@ function Header() {
                           <div className="profile-icon" onClick={toggleMenu}>
                             <Avatar
                               alt="User Profile"
-                              src="/assets/profilePic.svg"
+                              src={user?.image ? `data:image/jpeg;base64,${user.image}` : "/assets/profilePic.svg"}  // Conditionally set the image
                               className="profile-pic"
                             />
                           </div>
@@ -76,9 +77,9 @@ function Header() {
                             <div className="dropdown-menu">
                               <Link
                                 to={
-                                  user.type.toLowerCase() === "customer"
-                                    ? "/userProfile"
-                                    : "/ProfileAdmin"
+                                  user.type === "admin"
+                                    ? "/ProfileAdmin"
+                                    : "/userProfile"
                                 }
                                 className="dropdown-item"
                               >
