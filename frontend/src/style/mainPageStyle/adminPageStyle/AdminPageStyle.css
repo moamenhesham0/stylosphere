@@ -48,6 +48,8 @@
 .profile-image img{
     border-radius: 50%;
     margin-bottom: 15px;
+    height: 100px;
+    width: 100px;
 
 }
 

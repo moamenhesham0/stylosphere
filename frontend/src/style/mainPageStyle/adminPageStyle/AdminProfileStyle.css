@@ -13,7 +13,15 @@
     width: 250px;
     text-align: center;
   }
-  
+  .profile-image-left{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+  }
+  .profile_image :hover{
+    transform: scale(1.2);
+    box-shadow: #555;
+  }
   .profile-left img {
     border-radius: 50%;
     margin-bottom: 15px;

@@ -87,7 +87,7 @@ function Permission() {
         <h2>Add New Member</h2>
         <input
           type="text"
-          placeholder="Enter member name"
+          placeholder="Enter member's email"
           value={newMemberName}
           onChange={(e) => setNewMemberName(e.target.value)}
         />

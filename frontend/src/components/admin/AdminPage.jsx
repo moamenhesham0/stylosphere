@@ -1,8 +1,10 @@
 import '../../style/mainPageStyle/adminPageStyle/AdminPageStyle.css';
 import React, { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
+import { useUser } from "../user/UserContext";
 
 function AdminPage() {
+  const { user } = useUser(); // Access user data from context
   const [sidebarWidth, setSidebarWidth] = useState(250); // Initial sidebar width
   const minSidebarWidth = 100; // Minimum width for sidebar
   const maxSidebarWidth = 400; // Maximum width for sidebar
@@ -34,7 +36,10 @@ function AdminPage() {
         style={{ width: `${sidebarWidth}px` }}
       >
         <div className="profile-image">
-          <img src="https://via.placeholder.com/100" alt="Profile Picture" />
+          <img
+            src={user?.image ? `data:image/jpeg;base64,${user.image}` : "https://via.placeholder.com/100"}
+            alt="Profile Picture"
+          />
         </div>
 
         <nav>
@@ -50,7 +55,7 @@ function AdminPage() {
             </li>
             <div className="logo-admin">
               <Link to="/" >
-                  <img src="/assets/brandIcon.svg" alt="StyloSphere Logo" />
+                <img src="/assets/brandIcon.svg" alt="StyloSphere Logo" />
               </Link>
             </div> 
           </ul>
@@ -72,3 +77,4 @@ function AdminPage() {
 }
 
 export default AdminPage;
+
