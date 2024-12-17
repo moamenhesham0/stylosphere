@@ -34,7 +34,7 @@ public class Product {
     private List<String> images; // Store images as a list of byte arrays
 
     
-    private List<String> colors;
+    private Set<String> colors;
 
     
 
@@ -87,13 +87,18 @@ public class Product {
         return this.tags;
     }
 
-    public List<String> getColor()
+    public Set<String> getColors()
     {
         return this.colors;
     }
-    public void setColor(List<String> colors)
+    public void setColor(Set<String> colors)
     {
         this.colors = colors;
+    }
+
+    public void addColor(String colors)
+    {
+        this.colors.add(colors);
     }
 
 

@@ -452,3 +452,87 @@
     max-width: 100%;
     margin-top: 15px; /* Add top margin for spacing */
 }
+.color-slider {
+    width: 100%;
+    margin: 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+.slider {
+    width: 80%;
+    height: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+}
+
+.slider::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;  /* Default color */
+    border: 2px solid #000;
+    cursor: pointer;
+    top: -5px;
+    -webkit-appearance: none;
+    position: relative;
+    z-index: 2;
+    transition: background-color 0.3s;
+}
+
+
+.slider:hover::-webkit-slider-thumb {
+    background-color: #f0f0f0;
+}
+
+
+
+.color-popup {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff; /* Optional: Adds a border to make the pop-up more visible */
+    z-index: 10;
+    transition: left 0.1s ease-in-out, top 0.1s ease-in-out; /* Smooth transition */
+}
+
+.color-slider {
+    position: relative;  /* This is needed to position the popup inside the slider container */
+    width: 100%; /* Make sure the slider takes up the full width */
+}
+
+
+
+/* Color bubbles */
+.color-bubbles {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.color-bubble {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.color-bubble:hover {
+    transform: scale(1.1);
+}
+
+

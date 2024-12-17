@@ -12,10 +12,52 @@ const ProductsPage = () => {
     const [price, setPrice] = useState(100); // Track the price range
     const [selectedTags, setSelectedTags] = useState([]);
     const [products, setProducts] = useState([]);
-
     const tags = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
         "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
+        
 
+        
+    const [selectedColors, setSelectedColors] = useState([]); // Track selected colors
+    const [sliderValue, setSliderValue] = useState(0); // Track slider value
+    const [sliderThumbColor, setSliderThumbColor] = useState('white'); // Default to white
+    const [colorPopup, setColorPopup] = useState(null); // Store the color for the popup
+
+    // Predefined color options (This will be mapped to the color spectrum)
+    const colorOptions = ['red', 'blue', 'green', 'yellow', 'pink', 'orange'];
+
+    // Create a gradient spectrum background
+    const gradient = colorOptions.join(', ');
+    
+
+    // Function to determine closest color based on slider value
+    const getClosestColor = (value) => {
+        const index = Math.round(value / (200 / (colorOptions.length - 1))); // Get index based on slider value
+        return colorOptions[index];
+    };
+
+    // Handle the slider change and update the selected color
+    const handleSliderChange = (e) => {
+        const value = e.target.value;
+        setSliderValue(value);
+    
+        const closestColor = getClosestColor(value); // Get closest color from the list
+        setColorPopup(closestColor); // Show the color popup
+    
+        // Dynamically set the slider thumb color based on position
+        const sliderThumbColor = closestColor; // Update the thumb color based on the closest color
+        setSliderThumbColor(sliderThumbColor); // Save the color for the thumb
+    
+        setTimeout(() => setColorPopup(null), 1000); // Hide the popup after 1 second
+    
+        if (!selectedColors.includes(closestColor)) {
+            setSelectedColors([...selectedColors, closestColor]); // Add to selected colors
+        }
+    };
+
+    // Remove color from the selectedColors array
+    const removeColor = (colorToRemove) => {
+        setSelectedColors(selectedColors.filter(color => color !== colorToRemove));
+    };
     // Fetch products from the base list
     const getBaseList = async () => {
         try {
@@ -64,12 +106,12 @@ const ProductsPage = () => {
         
 
         try {
-            const response = await fetch('http://localhost:8080/api/products/filter-tags', {
+            const response = await fetch('http://localhost:8080/api/products/filter', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({selectedTags}),
+                body: JSON.stringify({selectedTags , selectedColors}),
               });
 
             if (response.ok) {
@@ -84,24 +126,6 @@ const ProductsPage = () => {
         }
     };
 
-    const HandleFilter = ()=>{
-        const response = async () => {
-            try {
-                // Call the retrieveProducts function asynchronously
-                const products = await retrieveProducts(); // Ensure retrieveProducts is awaited
-        
-                if (products) {
-                    // If products are retrieved, do something with them
-                    setProducts(products);
-                    // You can update your state with the filtered products here
-                }
-            } catch (error) {
-                console.error("Error in handleFilter:", error);
-            }
-        };
-        response();
-        
-    };
 
     // Handle search input change
     const handleInputChange = (e) => {
@@ -180,6 +204,18 @@ const ProductsPage = () => {
     const sortProductsByName = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
     };
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const products = await retrieveProducts(); // Call API
+                setProducts(products); // Update state with the fetched products
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        };
+        
+        fetchProducts();
+    }, [selectedTags,selectedColors]);
 
     const sortedProducts = sortType === 'price'
         ? sortProductsByPrice(sortOrder)
@@ -262,8 +298,51 @@ const ProductsPage = () => {
                                 </label>
                             ))}
                         </div>
+
                     </div>
-                    <button onClick={HandleFilter}>Filter</button>
+                    <div className="color-slider">
+                        <h3>Choose Colors</h3>
+
+                        {/* Spectrum Slider */}
+                        <input
+                            type="range"
+                            min="0"
+                            max="200"
+                            step="10"
+                            value={sliderValue}
+                            onChange={handleSliderChange}
+                            className="slider"
+                            style={{
+                                background: `linear-gradient(to right, ${colorOptions.join(', ')})`, // Spectrum
+                            }}
+                        />
+
+
+                        {/* Pop-up Color Indicator */}
+                        {colorPopup && (
+                            <div
+                                className="color-popup"
+                                style={{
+                                    left: '50%',  // Centered horizontally
+                                    transform: 'translateX(-50%)', // Center it perfectly
+                                    top: '-0.4px',  // Positioned above the slider
+                                    backgroundColor: colorPopup, // Set the background color
+                                }}
+                            ></div>
+                        )}
+
+                        {/* Display the bubbles for selected colors */}
+                        <div className="color-bubbles">
+                            {selectedColors.map((color) => (
+                                <div
+                                    key={color}
+                                    className="color-bubble"
+                                    style={{ backgroundColor: color }}
+                                    onClick={() => removeColor(color)} // Remove color on click
+                                ></div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="product-list-container">
@@ -293,8 +372,10 @@ const ProductsPage = () => {
                                     <img src={product.image} alt={product.name} />
                                 </div>
                                 <div className="product-info">
-                                    <h4>{product.name}</h4>
-                                    <p>{product.description}</p>
+                                    <div className='product-name'>
+                                    {product.name}
+                                    </div>
+                                    
                                     <p>${product.price}</p>
                                     <Link to={`/product/${product.id}`}>View details</Link>
                                 </div>

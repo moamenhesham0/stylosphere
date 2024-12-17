@@ -44,32 +44,21 @@ public class ProductController {
             return ResponseEntity.ok(Map.of("status" , "Failed"));
         }
     }
-    @PostMapping("/filter-tags")
+    @PostMapping("/filter")
     public ResponseEntity<List<Product>> filterByTags(@RequestBody Map<String, List<String>> body) {
         try {
             List<String> tags = body.get("selectedTags");
+            List<String> colors = body.get("selectedColors");
             
-            
-            List<Product> filteredProducts = tags.isEmpty()? productService.getBaseList() :productService.filterByTags(tags);
+            List<Product> baseList = productService.getBaseList();
+            List<Product> filteredByTags = tags.isEmpty()? baseList : productService.filterByTags(tags, baseList);
+            List<Product> filteredProducts = colors.isEmpty()? filteredByTags :productService.filterByColor(colors, filteredByTags);
 
             return ResponseEntity.ok(filteredProducts);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
-    }
-
-    @GetMapping("/filter-colors")
-    public ResponseEntity<List<Product>> filterByColors(@RequestBody Map<String, List<String>> body) {
-        try {
-            List<String> colors = body.get("colors");
-
-            List<Product> filteredProducts = productService.filterByColor(colors);
-
-            return ResponseEntity.ok( filteredProducts);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+    }   
 }
 
     
