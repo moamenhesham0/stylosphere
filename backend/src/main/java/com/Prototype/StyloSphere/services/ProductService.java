@@ -11,7 +11,10 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     
-
+    public void saveProduct(Product product)
+    {
+        productRepository.save(product);
+    }
     public List<Product> getBaseList()
     {
         return productRepository.findAll();
@@ -21,9 +24,9 @@ public class ProductService {
         return productRepository.getReferenceById(id);
     }
 
-    public List<Product> filterByTags (List<String> tags , List<Product> products)
+    public List<Product> filterByTags (List<String> tags)
     {
-        List<Product> filteProducts = new ArrayList<>();
+        List<Product> filteProducts = new ArrayList<>()  , products = getBaseList();
         for(Product product : products)
         {
             final Set<String> productTags = product.getTags();
@@ -46,9 +49,9 @@ public class ProductService {
     }
 
 
-    public List<Product> filterByColor (List<String> colors , List<Product> products)
+    public List<Product> filterByColor (List<String> colors)
     {
-        List<Product> filteProducts = new ArrayList<>();
+        List<Product> filteProducts = new ArrayList<>() , products = getBaseList();
         for(Product product : products)
         {
             final Set<String> productTags = product.getTags();
@@ -56,7 +59,7 @@ public class ProductService {
 
             for(String color : colors)
             {
-                if(!productTags.contains(color))
+                if(!productTags.contains(color.toLowerCase()))
                 {
                     addProduct = false;
                     break;

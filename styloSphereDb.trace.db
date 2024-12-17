@@ -16,3 +16,9 @@ select u1_0.id,u1_0.type,u1_0.email,u1_0.name,u1_0.password,u1_0.user_image,u1_0
 2024-12-16 11:46:24.315798+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
 select u1_0.id,u1_0.type,u1_0.email,u1_0.name,u1_0.password,u1_0.user_image,u1_0.admin_level,u1_0.payment_method,u1_0.shipping_address from users u1_0 where u1_0.email=? [42104-232]
+2024-12-17 15:44:39.102150+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (PRODUCTS: ""QUANTITY"" INTEGER NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."PRODUCTS"("ID","COLOR","DESCRIPTION","NAME","PRICE","TAGS","QUANTITY","COLORS","IMAGES")VALUES(?,?,?,?,?,?,?,?,?) [22018-232]
+2024-12-17 15:44:39.106133+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (PRODUCTS: ""QUANTITY"" INTEGER NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."PRODUCTS"("ID","COLOR","DESCRIPTION","NAME","PRICE","TAGS","QUANTITY","COLORS","IMAGES")VALUES(?,?,?,?,?,?,?,?,?) [22018-232]

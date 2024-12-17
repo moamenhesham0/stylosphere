@@ -290,7 +290,7 @@
 /* Overall filters container */
 .filters {
     padding: 20px;
-    max-width: 300px;
+    width: 300px;
     margin: 0 auto;
     margin-right: 20px;
     background-color: #fff;
@@ -403,22 +403,22 @@
 /* Tags Styling */
 /* Tags Styling */
 .tag {
-    padding: 8px 16px; /* Reduced padding for smaller size */
+    padding: 9px 15px; /* Compact padding */
     border: 2px solid #dcdcdc; /* Gray border */
-    border-radius: 25px;
+    border-radius: 25px; /* Rounded corners */
     background-color: #f8f8f8;
-    font-size: 14px; /* Smaller font size */
+    font-size: 8px; /* Balanced text size */
     color: #333;
     font-weight: 600;
     cursor: pointer;
+    width: 42px;
     transition: all 0.3s ease;
     box-sizing: border-box;
-    text-align: center;
-    min-width: 100px; /* Ensure tags have a consistent minimum width */
-    display: inline-block;
-    margin-bottom: 10px; /* Space between rows of tags */
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-align: center; /* Center the text horizontally */
+    display: inline-flex; /* Align content inside the tag */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    white-space: nowrap; /* Prevent text from wrapping */
     user-select: none; /* Prevent text selection */
 }
 
@@ -441,25 +441,14 @@
     display: inline-flex;
     align-items: center;
     cursor: pointer;
-    margin-bottom: 10px; /* Space between tags */
+    margin: 5px; /* Space between tags */
 }
 
-.tag-label:hover .tag {
-    background-color: #ffe3b5;
-}
-
-/* Adjustments for Tag Grid Layout (No Extra Columns) */
+/* Adjustments for Tag Grid Layout */
 .tag-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* Space between tags */
+    gap: 10px; /* Space between tags */
     max-width: 100%;
-    overflow: hidden; /* Prevent tags from spilling out */
     margin-top: 15px; /* Add top margin for spacing */
 }
-
-
-
-
-
- 

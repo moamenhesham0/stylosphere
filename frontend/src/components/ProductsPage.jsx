@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import '../style/productsPageStyle/ProductsPageStyle.css';
@@ -11,57 +11,168 @@ const ProductsPage = () => {
     const [clothingType, setClothingType] = useState(''); // Store the clothing type response
     const [price, setPrice] = useState(100); // Track the price range
     const [selectedTags, setSelectedTags] = useState([]);
-    const [selectedTag, setSelectedTag] = useState('');
+    const [products, setProducts] = useState([]);
 
+    const tags = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
+        "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
+
+    // Fetch products from the base list
+    const getBaseList = async () => {
+        try {
+            // Make a request to the backend
+            const response = await fetch('http://localhost:8080/api/products/all');
+            
+            // Check if the response is not OK
+            if (!response.ok) {
+                throw new Error(`Failed to fetch products: ${response.statusText}`);
+            }
     
+            // Parse the response JSON
+            const data = await response.json();
+    
+            // Validate and return the data as a list
+            if (Array.isArray(data)) {
+                return data; // Assuming the response is a plain array of products
+            } else {
+                console.error('Unexpected response format:', data);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            return [];
+        }
+    };
+    
+    
+    // Fetch products on component mount
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const baseList = await getBaseList();
+                setProducts(baseList); // Update the state with the fetched products
+            } catch (error) {
+                console.error('Error in fetchProducts:', error.message);
+            }
+        };
+    
+        fetchProducts();
+    }, []);
+     // Empty dependency array to run only once when the component mounts
 
+    // Filter products based on selected tags
+    const retrieveProducts = async () => {
+        
 
-    let products = [
-        // Your product data here
-    ];
+        try {
+            const response = await fetch('http://localhost:8080/api/products/filter-tags', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({selectedTags}),
+              });
 
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data)) 
+                    return data; // Update state with filtered products
+            } else {
+                console.error('Failed to fetch products');
+            }
+        } catch (error) {
+            console.error('Error retrieving products:', error);
+        }
+    };
+
+    const HandleFilter = ()=>{
+        const response = async () => {
+            try {
+                // Call the retrieveProducts function asynchronously
+                const products = await retrieveProducts(); // Ensure retrieveProducts is awaited
+        
+                if (products) {
+                    // If products are retrieved, do something with them
+                    setProducts(products);
+                    // You can update your state with the filtered products here
+                }
+            } catch (error) {
+                console.error("Error in handleFilter:", error);
+            }
+        };
+        response();
+        
+    };
+
+    // Handle search input change
     const handleInputChange = (e) => {
         setSearchInput(e.target.value);
     };
 
+    // Handle search action (currently just logs the search input)
     const handleSearch = () => {
         console.log('Search Input:', searchInput);
     };
 
-    // Function to handle image upload and send it to Flask API
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-            sendImageToAI(file);
-        }
-    };
+   
+
+    // Handle tag click to filter products based on selected tags
     const handleTagClick = (tag) => {
-        setSelectedTags(prevTags => 
-            prevTags.includes(tag) 
-                ? prevTags.filter(t => t !== tag) 
+        setSelectedTags((prevTags) =>
+            prevTags.includes(tag)
+                ? prevTags.filter((t) => t !== tag)
                 : [...prevTags, tag]
         );
     };
-    // Function to send image to Flask API and get the clothing type
-    const sendImageToAI = (file) => {
-        const formData = new FormData();
-        formData.append('image', file);
 
-        fetch('http://localhost:5000/api/ai', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                setClothingType(data.type); // Assuming the AI sends the type as 'type'
-            })
-            .catch(error => {
-                console.error('Error sending image to AI:', error);
-            });
+    // Send image to Flask API to detect clothing type
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (!file.type.startsWith("image/")) {
+                alert("Please upload a valid image file.");
+                return;
+            }
+            setImage(file);
+            sendImageToAI(file);
+        } else {
+            alert("No file selected.");
+        }
     };
+    
+    const sendImageToAI = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+    
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error from backend:', errorData.error);
+                alert(`Error: ${errorData.error}`);
+                return;
+            }
+    
+            const data = await response.json();
+            if (data.type) {
+                setSelectedTags([data.type]); // Assuming the AI sends the type as 'type'
+                console.log('AI predicted type:', data.type);
+                retrieveProducts(); // Fetch products related to the tag
+            } else {
+                alert("Failed to retrieve prediction type.");
+            }
+        } catch (error) {
+            console.error('Error sending image to AI:', error);
+            alert("An error occurred while processing the image.");
+        }
+    };
+    
+    
 
-    // Sorting logic remains unchanged
+    // Sorting logic for price and name
     const sortProductsByPrice = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
     };
@@ -134,14 +245,14 @@ const ProductsPage = () => {
                     <div className="filter-category">
                         <h3>Tags</h3>
                         <div className="tag-grid">
-                            {['Casual', 'Formal', 'Sale', 'Trending', 'New', 'Summer'].map(tag => (
+                            {tags.map(tag => (
                                 <label key={tag} className="tag-label">
                                     <input
                                         type="checkbox"
                                         value={tag}
                                         checked={selectedTags.includes(tag)}
                                         onChange={() => handleTagClick(tag)}
-                                        className="tag-checkbox" // Keep the class for styling
+                                        className="tag-checkbox"
                                     />
                                     <span
                                         className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
@@ -152,6 +263,7 @@ const ProductsPage = () => {
                             ))}
                         </div>
                     </div>
+                    <button onClick={HandleFilter}>Filter</button>
                 </div>
 
                 <div className="product-list-container">
@@ -175,37 +287,16 @@ const ProductsPage = () => {
                     </div>
 
                     <div className="products-grid">
-                        {sortedProducts.map(product => (
+                        {products.map(product => (
                             <div key={product.id} className="product-item">
                                 <div className="product-image">
                                     <img src={product.image} alt={product.name} />
                                 </div>
-                                <div className="product-details">
-                                    <span>{product.name}</span>
-                                    <span>${product.price}</span>
-                                    <Link
-                                        to={`/product/${product.id}`}
-                                        state={{ product }}
-                                        className="view-details-btn"
-                                    >
-                                        <img src="/assets/button icons/details.svg" alt="View Details" className="icon" />
-                                        View Details
-                                    </Link>
-                                    <div style={{ padding: "3px" }}></div>
-                                    <button
-                                        onClick={() => {
-                                            if (!image) {
-                                                alert('Please upload an image first!');
-                                                return;
-                                            }
-                                            console.log(`Added ${product.name} to cart`);
-                                        }}
-                                        className="add-to-cart-btn"
-                                        disabled={!image} // Disable button if no image is uploaded
-                                    >
-                                        Add to Cart
-                                    </button>
-                                    {!image && <p>Please upload an image first to proceed.</p>}
+                                <div className="product-info">
+                                    <h4>{product.name}</h4>
+                                    <p>{product.description}</p>
+                                    <p>${product.price}</p>
+                                    <Link to={`/product/${product.id}`}>View details</Link>
                                 </div>
                             </div>
                         ))}
@@ -217,5 +308,6 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
 
 
