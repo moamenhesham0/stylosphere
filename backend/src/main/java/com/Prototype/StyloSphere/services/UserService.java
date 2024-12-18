@@ -26,6 +26,21 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public boolean addAdmin(String email , String password ,String adminLevel)
+    {
+        User user = userRepository.findByEmail(email);
+        if(user!=null && user.getType().equalsIgnoreCase("admin"))
+            return false;
+
+        Admin newAdmin = new Admin();
+        newAdmin.setEmail(email);
+        newAdmin.setPassword(password);
+        newAdmin.setAdminLevel(adminLevel);
+        userRepository.save(newAdmin);
+        return true;
+        
+    }
+
     public boolean signIn(String email, String password) {
         User user = userRepository.findByEmail(email);
         return user != null && user.getPassword().equals(password);

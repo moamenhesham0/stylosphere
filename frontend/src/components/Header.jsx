@@ -12,6 +12,7 @@ function Header() {
     const navigate = useNavigate();
     useEffect(() => {
         setUserlogin(user.userStatus);
+        console.log(user.type);
       }, [user.userStatus]); 
     
     useEffect(() => {
@@ -78,7 +79,7 @@ function Header() {
                               <Link
                                 to={
                                   user.type === "admin"
-                                    ? "/ProfileAdmin"
+                                    ? "/admin/ProfileAdmin"
                                     : "/userProfile"
                                 }
                                 className="dropdown-item"

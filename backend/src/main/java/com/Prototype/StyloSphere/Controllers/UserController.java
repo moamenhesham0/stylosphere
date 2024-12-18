@@ -30,6 +30,7 @@ public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Strin
 
     if (authenticated) {
         User user = userService.getUser(email);
+        
         // Return JSON status and user for successful sign-in
         return ResponseEntity.ok(Map.of("user", user  , "status" , "SUCCESS"));
     } else {
@@ -65,6 +66,25 @@ public ResponseEntity<Map<String,String>> uploadUserImage(@RequestBody Map<Strin
         return ResponseEntity.badRequest().body(Map.of("status" , "Failed"));
 }
 
+@PostMapping("/add-admin")
+public ResponseEntity<Map<String,String>> addAdminApi(@RequestBody Map<String ,String> data)
+{ 
+    final String email = data.get("email");
+    final String password = data.get("password");
+    final String adminLevel = data.get("adminLevel");
+  
+
+
+    if (email == null || password == null || adminLevel == null) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(Map.of("status", "Invalid input data"));
+    }
+   
+    boolean valid = userService.addAdmin(email, password, adminLevel);
+
+    String message = valid ? "Admin added successfully." : "Error occurred";
+    return ResponseEntity.ok(Map.of("status", message));
+}
   
     
 }
