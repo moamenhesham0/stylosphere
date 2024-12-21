@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 import '../style/productsPageStyle/ProductsPageStyle.css';
 
 const ProductsPage = () => {
+    const navigate = useNavigate();
     const [sortType, setSortType] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
     const [searchInput, setSearchInput] = useState('');
@@ -96,7 +98,6 @@ const ProductsPage = () => {
                 console.error('Error in fetchProducts:', error.message);
             }
         };
-    
         fetchProducts();
     }, []);
      // Empty dependency array to run only once when the component mounts
@@ -256,6 +257,8 @@ const ProductsPage = () => {
                     {image && <p>Image uploaded successfully!</p>}
                 </div>
             </div>
+            <div className='banner' src = './assets/banner.png'>
+            </div>
 
             {/* Display the clothing type received from AI */}
             {clothingType && <div className="clothing-type">Clothing Type: {clothingType}</div>}
@@ -377,7 +380,13 @@ const ProductsPage = () => {
                                     </div>
                                     
                                     <p>${product.price}</p>
-                                    <Link to={`/product/${product.id}`}>View details</Link>
+                                    <button
+                                    className="details-btn"
+                                    onClick={() => navigate(`/product/${product.id}`)}
+                                    >
+                                    View details
+                                    </button>
+
                                 </div>
                             </div>
                         ))}

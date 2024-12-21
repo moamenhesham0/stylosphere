@@ -28,7 +28,7 @@
     justify-content: center;
 }
 
-.product-image {
+.product-image_inner {
     max-width: 100%;
     max-height: 300px;
     object-fit: contain;
@@ -44,10 +44,10 @@
     justify-content: space-between;
 }
 
-.product-name {
-    font-size: 2rem;
+.product-name_inner {
+    font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: #0a0a0a;
     margin-bottom: 1rem;
 }
 
