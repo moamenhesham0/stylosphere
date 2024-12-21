@@ -150,50 +150,73 @@ const ProductsPage = () => {
     };
 
     // Send image to Flask API to detect clothing type
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (!file.type.startsWith("image/")) {
-                alert("Please upload a valid image file.");
-                return;
-            }
-            setImage(file);
-            sendImageToAI(file);
-        } else {
-            alert("No file selected.");
+   // Function to convert an image file to Base64
+const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[1]); // Get Base64 part only
+        reader.onerror = (error) => reject(error);
+    });
+};
+
+const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        if (!file.type.startsWith("image/")) {
+            alert("Please upload a valid image file.");
+            return;
         }
-    };
-    
-    const sendImageToAI = async (file) => {
         try {
-            const formData = new FormData();
-            formData.append('image', file);
-    
-            const response = await fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                body: formData,
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Error from backend:', errorData.error);
-                alert(`Error: ${errorData.error}`);
-                return;
-            }
-    
-            const data = await response.json();
-            if (data.type) {
-                setSelectedTags([data.type]); // Assuming the AI sends the type as 'type'
-                console.log('AI predicted type:', data.type);
-                retrieveProducts(); // Fetch products related to the tag
-            } else {
-                alert("Failed to retrieve prediction type.");
-            }
+            const base64Image = await convertToBase64(file);
+            const products = await getBaseList(); // Fetch products using your Java Spring Boot service
+            console.log(products[0].image);
+            sendImageToAI(base64Image, products);
         } catch (error) {
-            console.error('Error sending image to AI:', error);
-            alert("An error occurred while processing the image.");
+            console.error("Error converting image to Base64:", error);
+            alert("Failed to process the selected image.");
         }
-    };
+    } else {
+        alert("No file selected.");
+    }
+};
+
+const sendImageToAI = async (base64Image, products) => {
+    try {
+        const payload = {
+            query_image: base64Image,
+            products: products,
+        };
+
+        const response = await fetch('http://127.0.0.1:5000/compare', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error from backend:', errorData.error);
+            alert(`Error: ${errorData.error}`);
+            return;
+        }
+
+        const data = await response.json();
+        if (data.similar_products) {
+            setProducts(data.similar_products);
+        } else {
+            alert("Failed to retrieve similar products.");
+        }
+    } catch (error) {
+        console.error('Error sending image to AI:', error);
+        alert("An error occurred while processing the image.");
+    }
+};
+
+// Function to display similar products (update according to your UI logic)
+
     
     
 
@@ -382,7 +405,7 @@ const ProductsPage = () => {
                                     <p>${product.price}</p>
                                     <button
                                     className="details-btn"
-                                    onClick={() => navigate(`/product/${product.id}`)}
+                                    onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
                                     >
                                     View details
                                     </button>
