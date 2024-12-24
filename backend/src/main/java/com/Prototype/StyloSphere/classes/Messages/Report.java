@@ -10,7 +10,7 @@ public class Report extends Message {
     private String ReportedSubject;
     private String ReportedObject;
 
-    public Report(String ReportedSubject ,String ReportedObject , String message , String sender , Date timeStamp) {
+    public Report(String ReportedSubject ,String ReportedObject , String message , Long sender , Date timeStamp) {
         super(message, sender);
         this.ReportedSubject = ReportedSubject;
         this.ReportedObject = ReportedObject;

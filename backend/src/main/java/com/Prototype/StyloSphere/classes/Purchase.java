@@ -8,12 +8,12 @@ import java.util.*;
 
 @Entity
 @Table(name = "PurchaseHistory")
-public class CompletedPurchase extends Order {
+public class Purchase extends Order {
     
     private Long customerId;
     private Date timeStamp;
     
-    public CompletedPurchase(Long givenCustomerId, Date givenTimeStamp , Long productId, String productColor, String productSize, int quantity) {
+    public Purchase(Long givenCustomerId, Date givenTimeStamp , Long productId, String productColor, String productSize, int quantity) {
         super(productId, productColor, productSize, quantity);
         this.customerId = givenCustomerId;
         this.timeStamp = givenTimeStamp;

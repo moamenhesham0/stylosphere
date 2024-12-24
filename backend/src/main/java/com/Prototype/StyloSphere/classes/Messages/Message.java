@@ -13,13 +13,21 @@ public abstract class Message {
     private Long id;
 
     private String message;
-    private String Sender;
+    private Long senderId;
     private LocalDateTime timeStamp;
 
-    public Message(String message , String sender) {
+    public Message(String message , Long sender) {
         this.message = message;
-        this.Sender = sender;
+        this.senderId = sender;
         this.timeStamp = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+    public String getType()
+    {
+        return this.getClass().getSimpleName();
     }
 
     public LocalDateTime getTimeStamp() {
@@ -34,13 +42,13 @@ public abstract class Message {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
-    public String getSender() {
-        return Sender;
+    public Long getSender() {
+        return this.senderId;
     }
-    public void setSender(String sender) {
-        Sender = sender;
+    public void setSender(Long sender) {
+        this.senderId = sender;
     }
 }

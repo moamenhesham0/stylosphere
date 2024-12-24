@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 public class Comment extends Message {
     private Long productId;
 
-    public Comment(Long productId , String message , String sender , Date timeStamp) {
+    public Comment(Long productId , String message , Long sender , Date timeStamp) {
         super(message, sender);
         this.productId = productId;
     }

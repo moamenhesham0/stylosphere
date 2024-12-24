@@ -14,13 +14,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
-    // @Autowired
-    // private ProductRepository productRepository;
-
-    // @Autowired
-    // private OrderRepository orderRepository;
+    public User getUser(Long id)
+    {
+        return userRepository.findById(id).get();
+    }
     public User getUser(String email)
     {
         return userRepository.findByEmail(email);
@@ -41,16 +40,36 @@ public class UserService {
         
     }
 
-    public boolean signIn(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        return user != null && user.getPassword().equals(password);
-    }
+    
 
     public void saveUser(User user)
     {
         userRepository.save(user);
     }
-    
+
+    public void updateUserName(Long id , String newName)
+    {
+        User user = userRepository.findById(id).get();
+        user.setName(newName);
+        userRepository.save(user);  
+    }
+    public void updateUserEmail(Long id , String newEmail)
+    {
+        User user = userRepository.findById(id).get();
+        user.setEmail(newEmail);
+        userRepository.save(user);  
+    }
+    public void updateUserPassword(Long id , String newPassword)
+    {
+        User user = userRepository.findById(id).get();
+        user.setPassword(newPassword);
+        userRepository.save(user);  
+    }
+
+    public boolean signIn(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        return user != null && user.getPassword().equals(password);
+    }
 
     public boolean signUp(Customer customer) {
         if (userRepository.findByEmail(customer.getEmail()) != null) {
