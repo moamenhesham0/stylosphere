@@ -3,8 +3,9 @@ package com.Prototype.StyloSphere.classes;
 
 
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+
 
 import java.util.List;
 
@@ -13,10 +14,11 @@ import java.util.List;
 public class Customer extends User {
     private String shippingAddress;
     private String paymentMethod;
-    @OneToMany
-    private List<Product> purchaseHistory;
-    public Customer() {
-    }
+
+    @Embedded
+    private Cart cart;
+
+    private List<Long> purchaseHistory;
 
     public Customer(String name, String email, String password, String shippingAddress, String paymentMethod) {
         super(name, email, password);
@@ -38,13 +40,18 @@ public class Customer extends User {
         this.paymentMethod = paymentMethod;
     }
 
-    public List<Product> getPurchaseHistory()
+    public Cart getCart()
+    {
+        return this.cart;
+    }
+    public void setCart(Cart cart)
+    {
+        this.cart = cart;
+    }
+
+    public List<Long> getPurchaseHistory()
     {
         return this.purchaseHistory;
-    }
-    public void addPurchaseEvent(Product  purchase)
-    {
-        this.purchaseHistory.add(purchase);
     }
     
 }
