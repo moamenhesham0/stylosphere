@@ -85,6 +85,12 @@ public ResponseEntity<Map<String,String>> addAdminApi(@RequestBody Map<String ,S
     String message = valid ? "Admin added successfully." : "Error occurred";
     return ResponseEntity.ok(Map.of("status", message));
 }
+
+@GetMapping("/getUser")
+public ResponseEntity<User> getName(@RequestParam Long id)
+{
+    return ResponseEntity.ok(userService.getUser(id));
+}
   
     
 }

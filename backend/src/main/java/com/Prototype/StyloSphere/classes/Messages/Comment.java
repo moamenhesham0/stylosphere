@@ -1,6 +1,6 @@
 package com.Prototype.StyloSphere.classes.Messages;
 
-import java.sql.Date;
+
 
 
 import jakarta.persistence.DiscriminatorValue;
@@ -10,11 +10,12 @@ import jakarta.persistence.Entity;
 public class Comment extends Message {
     private Long productId;
 
-    public Comment(Long productId , String message , Long sender , Date timeStamp) {
+    public Comment(Long productId , String message , Long sender) {
         super(message, sender);
         this.productId = productId;
     }
-
+    public Comment() {
+    }
     public Long getProductId() {
         return productId;
     }

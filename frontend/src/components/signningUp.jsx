@@ -21,7 +21,22 @@ const SignUp = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const getUserId = async () =>{
+    try {
+      const response = await fetch('http://localhost:8080/api/customers/getUser?email='+formData.email);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        return data.id;
+      } else {
+        console.error('Error response from backend:', data);
+        return null;
+      }
+    } catch (err) {
+      console.error('Fetch request failed:', err);
+      return null;
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -49,6 +64,8 @@ const SignUp = () => {
           email: formData.email,
           password: formData.password,
         }),
+
+
       });
   
       console.log('Response status:', response.status);
@@ -61,6 +78,7 @@ const SignUp = () => {
           email: formData.email,
           name: `${formData.firstname} ${formData.lastname}`, // Include the full name
           userStatus: true, // Mark the user as logged in
+          userId: data.user.id,
         });
         console.log('Success response from backend:', responseData);
         setSuccess(responseData.message);
@@ -73,6 +91,9 @@ const SignUp = () => {
       console.error('Fetch request failed:', err);
       setError('An error occurred. Please try again later.');
     }
+    updateUser({
+      userId: getUserId(),
+    });
   };
 
   return (

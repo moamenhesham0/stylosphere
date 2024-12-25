@@ -21,6 +21,8 @@ public abstract class Message {
         this.senderId = sender;
         this.timeStamp = LocalDateTime.now();
     }
+    public Message() {
+    }
 
     public Long getId() {
         return this.id;

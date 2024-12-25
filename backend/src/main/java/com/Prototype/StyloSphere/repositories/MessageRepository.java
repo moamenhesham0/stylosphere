@@ -1,18 +1,18 @@
 package com.Prototype.StyloSphere.repositories;
 
+import com.Prototype.StyloSphere.classes.Messages.*;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.Prototype.StyloSphere.classes.Messages.Message;
-import java.util.*;
-public interface MessageRepository<T extends Message> extends JpaRepository<T , Long>{
-    @Query("SELECT m FROM Message m WHERE m.senderId = :senderId")
-    List<T> findBySenderId(@Param("senderId") Long senderId);
+import java.util.List;
 
-    @Query("SELECT m FROM Message m WHERE TYPE(m) = :type")
-    List<T> findByType(@Param("type") String type);
+@Repository
+public interface MessageRepository<T extends Message> extends JpaRepository<T, Long> {
 
-    @Query("SELECT m FROM Message m WHERE m.productId = :productId")
-    List<T> findByProductId(@Param("productId") Long productId);
+    // Retrieve messages by senderId
+    List<T> findBySenderId(Long senderId);
+
+    List<Comment> findByProductId(Long productId);
 }
+
+

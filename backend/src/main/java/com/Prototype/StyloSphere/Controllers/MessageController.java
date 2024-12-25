@@ -5,31 +5,57 @@ package com.Prototype.StyloSphere.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.Prototype.StyloSphere.services.MessageService;
 import com.Prototype.StyloSphere.services.CommentService;
+
 import com.Prototype.StyloSphere.classes.Messages.*;
+
+
 import java.util.*;
 @RestController
 @RequestMapping("/api/message")
 @CrossOrigin(origins = "http://localhost:5173")
 public class MessageController {
 
-    @Autowired
-    private MessageService messageService;
 
+    
     @Autowired
     private CommentService commentService;
 
 
-    @PostMapping("/get-product-comments")
+    @GetMapping("/comments")
     public ResponseEntity<List<Comment>> getProductComments(@RequestParam Long productId)
     {
-        return ResponseEntity.ok(commentService.getProductComments(productId));
+        List<Comment> comments = commentService.getProductComments(productId);
+        if(comments == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(comments);
     }
-
-    
+    @GetMapping("/all-comments")
+    public ResponseEntity<List<Comment>> getAllComments()
+    {
+        List<Comment> comments = commentService.getAllComments();
+        if(comments == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(comments);
+    }
+    @PostMapping("/add-comment")
+    public ResponseEntity<String> addComment(@RequestParam Long productId, @RequestParam String message, @RequestParam Long sender)
+    {
+        Comment comment = new Comment(productId, message, sender);
+        try {
+            commentService.save(comment);
+            return ResponseEntity.ok("Comment added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to add comment");
+        }
+    }
 }

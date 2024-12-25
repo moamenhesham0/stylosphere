@@ -25,6 +25,8 @@ public class Customer extends User {
         this.shippingAddress = shippingAddress;
         this.paymentMethod = paymentMethod;
     }
+    public Customer() {
+    }
 
     public String getShippingAddress() {
         return shippingAddress;
