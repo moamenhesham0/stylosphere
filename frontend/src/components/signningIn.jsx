@@ -34,6 +34,7 @@ const SignIn = () => {
           type: data.user.type,
           userStatus: true, // Set user as logged in
           image: data.user.userImage,
+          userId: data.user.id,
         });
         console.log(user.email); // Debugging: check response structure
 

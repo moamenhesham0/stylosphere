@@ -23,7 +23,12 @@ const SignUp = () => {
   };
   const getUserId = async () =>{
     try {
-      const response = await fetch('http://localhost:8080/api/customers/getUser?email='+formData.email);
+      const response = await fetch(`http://localhost:8080/api/customers/get-user-email?email=${formData.email}` , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -78,7 +83,6 @@ const SignUp = () => {
           email: formData.email,
           name: `${formData.firstname} ${formData.lastname}`, // Include the full name
           userStatus: true, // Mark the user as logged in
-          userId: data.user.id,
         });
         console.log('Success response from backend:', responseData);
         setSuccess(responseData.message);
@@ -91,8 +95,13 @@ const SignUp = () => {
       console.error('Fetch request failed:', err);
       setError('An error occurred. Please try again later.');
     }
+    const userIdValue = await getUserId();
+    console.log(userIdValue);
     updateUser({
-      userId: getUserId(),
+      email: formData.email,
+      name: `${formData.firstname} ${formData.lastname}`,
+      userStatus: true,
+      userId : userIdValue, // Use the resolved value
     });
   };
 

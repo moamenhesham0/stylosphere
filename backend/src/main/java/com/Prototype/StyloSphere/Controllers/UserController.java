@@ -86,10 +86,15 @@ public ResponseEntity<Map<String,String>> addAdminApi(@RequestBody Map<String ,S
     return ResponseEntity.ok(Map.of("status", message));
 }
 
-@GetMapping("/getUser")
+@GetMapping("/get-user-id")
 public ResponseEntity<User> getName(@RequestParam Long id)
 {
     return ResponseEntity.ok(userService.getUser(id));
+}
+@GetMapping("/get-user-email")
+public ResponseEntity<User> getName(@RequestParam String email)
+{
+    return ResponseEntity.ok(userService.getUser(email));
 }
   
     

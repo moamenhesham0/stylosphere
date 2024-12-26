@@ -36,7 +36,7 @@ const ProductPage = () => {
       if (!names[review.sender]) {
         try {
           const response = await fetch(
-            `http://localhost:8080/api/customers/getUser?id=${review.sender}`
+            `http://localhost:8080/api/customers/get-user-id?id=${review.sender}`
           );
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -64,8 +64,6 @@ const ProductPage = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
   
-      const data = await response.json();
-      console.log(data);
   
       // Add the new comment to the reviews list
       setReviews((prevReviews) => [
@@ -124,7 +122,7 @@ const ProductPage = () => {
       <button className="post-comment-button" onClick={postComment}>
         Post Comment
       </button>
-        {reviews.map((review, index) => (
+        {[...reviews].reverse().map((review, index) => (
           <div key={index} className="review">
             <p className="review-user">
               {userNames[review.sender] || "Loading..."}
