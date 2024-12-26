@@ -20,6 +20,8 @@ public class Order{
         this.productSize = productSize;
         this.quantity = quantity;
     }
+    public Order(){
+    }
 
     public Long getId() {
         return this.id;

@@ -18,7 +18,8 @@ public class Purchase extends Order {
         this.customerId = givenCustomerId;
         this.timeStamp = givenTimeStamp;
     }
-
+    public Purchase(){
+    }
     public void setCustomerId(Long givenCustomerId)
     {
         this.customerId = givenCustomerId;
