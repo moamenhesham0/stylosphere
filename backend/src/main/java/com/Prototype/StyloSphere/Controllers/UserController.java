@@ -81,11 +81,17 @@ public ResponseEntity<Map<String,String>> addAdminApi(@RequestBody Map<String ,S
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .body(Map.of("status", "Invalid input data"));
     }
-   
+
     boolean valid = userService.addAdmin(email, password, adminLevel);
 
     String message = valid ? "Admin added successfully." : "Error occurred";
     return ResponseEntity.ok(Map.of("status", message));
+}
+
+@DeleteMapping("/delete-admin")
+public ResponseEntity<Map<String, String>> deleteAdmin(@RequestParam String email) {
+    userService.deleteAdmin(email);
+    return ResponseEntity.ok(Map.of("status", "Admin deleted successfully"));
 }
 
 @GetMapping("/get-user-id")

@@ -7,9 +7,11 @@ function Permission() {
   const [permissionsPopup, setPermissionsPopup] = useState(false);
   const [permissions, setPermissions] = useState({});
   const [emailInput, setEmailInput] = useState("");
+  const [email2Input, setEmail2Input] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [permissionLevelInput, setPermissionLevelInput] = useState(""); // Corrected typo
   const [statusMsg, setStatus] = useState("");
+  const [status2Msg, setStatus2] = useState("");
   const [products] = useState([
     { name: "Product A", sales: 120 },
     { name: "Product B", sales: 95 },
@@ -38,6 +40,26 @@ function Permission() {
   
     execute(); // Call the async execute function
   };
+
+  const deleteMember = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/customers/delete-admin?email=${encodeURIComponent(emailInput)}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setStatus2(data.message || "Admin deleted successfully.");
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message || "Failed to delete admin."}`);
+      }
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+      alert("An error occurred while sending data.");
+    }
+  };
+  
   
 
   const addMemberAPI = async () => {
@@ -132,6 +154,17 @@ function Permission() {
         />
 
         <button onClick={addMemberHandler}>Add Member</button>
+
+        <h2>Delete Member</h2>
+        <div className="status-msg">{status2Msg}</div>
+        <input
+          type="text"
+          placeholder="Enter member's email"
+          value={email2Input}
+          onChange={(e) => setEmail2Input(e.target.value)}  // Corrected event handler
+        />
+
+        <button onClick={deleteMember}>Delete Member</button>
         
       </div>
 

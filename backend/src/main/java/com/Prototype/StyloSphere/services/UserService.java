@@ -3,12 +3,8 @@ package com.Prototype.StyloSphere.services;
 import com.Prototype.StyloSphere.classes.*;
 import com.Prototype.StyloSphere.repositories.*;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 
 @Service
 public class UserService {
@@ -39,8 +35,6 @@ public class UserService {
         return true;
         
     }
-
-    
 
     public void saveUser(User user)
     {
@@ -78,5 +72,12 @@ public class UserService {
         
         userRepository.save(customer); 
         return true;    
+    }
+
+    public void deleteAdmin(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && user.getType().equalsIgnoreCase("admin")) {
+            userRepository.deleteById(user.getId());
+        }
     }
 }
