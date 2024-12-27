@@ -33,10 +33,11 @@ const SignIn = () => {
           name: data.user.name,
           type: data.user.type,
           userStatus: true, // Set user as logged in
+          adminLevel: data.user.adminLevel,
           image: data.user.userImage,
           userId: data.user.id,
         });
-        console.log(user.email); // Debugging: check response structure
+        console.log(data.user); // Debugging: check response structure
 
         navigate('/'); // Redirect to user profile page
       } else if (response.status === 401) {

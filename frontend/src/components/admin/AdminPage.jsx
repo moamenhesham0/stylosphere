@@ -10,6 +10,7 @@ function AdminPage() {
   const maxSidebarWidth = 400; // Maximum width for sidebar
 
   const handleMouseDown = (e) => {
+    console.log(user.adminLevel);
     const startX = e.clientX;
     const startWidth = sidebarWidth;
 
@@ -47,9 +48,11 @@ function AdminPage() {
             <li>
               <Link to="ProfileAdmin">Profile</Link>
             </li>
+            {user.adminLevel === "superAdmin" && (
             <li>
               <Link to="Permission">Permission</Link>
             </li>
+            )}
             <li>
               <Link to="Dash">Dash Board</Link>
             </li>
