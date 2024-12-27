@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../style/productPageStyle/ProductPageStyle.css";
 import { useUser } from './user/UserContext';
+import { useLocalCart } from "../context/localCartContext";
 const ProductPage = () => {
   const location = useLocation();
   const { product } = location.state || {};
   const { user} = useUser();
-
+  const {duplicateHandler ,updateLocalCart} = useLocalCart;
   const [reviews, setReviews] = useState([]);
+  const [size , setSize] = useState(product.sizes[0]||"");
+  const [color , setColor] = useState(product.colors[0]||"");
   const [userNames, setUserNames] = useState({}); // Map of userNames in the reviews
   const [comment, setComment] = useState('');
 
@@ -84,6 +87,18 @@ const ProductPage = () => {
     }
   };
   
+  const addProductToCart = async()=>{
+    const order = {'productId' : product.id , 'color' : color , 'size' : size , 'quantity' : quantity }
+    updateLocalCart(order);
+    if(user.id<0) return;
+
+    fetch(`http://localhost:8080/api/customer/add-order?productId=${product.id}&color=${color}&size=${size}&quantity=${quantity}&userId=${user.id}` ,
+      {
+        method: 'POST', 
+      }
+    )
+
+  }
   
 
   if (!product) {
@@ -104,7 +119,7 @@ const ProductPage = () => {
           <h1 className="product-name-inner">{product.name}</h1>
           <p className="product-price-inner">${product.price}</p>
           <p className="product-description">{product.description}</p>
-          <button className="add-to-cart-button">Add to Cart</button>
+          <button className="add-to-cart-button" onClick={addProductToCart}>Add to Cart</button>
         </div>
       </div>
       <div className="product-reviews">

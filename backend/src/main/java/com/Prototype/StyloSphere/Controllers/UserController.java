@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -20,6 +20,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CustomerService customerService;
 // Log in
 @PostMapping("/signin")
 public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, String> loginDetails) {
@@ -96,6 +98,22 @@ public ResponseEntity<User> getName(@RequestParam String email)
 {
     return ResponseEntity.ok(userService.getUser(email));
 }
-  
-    
+
+@PostMapping("add-to-cart")
+public void addToCart(@RequestParam Long productId, 
+                        @RequestParam String color, 
+                        @RequestParam String size, 
+                        @RequestParam int quantity,
+                        @RequestParam Long userId)
+{
+    Order newOrder = new Order(productId, color, size, quantity);
+    customerService.addOrderToCart(newOrder.getId(), userId);
+}
+
+@GetMapping("retrieve-cart")
+public ResponseEntity<List<Order>> getCartItems(@RequestParam Long userId)
+{
+    return ResponseEntity.ok(customerService.getCartItems(userId));
+}
+
 }

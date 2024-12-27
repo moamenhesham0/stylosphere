@@ -1,12 +1,13 @@
 package com.Prototype.StyloSphere.classes;
 
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import jakarta.persistence.Table;
 import java.util.*;
 
 @Entity
+
 @Table(name = "PurchaseHistory")
 public class Purchase extends Order {
     

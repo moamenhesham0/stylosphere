@@ -16,3 +16,36 @@ INSERT INTO "PUBLIC"."USERS"("TYPE","ID","EMAIL","NAME","PASSWORD","USER_IMAGE",
 2024-12-25 16:56:14.205580+02:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'[]' (USERS: ""PURCHASE_HISTORY"" BIGINT ARRAY)"; SQL statement:
 INSERT INTO "PUBLIC"."USERS"("TYPE","ID","EMAIL","NAME","PASSWORD","USER_IMAGE","ADMIN_LEVEL","PAYMENT_METHOD","PURCHASE_HISTORY","SHIPPING_ADDRESS")VALUES(?,?,?,?,?,?,?,?,?,?) [22018-232]
+2024-12-27 08:18:44.743342+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table [*]order (\000d\000a        id bigint not null,\000d\000a        product_color varchar(255),\000d\000a        product_id bigint,\000d\000a        product_size varchar(255),\000d\000a        quantity integer not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table order (
+        id bigint not null,
+        product_color varchar(255),
+        product_id bigint,
+        product_size varchar(255),
+        quantity integer not null,
+        primary key (id)
+    ) [42001-232]
+2024-12-27 14:09:59.846067+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table [*]order (\000d\000a        id bigint not null,\000d\000a        product_color varchar(255),\000d\000a        product_id bigint,\000d\000a        product_size varchar(255),\000d\000a        quantity integer not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table order (
+        id bigint not null,
+        product_color varchar(255),
+        product_id bigint,
+        product_size varchar(255),
+        quantity integer not null,
+        primary key (id)
+    ) [42001-232]
+2024-12-27 14:19:53.170467+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table [*]order (\000d\000a        id bigint not null,\000d\000a        product_color varchar(255),\000d\000a        product_id bigint,\000d\000a        product_size varchar(255),\000d\000a        quantity integer not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table order (
+        id bigint not null,
+        product_color varchar(255),
+        product_id bigint,
+        product_size varchar(255),
+        quantity integer not null,
+        primary key (id)
+    ) [42001-232]

@@ -1,17 +1,14 @@
 package com.Prototype.StyloSphere.classes;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 
 import java.util.*;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -28,16 +25,24 @@ public class Product {
 
 
 
-
-   
-    @Lob
+    @ElementCollection
     private List<String> images; // Store images as a list of byte arrays
 
     
     private Set<String> colors;
 
     
-
+    public Product() {
+    }
+    public Product(String name, String description, double price, List<String> images, Set<String> tags, Set<String> colors, int quantity) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.images = images;
+        this.tags = tags;
+        this.colors = colors;
+        this.quantity = quantity;
+    }
 
     public Long getId() {
         return this.id;
