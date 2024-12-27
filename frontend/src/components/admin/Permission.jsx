@@ -50,6 +50,7 @@ function Permission() {
       if (response.ok) {
         const data = await response.json();
         setStatus2(data.message || "Admin deleted successfully.");
+        setTimeout(() => setStatus2(null), 3000);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message || "Failed to delete admin."}`);
@@ -168,49 +169,6 @@ function Permission() {
         
       </div>
 
-      {/* Manage Member Permissions Section */}
-      <div className="section">
-        <h2>Manage Member Permissions</h2>
-        <ul>
-          {members.map((member, index) => (
-            <li key={index}>
-              {member.name}{" "}
-              <button onClick={() => openPermissionsPopup(member)}>
-                Manage Permissions
-              </button>
-            </li>
-          ))}
-        </ul>
-        {/* Removed sendToBackend button */}
-      </div>
-
-      {/* Product Review Section */}
-
-      {permissionsPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            <h3>Manage Permissions for {selectedMember.name}</h3>
-            <ul className="permissions-list">
-              {["makeAdmin", "View", "Delete", "allowed to add"].map(
-                (perm, index) => (
-                  <li key={index}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={permissions[perm] || false}
-                        onChange={() => togglePermission(perm)}
-                      />
-                      {perm}
-                    </label>
-                  </li>
-                )
-              )}
-            </ul>
-            <button onClick={savePermissions}>Save</button>
-            <button onClick={() => setPermissionsPopup(false)}>Close</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

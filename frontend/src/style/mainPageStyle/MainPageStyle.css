@@ -8,6 +8,7 @@
     --site-title-font-text-transform: none;
     --siteTitleColor: hsla(0,0%,0%,1);
     --site-navigation-font-font-size-value: 1;
+    overflow-x: hidden;
 }
 
 p{
