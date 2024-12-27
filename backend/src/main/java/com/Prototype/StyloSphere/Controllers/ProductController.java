@@ -58,6 +58,25 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
+    }
+    @GetMapping("/best-sellers")
+    public ResponseEntity<List<Product>> getBestSellers() {
+        try {
+            List<Product> bestSellers = productService.getTopBestSellers(5); // Top 5
+            return ResponseEntity.ok(bestSellers);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/discounts")
+    public ResponseEntity<List<Product>> getDiscountedProducts() {
+        try {
+            List<Product> discountedProducts = productService.getDiscountedProducts();
+            return ResponseEntity.ok(discountedProducts);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
     }   
 }
 

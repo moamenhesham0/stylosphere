@@ -557,4 +557,20 @@
     transform: scale(1.1);
 }
 
+.section-title {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+.original-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-right: 8px;
+}
+
+.discounted-price {
+    color: red;
+    font-weight: bold;
+}
 

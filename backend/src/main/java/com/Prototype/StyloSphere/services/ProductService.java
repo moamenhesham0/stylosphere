@@ -76,7 +76,18 @@ public class ProductService {
 
         return filteProducts;
     }
-
+    public List<Product> getTopBestSellers(int limit) {
+        List<Product> allProducts = productRepository.findAll();
+        allProducts.sort((p1, p2) -> Integer.compare(p2.getSalesCount(), p1.getSalesCount()));
+        return allProducts.stream().limit(limit).toList();
+    }
+    
+    public List<Product> getDiscountedProducts() {
+        return productRepository.findAll().stream()
+                .filter(product -> product.getDiscountedPrice() < product.getPrice())
+                .toList();
+    }
+    
 
 
 }

@@ -22,7 +22,8 @@ public class Product {
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
     private int quantity ;
-
+    private double DiscountedPrice;
+    private int SalesCount;
 
 
     @ElementCollection
@@ -115,6 +116,24 @@ public class Product {
     {
         return this.quantity;
     }
+    public void setDiscountedPrice(double discountedPrice)
+    {
+        this.DiscountedPrice = discountedPrice;
+    }
+    public double getDiscountedPrice()
+    {
+        return this.DiscountedPrice;
+    }
+    public void setSalesCount(int salesCount)
+    {
+        this.SalesCount = salesCount;
+    }
+    public int getSalesCount()
+    {
+        return this.SalesCount;
+    }
 }
+
+
 
 
