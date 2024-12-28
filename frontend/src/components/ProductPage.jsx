@@ -124,11 +124,13 @@ const ProductPage = () => {
     <div className="product-page">
       <div className="product-container">
         <div className="product-image-wrapper">
+        {product.images.map(image =>
           <img
-            src={product.image}
+            src={`data:image/jpeg;base64,${image}`}
             alt={product.name}
             className="product-image-inner"
           />
+        )}
         </div>
         <div className="product-info-wrapper">
           <h1 className="product-name-inner">{product.name}</h1>

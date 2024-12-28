@@ -243,7 +243,7 @@ const ShoppingCart = () => {
           cart.map((item, index) => (
             <div className="cart-item" key={index}>
               <img
-                src={products[item.productId]?.image}
+                src={`data:image/jpeg;base64,${products[item.productId]?.images[0]}`}
                 alt={products[item.productId]?.name}
               />
               <div className="cart-item-details">
