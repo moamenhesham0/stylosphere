@@ -7,40 +7,64 @@ import {
     Tooltip,
     Legend,
   } from "chart.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import '../../style/mainPageStyle/adminPageStyle/DashBoardStyle.css';
   
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
   
 function Dash() {
-    const data = {
-      labels: ["Jan", "Jul", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Total Income",
-          data: [300, 400, 350, 200, 150, 100, 250, 300, 350, 400, 380, 420],
-          backgroundColor: "#c3ad71",
-        },
-      ],
-    };
-  
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-    };
-    
+   
+  const [data, setData] = useState({
+        labels: [],
+        datasets: []
+    });
     const[customers, setCustomers] = useState(0);
     const[income, setIncome] = useState(0);
     const[customersGrowth, setCustomersGrowth] = useState(0);
     const[incomeGrowth, setIncomeGrowth] = useState(0);
     const [selectedOption, setSelectedOption] = useState("All Time");
+    const [bestSellers, setBestSellers] = useState([]);
     const overViewTime = [
         "All Time",
         "This Year",
         "Last 30 Days",
         "This Month",
       ];
+      useEffect(() => {
+        const fetchIncomeData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/admin/income-data?timeRange=${selectedOption}`);
+                const data = await response.json();
+                setIncomeData(data);
+            } catch (error) {
+                console.error('Error fetching income data:', error);
+            }
+        };
+
+        fetchIncomeData();
+    }, [selectedOption]);
+
+  useEffect(() => {
+      const fetchBestSellers = async () => {
+          try {
+              const response = await fetch(`http://localhost:8080/api/admin/best-sellers?period=${selectedOption}`);
+              const result = await response.json();
+              setBestSellers(result);
+          } catch (error) {
+              console.error('Error fetching best sellers:', error);
+          }
+      };
+
+      fetchBestSellers();
+  }, [selectedOption]);
+      
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+    };
+    
+
     
     const handleSelect = (option) => {
       setSelectedOption(option);
@@ -83,6 +107,16 @@ function Dash() {
                 <div className="dash-board">
                     <Bar data={data} options={options} />
                 </div>
+                <div className="best-sellers">
+                <h1>Best Sellers</h1>
+                <div className="best-sellers-list">
+                <ul>
+                    {bestSellers.map((seller, index) => (
+                        <li key={index}>Product ID: {seller.productId} - Sales: {seller.totalSales}</li>
+                    ))}
+                </ul>
+                </div>
+            </div>
         </div>
     );
 }

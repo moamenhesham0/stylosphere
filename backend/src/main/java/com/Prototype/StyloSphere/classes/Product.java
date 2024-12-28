@@ -1,11 +1,16 @@
 package com.Prototype.StyloSphere.classes;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 import java.util.*;
 import jakarta.persistence.Table;
@@ -25,9 +30,11 @@ public class Product {
     private double DiscountedPrice;
     private int SalesCount;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
+    List<Image> images;
 
-    @ElementCollection
-    private List<String> images; // Store images as a list of byte arrays
+     // Store images as a list of byte arrays
 
     
     private Set<String> colors;
@@ -35,7 +42,7 @@ public class Product {
     
     public Product() {
     }
-    public Product(String name, String description, double price, List<String> images, Set<String> tags, Set<String> colors, int quantity) {
+    public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -77,11 +84,11 @@ public class Product {
         this.price = price;
     }
 
-    public List<String> getImage() {
+    public List<Image> getImage() {
         return this.images;
     }
 
-    public void setImage(List<String> images) {
+    public void setImage(List<Image> images) {
         this.images = images;
     }
 

@@ -12,7 +12,7 @@ import Dash from './components/admin/Dash';
 import Permission from './components/admin/Permission';
 import ProfileAdmin from './components/admin/ProfileAdmin';
 import UserProfile from './components/user/UserProfile';
-import BestSellersPage from './components/BestSellersPage';
+
 const AppContent = () => {
     const location = useLocation();
     const isAdminRoute = location.pathname.startsWith('/admin');
@@ -34,6 +34,7 @@ const AppContent = () => {
                     <Route path="ProfileAdmin" element={<ProfileAdmin />} />
                     <Route path="Permission" element={<Permission />} />
                     <Route path="Dash" element={<Dash />} />
+                    <Route path="ProductHandler" element={<ProductHandler />} />
                 </Route>
             </Routes>
         </>

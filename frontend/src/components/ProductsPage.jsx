@@ -78,6 +78,7 @@ const ProductsPage = () => {
     
             // Validate and return the data as a list
             if (Array.isArray(data)) {
+                console.log(data);
                 return data; // Assuming the response is a plain array of products
             } else {
                 console.error('Unexpected response format:', data);
@@ -88,20 +89,26 @@ const ProductsPage = () => {
             return [];
         }
     };
-    
-    
-    // Fetch products on component mount
     useEffect(() => {
         const fetchProducts = async () => {
-            try {
-                const baseList = await getBaseList();
-                setProducts(baseList); // Update the state with the fetched products
-            } catch (error) {
-                console.error('Error in fetchProducts:', error.message);
-            }
+            const products = await getBaseList();
+            setProducts(products.map(product => ({
+                ...product,
+                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
+            })));
         };
+    
         fetchProducts();
     }, []);
+
+    // Function to convert image string to base64 if necessary
+    const convertImageStringToBase64 = (imageString) => {
+        if (imageString.startsWith('data:image')) {
+            return imageString; // Already in base64 format
+        } else {
+            return `data:image/jpeg;base64,${imageString}`;
+        }
+    };
      // Empty dependency array to run only once when the component mounts
 
     // Filter products based on selected tags
@@ -271,6 +278,48 @@ const sendImageToAI = async (base64Image, products) => {
         ? sortProductsByPrice(sortOrder)
         : sortProductsByName(sortOrder);
 
+
+
+       const [product, setProduct] = useState({
+            name: '',
+            description: '',
+            tags: '',
+            price: '',
+            quantity: '',
+            colors: ''
+        });
+        const [imageFiles, setImageFiles] = useState([]);
+        const [newproducts, setnewproducts] = useState([]);
+    
+     useEffect(() => {
+        const getnewproducts = async () => {
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/admin/products');
+                const result = await response.json();
+                if (Array.isArray(result)) {
+                    console.log('Fetched newproducts:', result);
+                    setProducts(result.map(product => ({
+                        ...product,
+                        images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                    })));
+                    console.log('Fetched newproducts:', result);
+                } else {
+                    console.error('Fetched data is not an array:', result);
+                }
+            } catch (error) {
+                console.error('Error fetching newproducts:', error);
+            }
+        };
+
+        getnewproducts();
+    }, []);
+
+    const generateDataUrl = (image) => {
+        console.log('Image:l;l;l', image[0]);
+        return `data:image/jpeg;base64,${image[0]}`;
+    };
+
     return (
         <div className="products-page">
             <div className="search-bar-container">
@@ -419,9 +468,17 @@ const sendImageToAI = async (base64Image, products) => {
 
                     <div className="products-grid">
                         {products.map(product => (
-                            <div key={product.id} className="product-item">
+                            <div key= {product.id}className="product-item">
                                 <div className="product-image">
-                                    <img src={product.image} alt={product.name} />
+                                {product.images && (
+                                        <div className="product-image">
+                                            <img
+                                                src={generateDataUrl(product.images)}
+                                                alt={`Product ${product.id} Image`}
+                                                title={`Product ${product.id} Image`}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="product-info">
                                     <div className='product-name'>
