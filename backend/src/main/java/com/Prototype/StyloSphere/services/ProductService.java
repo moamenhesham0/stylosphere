@@ -110,4 +110,25 @@ public class ProductService {
     }
 
     
+
+
+    public List<Product> search (String query)
+    {
+        List<Product> products = productRepository.findAll();
+        List<Product> filteProducts = new ArrayList<>();
+        for(Product product : products)
+        {
+            boolean addProduct = false ||
+            product.getName().contains(query)        || (query).contains(product.getName()) ||
+            product.getDescription().contains(query) || (query).contains(product.getDescription()) ||
+            product.getTags().contains(query)        || (query).contains(product.getTags().toString()) ||
+            product.getColors().contains(query)      || (query).contains(product.getColors().toString());
+
+            if(addProduct)
+                filteProducts.add(product);
+        }
+        return filteProducts;
+    }
+
+    
 }

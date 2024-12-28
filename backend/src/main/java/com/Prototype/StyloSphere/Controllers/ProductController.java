@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -60,7 +61,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
     }
-<<<<<<< Updated upstream
     @GetMapping("/best-sellers")
     public ResponseEntity<List<Product>> getBestSellers() {
         try {
@@ -79,21 +79,17 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
-    }   
-=======
+    }
     
-    @GetMapping("/get-product")
-    public ResponseEntity<Product> getProduct(@RequestParam Long id)
-    {
-        return ResponseEntity.ok(productService.getProductById(id));
-    }
-
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam String query)
-    {
-        return ResponseEntity.ok(productService.search(query));
+    public ResponseEntity<List<Product>> search(@RequestParam String query) {
+        try {
+            List<Product> searchResults = productService.search(query);
+            return ResponseEntity.ok(searchResults);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
     }
->>>>>>> Stashed changes
 }
 
     

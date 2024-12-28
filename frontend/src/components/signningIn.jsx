@@ -38,9 +38,7 @@ const SignIn = () => {
           image: data.user.userImage,
           userId: data.user.id,
         });
-<<<<<<< Updated upstream
         console.log(data.user); // Debugging: check response structure
-=======
         clearLocalCart();
         const cartResponse = await fetch(
           `http://localhost:8080/api/customers/retrieve-cart?userId=${data.user.id}`,
@@ -54,7 +52,6 @@ const SignIn = () => {
           updateLocalCart(cartData); // Update local cart context
         }
         console.log(user.email); // Debugging: check response structure
->>>>>>> Stashed changes
 
         navigate('/'); // Redirect to user profile page
       } else if (response.status === 401) {
