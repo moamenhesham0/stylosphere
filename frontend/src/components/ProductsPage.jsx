@@ -208,7 +208,6 @@ const handleImageChange = async (e) => {
         try {
             const base64Image = await convertToBase64(file);
             const products = await getBaseList(); // Fetch products using your Java Spring Boot service
-            console.log(products[0].image);
             sendImageToAI(base64Image, products);
         } catch (error) {
             console.error("Error converting image to Base64:", error);
@@ -225,7 +224,7 @@ const sendImageToAI = async (base64Image, products) => {
             query_image: base64Image,
             products: products,
         };
-
+        console.log(payload);
         const response = await fetch('http://127.0.0.1:5000/compare', {
             method: 'POST',
             headers: {
@@ -251,6 +250,7 @@ const sendImageToAI = async (base64Image, products) => {
         console.error('Error sending image to AI:', error);
         alert("An error occurred while processing the image.");
     }
+    setImage(''); // Reset the image state
 };
 
 // Function to display similar products (update according to your UI logic)
