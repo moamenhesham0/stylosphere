@@ -112,17 +112,17 @@ public class AdminController {
     
     @GetMapping("/top-selling")
     public ResponseEntity<List<Map<String, Object>>> getTopSellingProducts() {
-        System.out.println("Top selling productsssss");
+        
         List<Object[]> topSellingProducts = purchaseRepository.findTopSellingProducts().stream().limit(5).toList();
-        System.out.println(topSellingProducts.get(0).toString()+"nananana");
+      
         List<Map<String, Object>> response = new ArrayList<>();
-        System.out.println(response+"ffffffffffff");
+    
         for (Object[] result : topSellingProducts) {
             Long productId = (Long) result[0];
             Long totalQuantity = (Long) result[1];
 
             Optional<Product> productOpt = productRepository.findById(productId);
-            System.out.println(productId+"productIddddddddds");
+     
             List<Product> products = productOpt.isPresent() ? List.of(productOpt.get()) : List.of();
             for (Product product : products) {
               
@@ -144,7 +144,7 @@ public class AdminController {
                 response.add(productMap);
             }
         }
-        System.out.println(response+"response");
+
         return ResponseEntity.ok(response);
     }
 

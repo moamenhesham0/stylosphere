@@ -158,17 +158,22 @@ const ProductsPage = () => {
             const response = await fetch(`http://localhost:8080/api/products/search?query=${searchInput}`, {
                 method: 'GET'
               });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (Array.isArray(data)) 
-                setProducts(data); // Update state with filtered products
-            } else {
-                console.error('Failed to fetch products');
+              const result = await response.json();
+                if (Array.isArray(result)) {
+                    console.log('Fetched newproducts:', result);
+                    setProducts(result.map(product => ({
+                      
+                        ...product,
+                        images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                    })));
+                    console.log('Fetched newproducts:', products[0].images+"mkklksk");
+                    console.log('Fetched newproducts:', result);
+                } else {
+                    console.error('Fetched data is not an array:', result);
+                }
+            } catch (error) {
+                console.error('Error fetching newproducts:', error);
             }
-        } catch (error) {
-            console.error('Error retrieving products:', error);
-        }
     };
 
    
@@ -316,7 +321,7 @@ const sendImageToAI = async (base64Image, products) => {
     }, []);
 
     const generateDataUrl = (image) => {
-        console.log('Image:l;l;l', image[0]);
+
         return `data:image/jpeg;base64,${image[0]}`;
     };
 

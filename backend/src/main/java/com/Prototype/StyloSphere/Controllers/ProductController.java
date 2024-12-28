@@ -90,6 +90,17 @@ public class ProductController {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
     }
+
+       
+    @GetMapping("/get-product")
+    public ResponseEntity<Product> getProduct(@RequestParam Long id)
+    {
+        System.out.println("ssskmakas");
+        Product product = productService.getProductById(id);
+        System.out.println("myidpro+"+product);
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
 }
 
     

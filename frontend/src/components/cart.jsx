@@ -207,14 +207,14 @@ const ShoppingCart = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const updatedProducts = {};
-
+     
       await Promise.all(
         cart.map(async (item) => {
           try {
             const response = await fetch(
-              `http://localhost:8080/api/products/get-product?productId=${item.productId}`
+              `http://localhost:8080/api/products/get-product?id=${item.productId}`
             );
-
+            
             if (!response.ok) {
               throw new Error(`Failed to fetch product with productId: ${item.productId}`);
             }
@@ -234,16 +234,20 @@ const ShoppingCart = () => {
       fetchProducts();
     }
   }, [cart]);
-
+  useEffect(() => {
+    console.log('Cartssssssssssss:', cart);
+    console.log('Cartssssssssssss:',products[cart[0]?.productId]?.image[0].image);
+}, [cart, products]);
   return (
     <div className="container">
       <div className="cart">
         <h2>Shopping Cart</h2>
         {cart.length > 0 ? (
           cart.map((item, index) => (
+           
             <div className="cart-item" key={index}>
               <img
-                src={`data:image/jpeg;base64,${products[item.productId]?.images[0]}`}
+                src={`data:image/jpeg;base64,${products[item.productId]?.image[0].image}`}
                 alt={products[item.productId]?.name}
               />
               <div className="cart-item-details">
