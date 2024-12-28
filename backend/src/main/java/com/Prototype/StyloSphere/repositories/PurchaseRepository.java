@@ -2,6 +2,7 @@ package com.Prototype.StyloSphere.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.Prototype.StyloSphere.classes.Purchase;
@@ -25,12 +26,13 @@ public interface PurchaseRepository extends JpaRepository<Purchase , Long> {
     List<Object[]> findTopSellingProducts();
 
 
-    @Query("SELECT FUNCTION('DATE_FORMAT', p.timeStamp, '%Y-%m') as month, " +
-    "SUM(p.quantity) as totalQuantity " +
-    "FROM Purchase p " +
-    "WHERE p.timeStamp BETWEEN :startDate AND :endDate " +
-    "GROUP BY FUNCTION('DATE_FORMAT', p.timeStamp, '%Y-%m')")
-List<Object[]> findIncomeData(LocalDate startDate, LocalDate endDate);
+    @Query("SELECT FUNCTION('TO_CHAR', ph.timeStamp, :timePattern), SUM(ph.quantity) " +
+       "FROM Purchase ph " +
+       "WHERE ph.timeStamp BETWEEN :startDate AND :endDate " +
+       "GROUP BY FUNCTION('TO_CHAR', ph.timeStamp, :timePattern)")
+List<Object[]> findIncomeData(@Param("startDate") LocalDate startDate, 
+                              @Param("endDate") LocalDate endDate, 
+                              @Param("timePattern") String timePattern);
 
 
 }
