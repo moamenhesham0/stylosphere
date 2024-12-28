@@ -1,24 +1,23 @@
 from flask import Flask, request, jsonify
 from io import BytesIO
 import base64
-import requests
-from PIL import Image, UnidentifiedImageError
 import numpy as np
+from PIL import Image, UnidentifiedImageError
 import tensorflow as tf
 from tensorflow.keras.applications import ResNet50
 from sklearn.metrics.pairwise import cosine_similarity
-
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-
-# Load ResNet50 model pretrained on ImageNet for feature extraction
+# Load ResNet50 model
 model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
 
 # Preprocess image for ResNet50
 def preprocess_image(img):
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
     img = img.resize((224, 224))
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
@@ -31,38 +30,18 @@ def extract_features(img):
     features = model.predict(img_array)
     return features.flatten()
 
-# Fetch image from URL with headers to mimic a browser
-def fetch_image_from_url(img_url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
-    }
-    try:
-        print(f"Attempting to fetch image from URL: {img_url}")
-        response = requests.get(img_url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            if 'image' in response.headers.get('Content-Type', ''):
-                print(f"Successfully fetched image from {img_url}")
-                return Image.open(BytesIO(response.content))
-            else:
-                print(f"URL did not return an image: {img_url}")
-        else:
-            print(f"Failed to fetch image from {img_url}, Status Code: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching {img_url}: {e}")
-    return None
-
 # Decode base64 string to an image
 def decode_base64_image(base64_str):
     try:
         image_data = base64.b64decode(base64_str)
         img = Image.open(BytesIO(image_data))
         img.verify()
-        img = Image.open(BytesIO(image_data))  # Reopen after verification
+        img = Image.open(BytesIO(image_data))
         return img
     except (base64.binascii.Error, UnidentifiedImageError) as e:
-        raise ValueError(f"Invalid image or base64 data: {str(e)}")
+        raise ValueError(f"Invalid base64 image data: {str(e)}")
 
-# Find the most similar items
+# Find similar items
 def find_similar_items(query_features, catalog_data, top_n=5):
     catalog_features = np.array([data['features'] for data in catalog_data])
     similarities = cosine_similarity([query_features], catalog_features).flatten()
@@ -76,38 +55,44 @@ def compare_images():
         query_base64 = data.get('query_image')
         products = data.get('products')
 
-        # Decode query image
         if not query_base64:
             return jsonify({'error': 'Query image is missing'}), 400
+
+        if not isinstance(products, list) or not products:
+            return jsonify({'error': 'Invalid or missing products list'}), 400
+
         try:
             query_image = decode_base64_image(query_base64)
         except ValueError as ve:
-            print(f"Error decoding query image: {ve}")
-            return jsonify({'error': 'Invalid query image'}), 400
+            return jsonify({'error': str(ve)}), 400
 
         query_features = extract_features(query_image)
 
-        # Fetch and process catalog images
+        # Process catalog images
         catalog_data = []
-        for product in products:
+        invalid_products = []
+        for idx, product in enumerate(products):
             try:
-                img_url = product.get('image')
-                if not img_url:
-                    print(f"Product missing 'image' field: {product}")
+                img_base64_holder = product.get('image')
+                img_base64= img_base64_holder[0].get('image')
+                if isinstance(img_base64, list) and img_base64:
+                    img_base64 = img_base64[0]
+
+                if not isinstance(img_base64, str) or not img_base64.strip():
+                    invalid_products.append(idx + 1)
                     continue
-                img = fetch_image_from_url(img_url[0])
-                if img:
-                    print(f"Processing image from URL: {img_url[0]}")
-                    features = extract_features(img)
-                    catalog_data.append({'product': product, 'features': features})
-                else:
-                    print(f"Failed to process image from URL: {img_url[0]}")
+
+                catalog_image = decode_base64_image(img_base64)
+                features = extract_features(catalog_image)
+                catalog_data.append({'product': product, 'features': features})
+
+            except ValueError as ve:
+                invalid_products.append(idx + 1)
             except Exception as e:
-                print(f"Error processing product {product}: {e}")
+                invalid_products.append(idx + 1)
 
         if not catalog_data:
-            print("No valid catalog images fetched")
-            return jsonify({'error': 'No valid catalog images fetched'}), 400
+            return jsonify({'error': 'No valid catalog images fetched', 'invalid_products': invalid_products}), 400
 
         # Find similar products
         similar_products = find_similar_items(query_features, catalog_data, top_n=3)
@@ -115,11 +100,17 @@ def compare_images():
         return jsonify({'similar_products': similar_products})
 
     except Exception as e:
-        print(f"Unexpected error: {e}")
         return jsonify({'error': f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == '__main__':
+    import os
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow info and warning messages
     app.run(debug=True)
+
+
+
+
+
 
 
 
