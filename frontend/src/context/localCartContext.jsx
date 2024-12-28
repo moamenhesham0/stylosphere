@@ -5,24 +5,51 @@ const LocalCartContext = createContext();
 
 // Local Cart Provider Component
 export const LocalCartProvider = ({ children }) => {
-  // Initialize cart state from localStorage or default to an empty array
+  // Initialize cart state from localStorage or as an empty array
   const [cart, setCart] = useState(() => {
-    return [] ;
+    const storedCart = localStorage.getItem('cart');
+    return storedCart ? JSON.parse(storedCart) : [];
   });
 
-  // Function to update the cart
-  const updateLocalCart = (newCartItems) => {
-    const updatedCart = { ...cart, cartItems: newCartItems };
-    setCart(updatedCart);
+  // Sync cart state with localStorage
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  // Function to add or update an item in the cart
+  const updateLocalCart = (newCartItem) => {
+    setCart((prevCart) => {
+      // Check if the item already exists in the cart
+      const existingItemIndex = prevCart.findIndex(
+        (item) =>
+          item.productId === newCartItem.productId &&
+          item.productSize === newCartItem.productSize &&
+          item.productColor === newCartItem.productColor
+      );
+
+      if (existingItemIndex !== -1) {
+        // Update the quantity of the existing item
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex] = {
+          ...updatedCart[existingItemIndex],
+          quantity: updatedCart[existingItemIndex].quantity + newCartItem.quantity,
+        };
+        return updatedCart;
+      }
+
+      // Add the new item to the cart
+      return [...prevCart, newCartItem];
+    });
   };
 
   // Function to clear the cart
   const clearLocalCart = () => {
-    setCart({ cartItems: [] });
+    setCart([]);
+    localStorage.removeItem('cart');
   };
-  
+
   return (
-    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart}}>
+    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart }}>
       {children}
     </LocalCartContext.Provider>
   );

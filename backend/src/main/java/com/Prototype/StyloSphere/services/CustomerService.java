@@ -15,8 +15,9 @@ public class CustomerService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public void addOrderToCart(Long customerId , Long orderId)
+    public void addOrderToCart(Long customerId , Order order)   
     {
+        Long orderId = orderRepository.save(order).getId();
         Customer customer = customerRepository.findById(customerId).get();
         customer.getCart().addProductToCart(orderId);
         customerRepository.save(customer);

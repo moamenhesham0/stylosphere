@@ -3,8 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from './user/UserContext';
 import '../style/headerStyle/HeaderStyle.css';
 import { Avatar } from "@mui/material";
+import { useLocalCart } from '../context/localCartContext';
 function Header() {
     const { user , updateUser } = useUser();
+    const { cart , clearLocalCart} = useLocalCart();
     const location = useLocation();
     const [userLogin, setUserlogin] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -43,8 +45,10 @@ function Header() {
             userStatus: false, // Set user as logged in
             image: '',
           });
+          clearLocalCart();
           navigate("/");
       };
+      
     
     const openChat = () => {
         if (window.botpressWebChat) {

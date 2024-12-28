@@ -11,8 +11,6 @@ import java.util.List;
 @DiscriminatorValue("Admin")
 public class Admin extends User {
     private String adminLevel;
-    @OneToMany
-    private List<Product> products;
     public Admin() {
     }
 
@@ -27,13 +25,5 @@ public class Admin extends User {
 
     public void setAdminLevel(String adminLevel) {
         this.adminLevel = adminLevel;
-    }
-    public void addProduct(Product product)
-    {
-        this.products.add(product);
-    }
-    public List<Product> getAllProducts()
-    {
-        return this.products;
     }
 }

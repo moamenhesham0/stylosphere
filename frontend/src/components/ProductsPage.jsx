@@ -30,7 +30,9 @@ const ProductsPage = () => {
     // Create a gradient spectrum background
     const gradient = colorOptions.join(', ');
     
-
+    useEffect(() => {
+        setProducts(sortedProducts);
+    }, [sortType , sortOrder]);
     // Function to determine closest color based on slider value
     const getClosestColor = (value) => {
         const index = Math.round(value / (200 / (colorOptions.length - 1))); // Get index based on slider value
@@ -129,13 +131,37 @@ const ProductsPage = () => {
 
 
     // Handle search input change
-    const handleInputChange = (e) => {
-        setSearchInput(e.target.value);
-    };
+    const handleInputChange = async (e) => {
+        const inputValue = e.target.value;
+        setSearchInput(inputValue);
+      
+        if (inputValue === '') {
+          try {
+            const baseList = await getBaseList(); // Wait for the async function to resolve
+            setProducts(baseList); // Update products with the fetched base list
+          } catch (error) {
+            console.error('Error fetching base list:', error);
+          }
+        }
+      };
 
     // Handle search action (currently just logs the search input)
-    const handleSearch = () => {
-        console.log('Search Input:', searchInput);
+    const handleSearch = async() => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/products/search?query=${searchInput}`, {
+                method: 'GET'
+              });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data)) 
+                setProducts(data); // Update state with filtered products
+            } else {
+                console.error('Failed to fetch products');
+            }
+        } catch (error) {
+            console.error('Error retrieving products:', error);
+        }
     };
 
    

@@ -105,15 +105,23 @@ public ResponseEntity<User> getName(@RequestParam String email)
     return ResponseEntity.ok(userService.getUser(email));
 }
 
+
+@CrossOrigin(origins = "http://localhost:5173")
 @PostMapping("add-to-cart")
-public void addToCart(@RequestParam Long productId, 
+public ResponseEntity<String> addToCart(@RequestParam Long productId, 
                         @RequestParam String color, 
                         @RequestParam String size, 
                         @RequestParam int quantity,
                         @RequestParam Long userId)
 {
     Order newOrder = new Order(productId, color, size, quantity);
-    customerService.addOrderToCart(newOrder.getId(), userId);
+    try{
+    customerService.addOrderToCart(userId, newOrder);
+    }catch(Exception e)
+    {
+        return ResponseEntity.badRequest().body("Failed to add to cart");
+    }
+    return ResponseEntity.ok("Added to cart successfully");
 }
 
 @GetMapping("retrieve-cart")

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../style/mainPageStyle/sinningUpStyle.css';
 import { useUser } from './user/UserContext'; // Make sure this provides the correct context
-
+import { useLocalCart } from '../context/localCartContext';
 const SignUp = () => {
   const { user, updateUser } = useUser(); // Ensure updateUser is destructured
+  const {cart} = useLocalCart();
   const navigate = useNavigate(); // Initialize the navigate hook
   const [formData, setFormData] = useState({
     firstname: '',
@@ -103,6 +104,14 @@ const SignUp = () => {
       userStatus: true,
       userId : userIdValue, // Use the resolved value
     });
+    for(const item of cart){
+      const response = await fetch(
+        `http://localhost:8080/api/customers/add-to-cart?productId=${item.productId}&color=${item.color}&size=${item.size}&quantity=${item.quantity}&userId=${userIdValue}`,
+        {
+          method: 'POST',
+        }
+      );
+    }
   };
 
   return (

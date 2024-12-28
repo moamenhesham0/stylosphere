@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "orders")
 public class Order{
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)

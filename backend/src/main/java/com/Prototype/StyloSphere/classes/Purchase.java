@@ -4,20 +4,20 @@ package com.Prototype.StyloSphere.classes;
 import jakarta.persistence.*;
 
 import jakarta.persistence.Table;
-import java.util.*;
+
+import java.time.LocalDate;
 
 @Entity
-
 @Table(name = "PurchaseHistory")
 public class Purchase extends Order {
     
     private Long customerId;
-    private Date timeStamp;
+    private LocalDate timeStamp;
     
-    public Purchase(Long givenCustomerId, Date givenTimeStamp , Long productId, String productColor, String productSize, int quantity) {
+    public Purchase(Long givenCustomerId, Long productId, String productColor, String productSize, int quantity) {
         super(productId, productColor, productSize, quantity);
         this.customerId = givenCustomerId;
-        this.timeStamp = givenTimeStamp;
+        this.timeStamp = LocalDate.now();
     }
     public Purchase(){
     }
@@ -30,7 +30,7 @@ public class Purchase extends Order {
         return this.customerId;
     }
    
-    public Date getPurchaseDate()
+    public LocalDate getPurchaseDate()
     {
         return this.timeStamp;
     }
