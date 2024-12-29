@@ -124,9 +124,9 @@ const ProductPage = () => {
     <div className="product-page">
       <div className="product-container">
         <div className="product-image-wrapper">
-        {product.images.map(image =>
+        {product.image.map(image =>
           <img
-            src={`data:image/jpeg;base64,${image}`}
+            src={`data:image/jpeg;base64,${image.image}`}
             alt={product.name}
             className="product-image-inner"
           />

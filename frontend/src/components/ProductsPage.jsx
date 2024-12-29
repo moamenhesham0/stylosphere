@@ -63,32 +63,7 @@ const ProductsPage = () => {
         setSelectedColors(selectedColors.filter(color => color !== colorToRemove));
     };
     // Fetch products from the base list
-    const getBaseList = async () => {
-        try {
-            // Make a request to the backend
-            const response = await fetch('http://localhost:8080/api/products/all');
-            
-            // Check if the response is not OK
-            if (!response.ok) {
-                throw new Error(`Failed to fetch products: ${response.statusText}`);
-            }
-    
-            // Parse the response JSON
-            const data = await response.json();
-    
-            // Validate and return the data as a list
-            if (Array.isArray(data)) {
-                console.log(data);
-                return data; // Assuming the response is a plain array of products
-            } else {
-                console.error('Unexpected response format:', data);
-                return [];
-            }
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            return [];
-        }
-    };
+
     useEffect(() => {
         const fetchProducts = async () => {
             const products = await getBaseList();
@@ -123,17 +98,22 @@ const ProductsPage = () => {
                 },
                 body: JSON.stringify({selectedTags , selectedColors}),
               });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (Array.isArray(data)) 
-                    return data; // Update state with filtered products
-            } else {
-                console.error('Failed to fetch products');
-            }
-        } catch (error) {
-            console.error('Error retrieving products:', error);
-        }
+            const result = await response.json();
+                        if (Array.isArray(result)) {
+                            console.log('Fetched newproducts:', result);
+                            setProducts(result.map(product => ({
+                            
+                                ...product,
+                                images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                            })));
+                            console.log('Fetched newproducts:', products[0].images+"mkklksk");
+                            console.log('Fetched newproducts:', result);
+                        } else {
+                            console.error('Fetched data is not an array:', result);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching newproducts:', error);
+                    }
     };
 
 
@@ -208,6 +188,7 @@ const handleImageChange = async (e) => {
         try {
             const base64Image = await convertToBase64(file);
             const products = await getBaseList(); // Fetch products using your Java Spring Boot service
+            console.log(products[0].image);
             sendImageToAI(base64Image, products);
         } catch (error) {
             console.error("Error converting image to Base64:", error);
@@ -224,7 +205,7 @@ const sendImageToAI = async (base64Image, products) => {
             query_image: base64Image,
             products: products,
         };
-        console.log(payload);
+
         const response = await fetch('http://127.0.0.1:5000/compare', {
             method: 'POST',
             headers: {
@@ -250,7 +231,6 @@ const sendImageToAI = async (base64Image, products) => {
         console.error('Error sending image to AI:', error);
         alert("An error occurred while processing the image.");
     }
-    setImage(''); // Reset the image state
 };
 
 // Function to display similar products (update according to your UI logic)
@@ -269,8 +249,9 @@ const sendImageToAI = async (base64Image, products) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const products = await retrieveProducts(); // Call API
-                setProducts(products); // Update state with the fetched products
+                retrieveProducts(); // Call API
+
+                console.log(",l,,l,l"+products.product); // Update state with the fetched products
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
@@ -320,10 +301,6 @@ const sendImageToAI = async (base64Image, products) => {
         getnewproducts();
     }, []);
 
-    const generateDataUrl = (image) => {
-
-        return `data:image/jpeg;base64,${image[0]}`;
-    };
 
     return (
         <div className="products-page">
@@ -478,7 +455,7 @@ const sendImageToAI = async (base64Image, products) => {
                                 {product.images && (
                                         <div className="product-image">
                                             <img
-                                                src={generateDataUrl(product.images)}
+                                                src={`data:image/jpeg;base64,${product.image[0].image}`}
                                                 alt={`Product ${product.id} Image`}
                                                 title={`Product ${product.id} Image`}
                                             />

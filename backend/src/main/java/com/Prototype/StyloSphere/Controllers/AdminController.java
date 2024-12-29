@@ -83,30 +83,11 @@ public class AdminController {
 
    
     @GetMapping("/products")
-    public ResponseEntity<List<Map<String, Object>>> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        List<Map<String, Object>> response = new ArrayList<>();
+
     
-        for (Product product : products) {
-            Map<String, Object> productMap = new HashMap<>();
-            productMap.put("id", product.getId());
-            productMap.put("name", product.getName());
-            productMap.put("description", product.getDescription());
-            productMap.put("tags", product.getTags());
-            productMap.put("price", product.getPrice());
-            productMap.put("quantity", product.getQuantity());
-            productMap.put("colors", product.getColors());
-    
-            List<String> base64Images = new ArrayList<>();
-            for (Image image : product.getImage()) {
-                base64Images.add(Base64.getEncoder().encodeToString(image.getimage()));
-            }
-            productMap.put("images", base64Images);
-    
-            response.add(productMap);
-        }
-    
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(products);
     }
 
     

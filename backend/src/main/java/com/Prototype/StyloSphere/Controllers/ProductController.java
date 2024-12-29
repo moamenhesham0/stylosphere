@@ -55,7 +55,7 @@ public class ProductController {
             List<Product> baseList = productService.getBaseList();
             List<Product> filteredByTags = tags.isEmpty()? baseList : productService.filterByTags(tags, baseList);
             List<Product> filteredProducts = colors.isEmpty()? filteredByTags :productService.filterByColor(colors, filteredByTags);
-
+            
             return ResponseEntity.ok(filteredProducts);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
@@ -85,8 +85,10 @@ public class ProductController {
     public ResponseEntity<List<Product>> search(@RequestParam String query) {
         try {
             List<Product> searchResults = productService.search(query);
+
             return ResponseEntity.ok(searchResults);
         } catch (Exception e) {
+
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
     }

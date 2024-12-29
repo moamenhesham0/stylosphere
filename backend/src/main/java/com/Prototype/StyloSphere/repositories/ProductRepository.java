@@ -15,6 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         "LOWER(DESCRIPTION) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
         "COLORS ILIKE CONCAT('%', :query, '%') OR " +
         "tags ILIKE CONCAT('%', :query, '%')",
-    nativeQuery = true)
-    List<Product> search(@Param("query") String query);
+        nativeQuery = true)
+        List<Product> search(@Param("query") String query);
 }
