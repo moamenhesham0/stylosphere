@@ -59,6 +59,9 @@ function AdminPage() {
             <li>
               <Link to="ProductHandler">Product Management</Link>
             </li>
+            <li>
+              <Link to="Complaints">Complaints</Link>
+            </li>
             <div className="logo-admin">
               <Link to="/" >
                 <img src="/assets/brandIcon.svg" alt="StyloSphere Logo" />

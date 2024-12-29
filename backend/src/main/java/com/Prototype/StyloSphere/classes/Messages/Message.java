@@ -16,9 +16,9 @@ public abstract class Message {
     private Long senderId;
     private LocalDateTime timeStamp;
 
-    public Message(String message , Long sender) {
+    public Message(String message, Long senderId) {
         this.message = message;
-        this.senderId = sender;
+        this.senderId = senderId;
         this.timeStamp = LocalDateTime.now();
     }
     public Message() {
@@ -37,10 +37,6 @@ public abstract class Message {
     }
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
-    }
-    
-    public Message(String message) {
-        this.message = message;
     }
 
     public String getMessage() {

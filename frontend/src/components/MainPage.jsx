@@ -1,10 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header'; // Import the Header component
 import mainPagepng from '../images/mainPageImg/mainPage.png';
 import aboutuspng from '../images/mainPageImg/aboutUs2.png';
 import '../style/mainPageStyle/MainPageStyle.css';
 
 function MainPage() {
+    const [formData, setFormData] = useState({
+        name: "",
+        complain: "",
+        senderEmail: "",
+        lastName: "",
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handelComplain = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/complaints/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Success:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <div className="main-page">
 
@@ -66,9 +102,11 @@ function MainPage() {
                                 <input
                                     type="text"
                                     id="first-name"
-                                    name="firstName"
+                                    name="name" // changed from firstName to name
                                     placeholder="First Name"
                                     required
+                                    value={formData.name}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div>
@@ -78,6 +116,8 @@ function MainPage() {
                                     name="lastName"
                                     placeholder="Last Name"
                                     required
+                                    value={formData.lastName}
+                                    onChange={handleChange}
                                 />
                             </div>
                         </div>
@@ -87,9 +127,11 @@ function MainPage() {
                         <input
                             type="email"
                             id="email"
-                            name="email"
+                            name="senderEmail" // changed from email to senderEmail
                             placeholder="Email"
                             required
+                            value={formData.senderEmail}
+                            onChange={handleChange}
                         />
 
                         <label htmlFor="message" className="label label-message">
@@ -97,13 +139,15 @@ function MainPage() {
                         </label>
                         <textarea
                             id="message"
-                            name="message"
+                            name="complain" // changed from message to complain
                             placeholder="Message"
                             rows="4"
                             required
+                            value={formData.complain}
+                            onChange={handleChange}
                         ></textarea>
                         <div className="send-button">
-                            <button>Send</button>
+                            <button onClick={()=>handelComplain()}>Send</button>
                         </div>
                     </form>
                 </div>

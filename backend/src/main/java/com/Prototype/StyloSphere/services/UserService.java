@@ -12,6 +12,9 @@ public class UserService {
     @Autowired
     private UserRepository<User> userRepository;
 
+    @Autowired
+    private ComplaintRepository complaintRepository;
+
     public User getUser(Long id)
     {
         return userRepository.findById(id).get();
@@ -79,5 +82,9 @@ public class UserService {
         if (user != null && user.getType().equalsIgnoreCase("admin")) {
             userRepository.deleteById(user.getId());
         }
+    }
+
+    public void saveComplain(Complain complaint) {
+        complaintRepository.save(complaint);
     }
 }

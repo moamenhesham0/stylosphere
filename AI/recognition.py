@@ -95,7 +95,7 @@ def compare_images():
             return jsonify({'error': 'No valid catalog images fetched', 'invalid_products': invalid_products}), 400
 
         # Find similar products
-        similar_products = find_similar_items(query_features, catalog_data, top_n=3)
+        similar_products = find_similar_items(query_features, catalog_data)
 
         return jsonify({'similar_products': similar_products})
 

@@ -429,11 +429,11 @@
     border: 2px solid #dcdcdc; /* Gray border */
     border-radius: 25px; /* Rounded corners */
     background-color: #f8f8f8;
-    font-size: 8px; /* Balanced text size */
+    font-size: 15px; /* Balanced text size */
     color: #333;
     font-weight: 600;
     cursor: pointer;
-    width: 42px;
+    width: 125px;
     transition: all 0.3s ease;
     box-sizing: border-box;
     text-align: center; /* Center the text horizontally */

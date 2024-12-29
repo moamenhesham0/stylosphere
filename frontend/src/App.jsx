@@ -14,6 +14,7 @@ import ProfileAdmin from './components/admin/ProfileAdmin';
 import UserProfile from './components/user/UserProfile';
 import BestSellersPage from './components/BestSellersPage';
 import ProductHandler from './components/admin/ProductHandler';
+import Complaints from './components/admin/Complaints';
 
 const AppContent = () => {
     const location = useLocation();
@@ -37,6 +38,7 @@ const AppContent = () => {
                     <Route path="Permission" element={<Permission />} />
                     <Route path="Dash" element={<Dash />} />
                     <Route path="ProductHandler" element={<ProductHandler />} />
+                    <Route path="Complaints" element={<Complaints />} />
                 </Route>
             </Routes>
         </>
