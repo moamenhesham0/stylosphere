@@ -58,6 +58,7 @@ const ProductsPage = () => {
         }
     };
 
+
     // Remove color from the selectedColors array
     const removeColor = (colorToRemove) => {
         setSelectedColors(selectedColors.filter(color => color !== colorToRemove));
@@ -125,7 +126,10 @@ const ProductsPage = () => {
         if (inputValue === '') {
           try {
             const baseList = await getBaseList(); // Wait for the async function to resolve
-            setProducts(baseList); // Update products with the fetched base list
+            setProducts(products.map(product => ({
+                ...product,
+                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
+            }))); // Update products with the fetched base list
           } catch (error) {
             console.error('Error fetching base list:', error);
           }
@@ -154,6 +158,31 @@ const ProductsPage = () => {
             } catch (error) {
                 console.error('Error fetching newproducts:', error);
             }
+    };
+
+
+    
+    const getBaseList = async () => {
+        try {
+            // Make a request to the backend
+            const response = await fetch('http://localhost:8080/api/products/all');
+            
+            const result = await response.json();
+            if (Array.isArray(result)) {
+                console.log('Fetched newproducts:', result);
+                setProducts(result.map(product => ({
+                  
+                    ...product,
+                    images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                })));
+                console.log('Fetched newproducts:', products[0].images+"mkklksk");
+                console.log('Fetched newproducts:', result);
+            } else {
+                console.error('Fetched data is not an array:', result);
+            }
+        } catch (error) {
+            console.error('Error fetching newproducts:', error);
+        }
     };
 
    
@@ -223,7 +252,10 @@ const sendImageToAI = async (base64Image, products) => {
 
         const data = await response.json();
         if (data.similar_products) {
-            setProducts(data.similar_products);
+            setProducts(products.map(product => ({
+                ...product,
+                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
+            })));
         } else {
             alert("Failed to retrieve similar products.");
         }
