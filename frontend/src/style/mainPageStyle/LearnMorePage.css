@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.learn-more-page {
+    padding: 20px;
+}
+
+.learn-more-container, .chatbot-container, .recognition-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    transition: transform 0.3s ease;
+}
+
+.learn-more-container:hover, .chatbot-container:hover, .recognition-container:hover {
+    transform: translateY(-10px);
+}
+
+.learn-more-image-container, .chatbot-image-container, .recognition-image-container {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.learn-more-image, .chatbot-image, .recognition-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.learn-more-info, .chatbot-info, .recognition-info {
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.learn-more-info {
+    font-family: 'Playfair Display', serif;
+}
+
+.chatbot-info, .recognition-info {
+    font-family: 'Roboto', sans-serif;
+}
+
+.learn-more-info h2, .chatbot-info h2, .recognition-info h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.learn-more-info p, .chatbot-info ul, .recognition-info ul {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.learn-more-info ul, .chatbot-info ul, .recognition-info ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.learn-more-info ul li, .chatbot-info ul li, .recognition-info ul li {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.learn-more-info ul ul, .chatbot-info ul ul, .recognition-info ul ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.learn-more-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.learn-more-button:hover {
+    background-color: #444;
+    transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+    .learn-more-container, .chatbot-container, .recognition-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .learn-more-image-container, .chatbot-image-container, .recognition-image-container {
+        margin-bottom: 0;
+    }
+
+    .learn-more-info, .chatbot-info, .recognition-info {
+        text-align: left;
+    }
+}

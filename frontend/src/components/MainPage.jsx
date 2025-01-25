@@ -3,6 +3,7 @@ import Header from '../components/Header'; // Import the Header component
 import mainPagepng from '../images/mainPageImg/mainPage.png';
 import aboutuspng from '../images/mainPageImg/aboutUs2.png';
 import '../style/mainPageStyle/MainPageStyle.css';
+import { Link } from 'react-router-dom';
 
 function MainPage() {
     const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ function MainPage() {
             [name]: value
         });
     };
-
+    
     const handelComplain = async () => {
         try {
             const response = await fetch('http://localhost:8080/complaints/save', {
@@ -43,7 +44,6 @@ function MainPage() {
 
     return (
         <div className="main-page">
-
             <div className='page-main-one'>
                 <div className='page-main-one-title'>
                     <h1>Unlock Your Marketing Potential Today</h1>
@@ -55,6 +55,7 @@ function MainPage() {
                     </p>
                 </div>
             </div>
+            
 
             <div className='page-main-two'>
                 <div className='page-main-two-img'>
@@ -76,8 +77,8 @@ function MainPage() {
                         </p>
                     </div>
                     <div className='page-main-two-button'>
-                        <a href="/about" className="button">LEARN MORE</a>
-                    </div>
+                     <Link to="/learnmore" className="button">LEARN More</Link>
+                     </div>
                 </div>
             </div>
 
@@ -174,6 +175,7 @@ function MainPage() {
                 </div>
             </footer>
         </div>
+        
     );
 }
 

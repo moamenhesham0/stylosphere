@@ -15,7 +15,7 @@ import UserProfile from './components/user/UserProfile';
 import BestSellersPage from './components/BestSellersPage';
 import ProductHandler from './components/admin/ProductHandler';
 import Complaints from './components/admin/Complaints';
-
+import LearnMorePage from './components/LearnMorePage';
 const AppContent = () => {
     const location = useLocation();
     const isAdminRoute = location.pathname.startsWith('/admin');
@@ -27,6 +27,7 @@ const AppContent = () => {
             <Routes>
                 <Route path="/best-sellers" element={<BestSellersPage />} />
                 <Route path="/" element={<MainPage />} />
+                <Route path="/learnmore" element={<LearnMorePage />} />
                 <Route path="/shop" element={<ProductsPage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/signin" element={<SignIn />} />
