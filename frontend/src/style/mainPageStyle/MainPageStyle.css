@@ -484,4 +484,17 @@ textarea:focus {
         margin-bottom: 20px; /* Add spacing between sections */
     }
 }
+.status-message {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.status-message.success {
+    color: green;
+}
+
+.status-message.error {
+    color: red;
+}
 

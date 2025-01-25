@@ -12,23 +12,40 @@ function MainPage() {
         senderEmail: "",
         lastName: "",
     });
+    const [messageStatus, setMessageStatus] = useState(""); // State for displaying success or error message
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     };
-    
-    const handelComplain = async () => {
+
+    const handelComplain = async (e) => {
+        e.preventDefault(); // Prevents the form from submitting
+        // Validate that all required fields are filled
+        if (!formData.name.trim() || !formData.lastName.trim() || !formData.senderEmail.trim() || !formData.complain.trim()) {
+            setMessageStatus("Please fill out all required fields before submitting.");
+            return; // Stop the function if validation fails
+        }
+
         try {
+            // Concatenate name and lastName
+            const fullName = `${formData.name} ${formData.lastName}`;
+
+            // Create a new object for the request body
+            const complaintData = {
+                ...formData,
+                name: fullName, // Use the concatenated full name
+            };
+
             const response = await fetch('http://localhost:8080/complaints/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(complaintData), // Send the updated object
             });
 
             if (!response.ok) {
@@ -37,54 +54,62 @@ function MainPage() {
 
             const data = await response.json();
             console.log('Success:', data);
+            setMessageStatus("Message successfully sent!");
+            // Optionally reset the form
+            setFormData({
+                name: "",
+                complain: "",
+                senderEmail: "",
+                lastName: "",
+            });
         } catch (error) {
             console.error('Error:', error);
+            setMessageStatus("There was an error submitting your complaint. Please try again.");
         }
-    }
+    };
 
     return (
         <div className="main-page">
-            <div className='page-main-one'>
-                <div className='page-main-one-title'>
+            <div className="page-main-one">
+                <div className="page-main-one-title">
                     <h1>Unlock Your Marketing Potential Today</h1>
                 </div>
-                <div className='page-main-one-img'>
+                <div className="page-main-one-img">
                     <img src={mainPagepng} alt="Main Page" />
-                    <p className="overlay-text">
-                        
-                    </p>
+                    <p className="overlay-text"></p>
                 </div>
             </div>
-            
 
-            <div className='page-main-two'>
-                <div className='page-main-two-img'>
+            <div className="page-main-two">
+                <div className="page-main-two-img">
                     <img src={aboutuspng} alt="About Us" />
                 </div>
-                <div className='page-main-two-right'>
-                    <div className='page-main-two-head'>
+                <div className="page-main-two-right">
+                    <div className="page-main-two-head">
                         <h1>
                             Who
                             <br />
                             We are
                         </h1>
                     </div>
-                    <div className='page-main-two-txt'>
+                    <div className="page-main-two-txt">
                         <p>
                             Welcome to our marketing hub, where creativity meets strategy! We're
                             here to help your brand thrive with personalized solutions that connect,
                             engage, and inspire.
                         </p>
                     </div>
-                    <div className='page-main-two-button'>
-                     <Link to="/learnmore" className="button">LEARN More</Link>
-                     </div>
+                    <div className="page-main-two-button">
+                        <Link to="/learnmore" className="button">
+                            LEARN More
+                        </Link>
+                    </div>
                 </div>
             </div>
 
-            <div className='page-main-three'>
-                <div className='page-main-three-contactus'>
-                    <div className='page-main-three-contactus-title'>
+            <div className="page-main-three">
+                <div className="page-main-three-contactus">
+                    <div className="page-main-three-contactus-title">
                         <h1>Contact Us</h1>
                     </div>
                     <p>
@@ -94,7 +119,7 @@ function MainPage() {
                 </div>
 
                 <div className="page-main-three-login">
-                    <form>
+                    <form onSubmit={handelComplain}>
                         <label htmlFor="first-name" className="label">
                             Name <span className="required">(required)</span>
                         </label>
@@ -103,7 +128,7 @@ function MainPage() {
                                 <input
                                     type="text"
                                     id="first-name"
-                                    name="name" // changed from firstName to name
+                                    name="name"
                                     placeholder="First Name"
                                     required
                                     value={formData.name}
@@ -128,7 +153,7 @@ function MainPage() {
                         <input
                             type="email"
                             id="email"
-                            name="senderEmail" // changed from email to senderEmail
+                            name="senderEmail"
                             placeholder="Email"
                             required
                             value={formData.senderEmail}
@@ -140,7 +165,7 @@ function MainPage() {
                         </label>
                         <textarea
                             id="message"
-                            name="complain" // changed from message to complain
+                            name="complain"
                             placeholder="Message"
                             rows="4"
                             required
@@ -148,7 +173,12 @@ function MainPage() {
                             onChange={handleChange}
                         ></textarea>
                         <div className="send-button">
-                            <button onClick={()=>handelComplain()}>Send</button>
+                            <button type="submit">Send</button>
+                            {messageStatus && (
+                                <span className={`status-message ${messageStatus.includes('successfully') ? 'success' : 'error'}`}>
+                                    {messageStatus}
+                                </span>
+                            )}
                         </div>
                     </form>
                 </div>
@@ -158,24 +188,31 @@ function MainPage() {
                 <div className="footer-left">
                     <h2>StyloSphere</h2>
                     <p>muhannd, ahmedAli, Moamen, farag and yousef </p>
-                    <br/>
+                    <br />
                     <p>Made by Muhannd</p>
-                    <br/>
+                    <br />
                     <p>AI Made by ahmedAli & moamen</p>
                 </div>
                 <div className="footer-right">
                     <div className="footer-section">
                         <h3>Location</h3>
-                        <p>123 Demo Street<br />New York, NY 12345</p>
+                        <p>
+                            123 Demo Street
+                            <br />
+                            New York, NY 12345
+                        </p>
                     </div>
                     <div className="footer-section">
                         <h3>Contact</h3>
-                        <p><a href="mailto:email@example.com">muhanndsayed24@gmail.com</a><br />(555) 555-5555</p>
+                        <p>
+                            <a href="mailto:email@example.com">muhanndsayed24@gmail.com</a>
+                            <br />
+                            (555) 555-5555
+                        </p>
                     </div>
                 </div>
             </footer>
         </div>
-        
     );
 }
 
