@@ -29,6 +29,10 @@ public class Product {
     private int quantity ;
     private double DiscountedPrice;
     private int SalesCount;
+    private Set<String> sizes = new HashSet<>();
+    private Set<String> styles = new HashSet<>();
+    private String brand;
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id")
@@ -42,7 +46,7 @@ public class Product {
     
     public Product() {
     }
-    public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity) {
+    public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity, double discountedPrice, int salesCount, Set<String> sizes, Set<String> styles, String brand) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -50,6 +54,11 @@ public class Product {
         this.tags = tags;
         this.colors = colors;
         this.quantity = quantity;
+        this.DiscountedPrice = discountedPrice;
+        this.SalesCount = salesCount;
+        this.sizes = sizes;
+        this.styles = styles;
+        this.brand = brand;
     }
 
     public Long getId() {
@@ -139,8 +148,28 @@ public class Product {
     {
         return this.SalesCount;
     }
+
+    public Set<String> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(Set<String> sizes) {
+        this.sizes = sizes;
+    }
+
+    public Set<String> getStyles() {
+        return styles;
+    }
+
+    public void setStyles(Set<String> styles) {
+        this.styles = styles;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 }
-
-
-
-

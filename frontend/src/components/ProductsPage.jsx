@@ -3,180 +3,93 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import '../style/productsPageStyle/ProductsPageStyle.css';
+import FilterWindow from './FilterWindow'; // Import the FilterWindow component
 
 const ProductsPage = () => {
     const navigate = useNavigate();
     const [sortType, setSortType] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
     const [searchInput, setSearchInput] = useState('');
-    const [image, setImage] = useState(null); // Track the image for AI
-    const [clothingType, setClothingType] = useState(''); // Store the clothing type response
-    const [price, setPrice] = useState(100); // Track the price range
+    const [image, setImage] = useState(null);
+    const [clothingType, setClothingType] = useState('');
+    const [price, setPrice] = useState(100);
     const [selectedTags, setSelectedTags] = useState([]);
     const [products, setProducts] = useState([]);
-    const tags = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
-        "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
-        
-
-        
-    const [selectedColors, setSelectedColors] = useState([]); // Track selected colors
-    const [sliderValue, setSliderValue] = useState(0); // Track slider value
-    const [sliderThumbColor, setSliderThumbColor] = useState('white'); // Default to white
-    const [colorPopup, setColorPopup] = useState(null); // Store the color for the popup
-
-    // Predefined color options (This will be mapped to the color spectrum)
-    const colorOptions = ['red', 'blue', 'green', 'yellow', 'pink', 'orange'];
-
-    // Create a gradient spectrum background
-    const gradient = colorOptions.join(', ');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const tags = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
+    const [selectedColors, setSelectedColors] = useState([]);
+    const [sliderValue, setSliderValue] = useState(0);
+    const [sliderThumbColor, setSliderThumbColor] = useState('white');
+    const [colorPopup, setColorPopup] = useState(null);
+    const colorOptions = ['red', 'blue', 'green', 'yellow', 'pink', 'orange','purple', 'brown', 'black', 'white'];
+    const [isFilterVisible, setIsFilterVisible] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 18;
     
-    useEffect(() => {
-        setProducts(sortedProducts);
-    }, [sortType , sortOrder]);
-    // Function to determine closest color based on slider value
+    const toggleFilter = () => {
+        setIsFilterOpen(!isFilterOpen);
+    };
+
+    const handleCloseFilter = () => {
+        setIsFilterOpen(false);
+    };
+
     const getClosestColor = (value) => {
-        const index = Math.round(value / (200 / (colorOptions.length - 1))); // Get index based on slider value
+        const index = Math.round(value / (200 / (colorOptions.length - 1)));
         return colorOptions[index];
     };
 
-    // Handle the slider change and update the selected color
     const handleSliderChange = (e) => {
         const value = e.target.value;
         setSliderValue(value);
-    
-        const closestColor = getClosestColor(value); // Get closest color from the list
-        setColorPopup(closestColor); // Show the color popup
-    
-        // Dynamically set the slider thumb color based on position
-        const sliderThumbColor = closestColor; // Update the thumb color based on the closest color
-        setSliderThumbColor(sliderThumbColor); // Save the color for the thumb
-    
-        setTimeout(() => setColorPopup(null), 1000); // Hide the popup after 1 second
-    
+        const closestColor = getClosestColor(value);
+        setColorPopup(closestColor);
+        const sliderThumbColor = closestColor;
+        setSliderThumbColor(sliderThumbColor);
+        setTimeout(() => setColorPopup(null), 1000);
         if (!selectedColors.includes(closestColor)) {
-            setSelectedColors([...selectedColors, closestColor]); // Add to selected colors
+            setSelectedColors([...selectedColors, closestColor]);
         }
     };
 
-
-    // Remove color from the selectedColors array
     const removeColor = (colorToRemove) => {
         setSelectedColors(selectedColors.filter(color => color !== colorToRemove));
     };
-    // Fetch products from the base list
 
     useEffect(() => {
         const fetchProducts = async () => {
             const products = await getBaseList();
             setProducts(products.map(product => ({
                 ...product,
-                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
+                image: product.images && product.images.length > 0 ? product.images : null
             })));
         };
-    
         fetchProducts();
     }, []);
 
-    // Function to convert image string to base64 if necessary
     const convertImageStringToBase64 = (imageString) => {
         if (imageString.startsWith('data:image')) {
-            return imageString; // Already in base64 format
+            return imageString;
         } else {
             return `data:image/jpeg;base64,${imageString}`;
         }
     };
-     // Empty dependency array to run only once when the component mounts
 
-    // Filter products based on selected tags
     const retrieveProducts = async () => {
-        
-
         try {
             const response = await fetch('http://localhost:8080/api/products/filter', {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({selectedTags , selectedColors}),
-              });
-            const result = await response.json();
-                        if (Array.isArray(result)) {
-                            console.log('Fetched newproducts:', result);
-                            setProducts(result.map(product => ({
-                            
-                                ...product,
-                                images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
-                            })));
-                            console.log('Fetched newproducts:', products[0].images+"mkklksk");
-                            console.log('Fetched newproducts:', result);
-                        } else {
-                            console.error('Fetched data is not an array:', result);
-                        }
-                    } catch (error) {
-                        console.error('Error fetching newproducts:', error);
-                    }
-    };
-
-
-    // Handle search input change
-    const handleInputChange = async (e) => {
-        const inputValue = e.target.value;
-        setSearchInput(inputValue);
-      
-        if (inputValue === '') {
-          try {
-            const baseList = await getBaseList(); // Wait for the async function to resolve
-            setProducts(products.map(product => ({
-                ...product,
-                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
-            }))); // Update products with the fetched base list
-          } catch (error) {
-            console.error('Error fetching base list:', error);
-          }
-        }
-      };
-
-    // Handle search action (currently just logs the search input)
-    const handleSearch = async() => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/products/search?query=${searchInput}`, {
-                method: 'GET'
-              });
-              const result = await response.json();
-                if (Array.isArray(result)) {
-                    console.log('Fetched newproducts:', result);
-                    setProducts(result.map(product => ({
-                      
-                        ...product,
-                        images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
-                    })));
-                    console.log('Fetched newproducts:', products[0].images+"mkklksk");
-                    console.log('Fetched newproducts:', result);
-                } else {
-                    console.error('Fetched data is not an array:', result);
-                }
-            } catch (error) {
-                console.error('Error fetching newproducts:', error);
-            }
-    };
-
-
-    
-    const getBaseList = async () => {
-        try {
-            // Make a request to the backend
-            const response = await fetch('http://localhost:8080/api/products/all');
-            
+                body: JSON.stringify({ selectedTags, selectedColors }),
+            });
             const result = await response.json();
             if (Array.isArray(result)) {
-                console.log('Fetched newproducts:', result);
                 setProducts(result.map(product => ({
-                  
                     ...product,
-                    images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                    images: Array.isArray(product.images) ? product.images : []
                 })));
-                console.log('Fetched newproducts:', products[0].images+"mkklksk");
-                console.log('Fetched newproducts:', result);
             } else {
                 console.error('Fetched data is not an array:', result);
             }
@@ -185,9 +98,57 @@ const ProductsPage = () => {
         }
     };
 
-   
+    const handleInputChange = async (e) => {
+        const inputValue = e.target.value;
+        setSearchInput(inputValue);
+        if (inputValue === '') {
+            try {
+                const baseList = await getBaseList();
+                setProducts(baseList.map(product => ({
+                    ...product,
+                    images: Array.isArray(product.images) ? product.images : []
+                })));
+            } catch (error) {
+                console.error('Error fetching base list:', error);
+            }
+        }
+    };
 
-    // Handle tag click to filter products based on selected tags
+    const handleSearch = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/products/search?query=${searchInput}`, {
+                method: 'GET'
+            });
+            const result = await response.json();
+            if (Array.isArray(result)) {
+                setProducts(result.map(product => ({
+                    ...product,
+                    images: Array.isArray(product.images) ? product.images : []
+                })));
+            } else {
+                console.error('Fetched data is not an array:', result);
+            }
+        } catch (error) {
+            console.error('Error fetching newproducts:', error);
+        }
+    };
+
+    const getBaseList = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/products/all');
+            const result = await response.json();
+            if (Array.isArray(result)) {
+                return result;
+            } else {
+                console.error('Fetched data is not an array:', result);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching newproducts:', error);
+            return [];
+        }
+    };
+
     const handleTagClick = (tag) => {
         setSelectedTags((prevTags) =>
             prevTags.includes(tag)
@@ -196,81 +157,69 @@ const ProductsPage = () => {
         );
     };
 
-    // Send image to Flask API to detect clothing type
-   // Function to convert an image file to Base64
-const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(",")[1]); // Get Base64 part only
-        reader.onerror = (error) => reject(error);
-    });
-};
-
-const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        if (!file.type.startsWith("image/")) {
-            alert("Please upload a valid image file.");
-            return;
-        }
-        try {
-            const base64Image = await convertToBase64(file);
-            const products = await getBaseList(); // Fetch products using your Java Spring Boot service
-            console.log(products[0].image);
-            sendImageToAI(base64Image, products);
-        } catch (error) {
-            console.error("Error converting image to Base64:", error);
-            alert("Failed to process the selected image.");
-        }
-    } else {
-        alert("No file selected.");
-    }
-};
-
-const sendImageToAI = async (base64Image, products) => {
-    try {
-        const payload = {
-            query_image: base64Image,
-            products: products,
-        };
-
-        const response = await fetch('http://127.0.0.1:5000/compare', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(",")[1]);
+            reader.onerror = (error) => reject(error);
         });
+    };
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Error from backend:', errorData.error);
-            alert(`Error: ${errorData.error}`);
-            return;
-        }
-
-        const data = await response.json();
-        if (data.similar_products) {
-            setProducts(products.map(product => ({
-                ...product,
-                image: product.images && product.images.length > 0 ? product.images : null // Take the first image if available
-            })));
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (!file.type.startsWith("image/")) {
+                alert("Please upload a valid image file.");
+                return;
+            }
+            try {
+                const base64Image = await convertToBase64(file);
+                const products = await getBaseList();
+                sendImageToAI(base64Image, products);
+            } catch (error) {
+                console.error("Error converting image to Base64:", error);
+                alert("Failed to process the selected image.");
+            }
         } else {
-            alert("Failed to retrieve similar products.");
+            alert("No file selected.");
         }
-    } catch (error) {
-        console.error('Error sending image to AI:', error);
-        alert("An error occurred while processing the image.");
-    }
-};
+    };
 
-// Function to display similar products (update according to your UI logic)
+    const sendImageToAI = async (base64Image, products) => {
+        try {
+            const payload = {
+                query_image: base64Image,
+                products: products,
+            };
+            const response = await fetch('http://127.0.0.1:5000/compare', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error from backend:', errorData.error);
+                alert(`Error: ${errorData.error}`);
+                return;
+            }
+            const data = await response.json();
+            if (data.similar_products) {
+                setProducts(products.map(product => ({
+                    ...product,
+                    image: product.images && product.images.length > 0 ? product.images : null
+                })));
+            } else {
+                alert("Failed to retrieve similar products.");
+            }
+        } catch (error) {
+            console.error('Error sending image to AI:', error);
+            alert("An error occurred while processing the image.");
+        }
+    };
 
-    
-    
-
-    // Sorting logic for price and name
     const sortProductsByPrice = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
     };
@@ -278,50 +227,43 @@ const sendImageToAI = async (base64Image, products) => {
     const sortProductsByName = (order) => {
         return [...products].sort((a, b) => (order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
     };
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                retrieveProducts(); // Call API
-
-                console.log(",l,,l,l"+products.product); // Update state with the fetched products
+                retrieveProducts();
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
         };
-        
         fetchProducts();
-    }, [selectedTags,selectedColors]);
+    }, [selectedTags, selectedColors]);
 
     const sortedProducts = sortType === 'price'
         ? sortProductsByPrice(sortOrder)
         : sortProductsByName(sortOrder);
 
+    const [product, setProduct] = useState({
+        name: '',
+        description: '',
+        tags: '',
+        price: '',
+        quantity: '',
+        colors: ''
+    });
+    const [imageFiles, setImageFiles] = useState([]);
+    const [newproducts, setnewproducts] = useState([]);
 
-
-       const [product, setProduct] = useState({
-            name: '',
-            description: '',
-            tags: '',
-            price: '',
-            quantity: '',
-            colors: ''
-        });
-        const [imageFiles, setImageFiles] = useState([]);
-        const [newproducts, setnewproducts] = useState([]);
-    
-     useEffect(() => {
+    useEffect(() => {
         const getnewproducts = async () => {
-            
             try {
                 const response = await fetch('http://localhost:8080/api/admin/products');
                 const result = await response.json();
                 if (Array.isArray(result)) {
-                    console.log('Fetched newproducts:', result);
                     setProducts(result.map(product => ({
                         ...product,
-                        images: Array.isArray(product.images) ? product.images : [] // Ensure images is an array
+                        images: Array.isArray(product.images) ? product.images : []
                     })));
-                    console.log('Fetched newproducts:', result);
                 } else {
                     console.error('Fetched data is not an array:', result);
                 }
@@ -329,10 +271,28 @@ const sendImageToAI = async (base64Image, products) => {
                 console.error('Error fetching newproducts:', error);
             }
         };
-
         getnewproducts();
     }, []);
 
+    // Calculate the products to display based on the current page
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const handleNextPage = () => {
+        setCurrentPage(prevPage => prevPage + 1);
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    };
+
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <div className="products-page">
@@ -357,7 +317,6 @@ const sendImageToAI = async (base64Image, products) => {
                     </svg>
                 </button>
 
-                {/* Image upload */}
                 <div className="image-upload">
                     <input
                         type="file"
@@ -368,156 +327,89 @@ const sendImageToAI = async (base64Image, products) => {
                     <label htmlFor="file-input">AI detection</label>
                     {image && <p>Image uploaded successfully!</p>}
                 </div>
-            </div>
-            <div className='banner' src = './assets/banner.png'>
+
+                <button className="filter-button" onClick={toggleFilter}>
+                    Filter
+                </button>
             </div>
 
-            {/* Display the clothing type received from AI */}
+            {isFilterOpen && <FilterWindow onClose={handleCloseFilter} setProducts={setProducts} />}
+
+            <div className='banner' src='./assets/banner.png'></div>
+
             {clothingType && <div className="clothing-type">Clothing Type: {clothingType}</div>}
 
-            <div className="products-container">
-                <div className="filters">
-                    {/* Price Range Slider */}
-                    <div className="filter-category">
-                        <h3>Price Range</h3>
-                        <input
-                            type="range"
-                            min="0"
-                            max="200"
-                            step="10"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="price-range"
-                        />
-                        <div className="price-display">Price: ${price}</div>
-                    </div>
+            
 
-                    {/* Tags Grid */}
-                    <div className="filter-category">
-                        <h3>Tags</h3>
-                        <div className="tag-grid">
-                            {tags.map(tag => (
-                                <label key={tag} className="tag-label">
-                                    <input
-                                        type="checkbox"
-                                        value={tag}
-                                        checked={selectedTags.includes(tag)}
-                                        onChange={() => handleTagClick(tag)}
-                                        className="tag-checkbox"
-                                    />
-                                    <span
-                                        className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
-                                    >
-                                        {tag}
-                                    </span>
-                                </label>
-                            ))}
-                        </div>
-
-                    </div>
-                    <div className="color-slider">
-                        <h3>Choose Colors</h3>
-
-                        {/* Spectrum Slider */}
-                        <input
-                            type="range"
-                            min="0"
-                            max="200"
-                            step="10"
-                            value={sliderValue}
-                            onChange={handleSliderChange}
-                            className="slider"
-                            style={{
-                                background: `linear-gradient(to right, ${colorOptions.join(', ')})`, // Spectrum
+            <div className="product-list-container">
+                <div className="sorting-toolbar">
+                    <div className="sort-dropdown">
+                        <label>Sort by</label>
+                        <select
+                            value={sortType + '-' + sortOrder}
+                            onChange={(e) => {
+                                const [type, order] = e.target.value.split('-');
+                                setSortType(type);
+                                setSortOrder(order);
                             }}
-                        />
-
-
-                        {/* Pop-up Color Indicator */}
-                        {colorPopup && (
-                            <div
-                                className="color-popup"
-                                style={{
-                                    left: '50%',  // Centered horizontally
-                                    transform: 'translateX(-50%)', // Center it perfectly
-                                    top: '-0.4px',  // Positioned above the slider
-                                    backgroundColor: colorPopup, // Set the background color
-                                }}
-                            ></div>
-                        )}
-
-                        {/* Display the bubbles for selected colors */}
-                        <div className="color-bubbles">
-                            {selectedColors.map((color) => (
-                                <div
-                                    key={color}
-                                    className="color-bubble"
-                                    style={{ backgroundColor: color }}
-                                    onClick={() => removeColor(color)} // Remove color on click
-                                ></div>
-                            ))}
-                        </div>
+                        >
+                            <option value="price-asc">Price <span className="arrow-up">↑</span></option>
+                            <option value="price-desc">Price <span className="arrow-down">↓</span></option>
+                            <option value="name-asc">Alphabetically <span className="arrow-up">↑</span></option>
+                            <option value="name-desc">Alphabetically <span className="arrow-down">↓</span></option>
+                        </select>
                     </div>
                 </div>
 
-                <div className="product-list-container">
-                    <div className="sorting-toolbar">
-                        <div className="sort-dropdown">
-                            <label>Sort by</label>
-                            <select
-                                value={sortType + '-' + sortOrder}
-                                onChange={(e) => {
-                                    const [type, order] = e.target.value.split('-');
-                                    setSortType(type);
-                                    setSortOrder(order);
-                                }}
-                            >
-                                <option value="price-asc">Price <span className="arrow-up">↑</span></option>
-                                <option value="price-desc">Price <span className="arrow-down">↓</span></option>
-                                <option value="name-asc">Alphabetically <span className="arrow-up">↑</span></option>
-                                <option value="name-desc">Alphabetically <span className="arrow-down">↓</span></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="products-grid">
-                        {products.map(product => (
-                            <div key= {product.id}className="product-item">
-                                <div className="product-image">
+                <div className="products-grid">
+                    {currentProducts.map(product => (
+                        <div key={product.id} className="product-item">
+                            <div className="product-image">
                                 {product.images && (
-                                        <div className="product-image">
-                                            <img
-                                                src={`data:image/jpeg;base64,${product.image[0].image}`}
-                                                alt={`Product ${product.id} Image`}
-                                                title={`Product ${product.id} Image`}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="product-info">
-                                    <div className='product-name'>
-                                    {product.name}
+                                    <div className="product-image">
+                                        <img
+                                            src={`data:image/jpeg;base64,${product.image[0].image}`}
+                                            alt={`Product ${product.id} Image`}
+                                            title={`Product ${product.id} Image`}
+                                        />
                                     </div>
-                                    
-                                    <p>${product.price}</p>
-                                    <button
+                                )}
+                            </div>
+                            <div className="product-info">
+                                <div className='product-name'>
+                                    {product.name}
+                                </div>
+                                <p>${product.price}</p>
+                                <button
                                     className="details-btn"
                                     onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
-                                    >
+                                >
                                     View details
-                                    </button>
-
-                                </div>
+                                </button>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="pagination-buttons">
+                    <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+                    {[...Array(totalPages).keys()].slice(
+                        Math.max(0, currentPage - 3), 
+                        Math.min(totalPages, currentPage + 2)
+                    ).map(pageNumber => (
+                        <button
+                            key={pageNumber + 1}
+                            onClick={() => handlePageClick(pageNumber + 1)}
+                            className={currentPage === pageNumber + 1 ? 'active' : ''}
+                        >
+                            {pageNumber + 1}
+                        </button>
+                    ))}
+                    <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
                 </div>
             </div>
         </div>
+        
     );
 };
 
 export default ProductsPage;
-
-
-

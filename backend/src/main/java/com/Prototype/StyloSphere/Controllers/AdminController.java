@@ -56,7 +56,12 @@ public class AdminController {
             @RequestParam("price") double price,
             @RequestParam("quantity") int quantity,
             @RequestParam("colors") String colors,
-            @RequestParam("images") MultipartFile[] images) {
+            @RequestParam("images") MultipartFile[] images,
+            @RequestParam("discountedPrice") double discountedPrice,
+            @RequestParam("salesCount") int salesCount,
+            @RequestParam("sizes") String sizes,
+            @RequestParam("styles") String styles,
+            @RequestParam("brand") String brand) {
 
             List<Image> imageList = new ArrayList<>();
             if (images != null && images.length > 0) {
@@ -76,8 +81,10 @@ public class AdminController {
 
             Set<String> tagSet = Arrays.stream(tags.split(",")).map(String::trim).collect(Collectors.toSet());
             Set<String> colorSet = Arrays.stream(colors.split(",")).map(String::trim).collect(Collectors.toSet());
+            Set<String> sizeSet = Arrays.stream(sizes.split(",")).map(String::trim).collect(Collectors.toSet());
+            Set<String> styleSet = Arrays.stream(styles.split(",")).map(String::trim).collect(Collectors.toSet());
 
-            Product product = new Product(name, description, price, imageList, tagSet, colorSet, quantity);
+            Product product = new Product(name, description, price, imageList, tagSet, colorSet, quantity, discountedPrice, salesCount, sizeSet, styleSet, brand);
             Product savedProduct = productRepository.save(product);
     }
 
@@ -115,7 +122,11 @@ public class AdminController {
                 productMap.put("price", product.getPrice());
                 productMap.put("quantity", totalQuantity); // Use total quantity sold
                 productMap.put("colors", product.getColors());
-
+                productMap.put("discountedPrice", product.getDiscountedPrice());
+                productMap.put("salesCount", product.getSalesCount());
+                productMap.put("sizes", product.getSizes());
+                productMap.put("styles", product.getStyles());
+                productMap.put("brand", product.getBrand());
                 List<String> base64Images = new ArrayList<>();
                 for (Image image : product.getImage()) {
                     base64Images.add(Base64.getEncoder().encodeToString(image.getimage()));

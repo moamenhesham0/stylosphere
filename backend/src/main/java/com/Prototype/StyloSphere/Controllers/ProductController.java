@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/products")
@@ -46,21 +48,51 @@ public class ProductController {
             return ResponseEntity.ok(Map.of("status" , "Failed"));
         }
     }
-    @PostMapping("/filter")
-    public ResponseEntity<List<Product>> filterByTags(@RequestBody Map<String, List<String>> body) {
-        try {
-            List<String> tags = body.get("selectedTags");
-            List<String> colors = body.get("selectedColors");
-            
-            List<Product> baseList = productService.getBaseList();
-            List<Product> filteredByTags = tags.isEmpty()? baseList : productService.filterByTags(tags, baseList);
-            List<Product> filteredProducts = colors.isEmpty()? filteredByTags :productService.filterByColor(colors, filteredByTags);
-            
-            return ResponseEntity.ok(filteredProducts);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new ArrayList<>());
+@PostMapping("/filter")
+public ResponseEntity<List<Product>> filterProducts(@RequestBody Map<String, List<String>> body, @RequestParam(required = false) Double maxPrice) {
+    try {
+        // Extract filter parameters from request body
+        List<String> tags = body.get("selectedTags");
+        List<String> colors = body.get("selectedColors");
+        List<String> sizes = body.get("selectedSizes");
+        List<String> styles = body.get("selectedStyles");
+        List<String> brands = body.get("selectedBrands");
+
+        // Retrieve the base product list
+        List<Product> baseList = productService.getBaseList();
+
+        // Apply filters using AND logic
+        Stream<Product> productStream = baseList.stream();
+
+        if (tags != null) {
+            productStream = productStream.filter(product -> productService.matchesTags(tags, product));
         }
+        if (colors != null) {
+            productStream = productStream.filter(product -> productService.matchesColors(colors, product));
+        }
+        if (sizes != null) {
+            productStream = productStream.filter(product -> productService.matchesSizes(sizes, product));
+        }
+        if (styles != null) {
+            productStream = productStream.filter(product -> productService.matchesStyles(styles, product));
+        }
+        if (brands != null) {
+            productStream = productStream.filter(product -> productService.matchesBrands(brands, product));
+        }
+        if (maxPrice != null) {
+            productStream = productStream.filter(product -> product.getPrice() <= maxPrice);
+        }
+
+        List<Product> filteredProducts = productStream.collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredProducts);
+    } catch (Exception e) {
+        // Handle errors gracefully
+        return ResponseEntity.badRequest().body(new ArrayList<>());
     }
+}
+
+    
     @GetMapping("/best-sellers")
     public ResponseEntity<List<Product>> getBestSellers() {
         try {
@@ -104,9 +136,3 @@ public class ProductController {
     }
 
 }
-
-    
-
-
-
-    

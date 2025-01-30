@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../style/productPageStyle/ProductPageStyle.css";
 import { useUser } from "./user/UserContext";
 import { useLocalCart } from "../context/localCartContext";
+import{ FaTimes } from 'react-icons/fa';
 
 const ProductPage = () => {
   const location = useLocation();
@@ -15,6 +16,8 @@ const ProductPage = () => {
   const [color, setColor] = useState(product?.colors?.[0] || "");
   const [userNames, setUserNames] = useState({});
   const [comment, setComment] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!product?.id) return;
@@ -106,9 +109,10 @@ const ProductPage = () => {
         throw new Error(`Failed to add product to cart. Status: ${response}`);
       }
 
-      console.log("Product successfully added to backend cart");
+      
     } catch (error) {
       console.error("Error adding product to cart:", error);
+      setIsModalOpen(true); // Show the modal
     }
   };
 
@@ -116,10 +120,21 @@ const ProductPage = () => {
     setQuantity((prev) => Math.max(1, prev + change));
   };
 
+  const handleContinueShopping = () => {
+    setIsModalOpen(false);
+    navigate('/shop');
+  };
+
+  const handleGoToCart = () => {
+    navigate('/cart');
+  };
+
   if (!product) {
     return <div className="loading-message">Loading...</div>;
   }
-
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="product-page">
       <div className="product-container">
@@ -215,12 +230,19 @@ const ProductPage = () => {
 )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+          <FaTimes className="close-icon" onClick={handleCloseModal} />
+            <h2>Product added to cart</h2>
+            <button onClick={handleContinueShopping}>Continue Shopping</button>
+            <button onClick={handleGoToCart}>Go to Cart</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ProductPage;
-
-
-
-
