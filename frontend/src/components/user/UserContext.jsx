@@ -6,7 +6,7 @@ export const UserProvider = ({ children }) => {
   // Initialize user state from localStorage (if available)
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : { email: '', name: '', type: '', admin_level: '', userStatus: false, image: '', userId: -1 };
+    return storedUser ? JSON.parse(storedUser) : { email: '', name: '', type: '', phone:'' , address:'' ,admin_level: '', userStatus: false, image: '', userId: -1 };
   });
 
   // Update user data and store it in localStorage
@@ -20,8 +20,12 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
+  const clearUser = () => {
+    setUser({ email: '', name: '', type: '', phone:'' , address:'' ,admin_level: '', userStatus: false, image: '', userId: -1 });
+  };
+
   return (
-    <UserContext.Provider value={{ user, updateUser }}>
+    <UserContext.Provider value={{ user, updateUser, clearUser }}>
       {children}
     </UserContext.Provider>
   );

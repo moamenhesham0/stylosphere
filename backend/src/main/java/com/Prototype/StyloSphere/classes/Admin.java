@@ -3,7 +3,6 @@ package com.Prototype.StyloSphere.classes;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 
 import java.util.List;
 
@@ -11,6 +10,7 @@ import java.util.List;
 @DiscriminatorValue("Admin")
 public class Admin extends User {
     private String adminLevel;
+    private List<String> PromoCodes;
     public Admin() {
     }
 

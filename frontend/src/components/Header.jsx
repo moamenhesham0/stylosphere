@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from './user/UserContext';
 import '../style/headerStyle/HeaderStyle.css';
 import { Avatar } from "@mui/material";
-import { useLocalCart } from '../context/localCartContext';
+import { useLocalCart } from './cart/localCartContext';
 function Header() {
-    const { user , updateUser } = useUser();
+    const { user , updateUser , clearUser } = useUser();
     const { cart , clearLocalCart} = useLocalCart();
     const location = useLocation();
     const [userLogin, setUserlogin] = useState(false);
@@ -38,13 +38,7 @@ function Header() {
     }, []);
 
     const logOut= () => {
-        updateUser({
-            email: '',
-            name: '',
-            type: '',
-            userStatus: false, // Set user as logged in
-            image: '',
-          });
+          clearUser();
           clearLocalCart();
           navigate("/");
       };

@@ -11,8 +11,17 @@ import java.time.LocalDate;
 import java.util.*;
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase , Long> {
+
+
+    @Query("SELECT p FROM Purchase p WHERE p.customerId = :customerId AND TYPE(p) = Purchase")
     List<Purchase> findByCustomerId(Long customerId);
+
+
+    @Query("SELECT p FROM Purchase p WHERE p.timeStamp = :timeStamp AND TYPE(p) = Purchase")
     List<Purchase> findByTimeStamp(Date timeStamp);
+
+
+    @Query("SELECT p FROM Purchase p WHERE p.productId = :productId AND TYPE(p) = Purchase")
     List<Purchase> findByProductId(Long productId);
 
     @Query("SELECT p.productId AS productId, SUM(p.quantity) AS totalSales FROM Purchase p GROUP BY p.productId ORDER BY totalSales DESC")

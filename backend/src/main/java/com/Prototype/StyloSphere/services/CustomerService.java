@@ -12,28 +12,11 @@ public class CustomerService {
     
     @Autowired
     private UserRepository<Customer> customerRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+    
 
-    public void addOrderToCart(Long customerId , Order order)   
+    public Customer getCustomerById(Long id)
     {
-        Long orderId = orderRepository.save(order).getId();
-        Customer customer = customerRepository.findById(customerId).get();
-        customer.getCart().addProductToCart(orderId);
-        customerRepository.save(customer);
-    }
-
-    public List<Order> getCartItems(Long customerId)
-    {
-        Customer customer = customerRepository.findById(customerId).get();
-        List<Long> cartIds= customer.getCart().getCartItems();
-        List<Order> cartItems = new ArrayList<>();
-        for(Long id : cartIds)
-        {
-            Order item = orderRepository.findById(id).get();
-            cartItems.add(item);
-        }
-        return cartItems;
+        return customerRepository.findById(id).get();
     }
 
     

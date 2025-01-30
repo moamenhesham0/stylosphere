@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.Prototype.StyloSphere.classes.Purchase;
 import com.Prototype.StyloSphere.services.PurchaseService;
-import java.util.Map;
+import java.util.*;
 @RestController
 @RequestMapping("/api/purchase")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -41,5 +41,12 @@ public class PurchaseController {
     public ResponseEntity<Map<String, Object>> getIncomeDataa(@RequestParam String timeRange) {
         Map<String, Object> incomeData = purchaseService.getIncomeData(timeRange);
         return ResponseEntity.ok(incomeData);
+    }
+
+    @GetMapping("/user-purchases")
+    public ResponseEntity<List<Purchase>> getUserPurchases(@RequestParam Long userId)
+    {
+        List<Purchase> purchases = purchaseService.getPurchasesByCustomerId(userId);
+        return ResponseEntity.ok(purchases);
     }
 }

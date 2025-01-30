@@ -3,7 +3,6 @@ package com.Prototype.StyloSphere.classes;
 
 
 import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 
 
@@ -13,10 +12,10 @@ import java.util.List;
 @DiscriminatorValue("Customer")
 public class Customer extends User {
     private String shippingAddress;
+    private String phoneNumber;
     private String paymentMethod;
-
-    @Embedded
-    private Cart cart;
+    
+    
 
     private List<Long> purchaseHistory;
 
@@ -42,14 +41,12 @@ public class Customer extends User {
         this.paymentMethod = paymentMethod;
     }
 
-    public Cart getCart()
-    {
-        return this.cart;
+    public String getPhoneNumber() {
+        return this.phoneNumber;
     }
-    public void setCart(Cart cart)
-    {
-        this.cart = cart;
-    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    } 
 
     public List<Long> getPurchaseHistory()
     {

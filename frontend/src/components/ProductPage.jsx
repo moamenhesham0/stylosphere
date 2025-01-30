@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../style/productPageStyle/ProductPageStyle.css";
 import { useUser } from "./user/UserContext";
-import { useLocalCart } from "../context/localCartContext";
+import { useLocalCart } from "./cart/localCartContext";
 import{ FaTimes } from 'react-icons/fa';
 
 const ProductPage = () => {
@@ -97,10 +97,10 @@ const ProductPage = () => {
     updateLocalCart(order);
 
     if (user.id < 0) return;
-
+    console.log(user.userId);
     try {
       const response = await fetch(
-        `http://localhost:8080/api/customers/add-to-cart?productId=${product.id}&color=${color}&size=${size}&quantity=${quantity}&userId=${user.id}`,
+        `http://localhost:8080/api/cart/add-to-cart?productId=${product.id}&color=${color}&size=${size}&quantity=${quantity}&userId=${user.userId}`,
         {
           method: "POST",
         }

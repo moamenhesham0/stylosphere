@@ -47,9 +47,39 @@ export const LocalCartProvider = ({ children }) => {
     setCart([]);
     localStorage.removeItem('cart');
   };
+  const deleteCartItem = (productId, productSize, productColor) => {
+    setCart((prevCart) => {
+      // Filter out the item based on all features (productId, productSize, productColor)
+      const updatedCart = prevCart.filter(
+        (item) =>
+          item.productId !== productId ||
+          item.productSize !== productSize ||
+          item.productColor !== productColor
+      );
+      return updatedCart;
+    });
+  };
+
+  // Function to update the quantity of an existing item
+  const updateItemQuantity = (productId, productSize, productColor, newQuantity) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) => {
+        if (
+          item.productId === productId &&
+          item.productSize === productSize &&
+          item.productColor === productColor
+        ) {
+          // Update the quantity
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+      return updatedCart;
+    });
+  };
 
   return (
-    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart }}>
+    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart , updateItemQuantity , deleteCartItem }}>
       {children}
     </LocalCartContext.Provider>
   );

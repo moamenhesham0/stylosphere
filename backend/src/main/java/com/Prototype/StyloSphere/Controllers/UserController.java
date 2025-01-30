@@ -3,6 +3,8 @@ package com.Prototype.StyloSphere.Controllers;
 import com.Prototype.StyloSphere.classes.*;
 
 import com.Prototype.StyloSphere.services.*;
+
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,16 +44,15 @@ public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Strin
 }
 
 //sign up
-    @PostMapping("/signup")
-public ResponseEntity<Map<String, String>> signUp(@RequestBody Customer user) {
-    boolean success = userService.signUp(user);
-    System.out.println(success);
-    if (success) {
-        
-        return ResponseEntity.ok(Map.of("message", "Sign-up successful"));
-    } else {
-        return ResponseEntity.badRequest().body(Map.of("message", "Sign-up failed. Email may already be in use."));
+@PostMapping("/signup")
+public ResponseEntity<Boolean> signUp(@RequestBody Customer user) {
+    Boolean success = false;
+    try{
+    success = userService.signUp(user);
+    }catch(Exception e){
+        return ResponseEntity.badRequest().body(false); 
     }
+    return ResponseEntity.ok(success);
 }
 
 @PostMapping("/photo-upload")
@@ -99,6 +100,7 @@ public ResponseEntity<User> getName(@RequestParam Long id)
 {
     return ResponseEntity.ok(userService.getUser(id));
 }
+
 @GetMapping("/get-user-email")
 public ResponseEntity<User> getName(@RequestParam String email)
 {
@@ -106,28 +108,57 @@ public ResponseEntity<User> getName(@RequestParam String email)
 }
 
 
-@CrossOrigin(origins = "http://localhost:5173")
-@PostMapping("add-to-cart")
-public ResponseEntity<String> addToCart(@RequestParam Long productId, 
-                        @RequestParam String color, 
-                        @RequestParam String size, 
-                        @RequestParam int quantity,
-                        @RequestParam Long userId)
+
+@PostMapping("/update-name")  
+public ResponseEntity<String> updateName(@RequestParam Long userId , @RequestParam String name)
 {
-    Order newOrder = new Order(productId, color, size, quantity);
-    try{
-    customerService.addOrderToCart(userId, newOrder);
-    }catch(Exception e)
-    {
-        return ResponseEntity.badRequest().body("Failed to add to cart");
-    }
-    return ResponseEntity.ok("Added to cart successfully");
+    Customer user = customerService.getCustomerById(userId);
+    user.setName(name);
+    userService.saveUser(user);
+    return ResponseEntity.ok("Name updated successfully");
 }
 
-@GetMapping("retrieve-cart")
-public ResponseEntity<List<Order>> getCartItems(@RequestParam Long userId)
+@PostMapping("/update-email")
+public ResponseEntity<String> updateEmail(@RequestParam Long userId , @RequestParam String email)
 {
-    return ResponseEntity.ok(customerService.getCartItems(userId));
+    Customer user = customerService.getCustomerById(userId);
+    user.setEmail(email);
+    userService.saveUser(user);
+    return ResponseEntity.ok("Email updated successfully");
 }
+
+@PostMapping("/update-password")
+public ResponseEntity<String> updatePassword(@RequestParam Long userId , @RequestParam String password)
+{
+    Customer user = customerService.getCustomerById(userId);
+    user.setPassword(password);
+    userService.saveUser(user);
+    return ResponseEntity.ok("Password updated successfully");
+}
+
+@PostMapping("/update-phone")
+public ResponseEntity<String> updatePhone(@RequestParam Long userId , @RequestParam String phone)
+{
+    Customer user = customerService.getCustomerById(userId);
+    user.setPhoneNumber(phone);
+    userService.saveUser(user);
+    return ResponseEntity.ok("Phone updated successfully");
+}
+@PostMapping("/update-address")
+public ResponseEntity<String> updateAddress(@RequestParam Long userId , @RequestParam String address)
+{
+    Customer user = customerService.getCustomerById(userId);
+    user.setShippingAddress(address);
+    userService.saveUser(user);
+    return ResponseEntity.ok("Address updated successfully");
+}
+
+@GetMapping("/check-password")
+public ResponseEntity<Boolean> checkPassword(@RequestParam Long userId , @RequestParam String password)
+{
+    Customer user = customerService.getCustomerById(userId);
+    return ResponseEntity.ok(user.getPassword().equals(password));
+}
+
 
 }

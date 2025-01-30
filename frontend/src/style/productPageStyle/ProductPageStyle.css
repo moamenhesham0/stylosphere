@@ -1,7 +1,7 @@
 /* General Page Styles */
 .product-page {
   font-family: Arial, sans-serif;
-  margin: 20px auto;
+  /* margin: 20px auto; */
   max-width: 100%;
   padding: 20px;
   background-color: #dcdcdc;

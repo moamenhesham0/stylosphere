@@ -4,7 +4,7 @@ import ProductsPage from './components/ProductsPage';
 import ProductPage from './components/ProductPage';
 import SignIn from './components/signningIn';
 import SignUp from './components/signningUp';
-import ShoppingCart from './components/cart';
+import ShoppingCart from './components/cart/cart';
 import Header from './components/Header';
 import MainPage from './components/MainPage';
 import AdminPage from './components/admin/AdminPage';
@@ -25,9 +25,9 @@ const AppContent = () => {
         <>
             {!isAdminRoute && <Header />}
             <Routes>
-                <Route path="/best-sellers" element={<BestSellersPage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/learnmore" element={<LearnMorePage />} />
+                <Route path="/sale" element={<BestSellersPage />} />
                 <Route path="/shop" element={<ProductsPage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/signin" element={<SignIn />} />

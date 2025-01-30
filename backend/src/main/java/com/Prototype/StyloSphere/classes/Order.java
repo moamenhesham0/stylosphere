@@ -12,12 +12,14 @@ public class Order{
     private Long id;
 
     private Long productId;
+    private Long customerId;
     private String productColor;
     private String productSize;
     private int quantity;
 
-    public Order(Long productId, String productColor, String productSize, int quantity) {
+    public Order(Long productId, Long customerId , String productColor, String productSize, int quantity) {
         this.productId = productId;
+        this.customerId = customerId;
         this.productColor = productColor;
         this.productSize = productSize;
         this.quantity = quantity;
@@ -32,8 +34,10 @@ public class Order{
     public Long getProductId() {
         return this.productId;
     }
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    
+    public Long getCustomerId()
+    {
+        return this.customerId;
     }
 
     public String getProductColor() {
@@ -56,4 +60,5 @@ public class Order{
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
 }

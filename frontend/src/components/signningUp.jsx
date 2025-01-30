@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../style/mainPageStyle/sinningUpStyle.css';
 import { useUser } from './user/UserContext'; // Make sure this provides the correct context
-import { useLocalCart } from '../context/localCartContext';
+import { useLocalCart } from './cart/localCartContext';
 const SignUp = () => {
   const { user, updateUser } = useUser(); // Ensure updateUser is destructured
   const {cart} = useLocalCart();
@@ -52,7 +52,18 @@ const SignUp = () => {
       setError('Passwords do not match!');
       return;
     }
-  
+    if (formData.firstname === "") {
+      setError('No First name was entered');
+      return;
+    }
+    if (formData.lastname === "") {
+      setError('No Last name was entered');
+      return;
+    }
+    if (formData.email === "") {
+      setError('No email was entered');
+      return;
+    }
     console.log('Attempting to sign up with data:', {
       name: `${formData.firstname} ${formData.lastname}`,
       email: formData.email,
@@ -73,31 +84,21 @@ const SignUp = () => {
 
 
       });
-  
-      console.log('Response status:', response.status);
-  
-      const responseData = await response.json();
+      
+      const status = await response.json();
+      console.log(`status  : ${status}`);
   
       if (response.ok) {
         // Successfully signed up, now update the user context and redirect
+        
+        if(status === true){
         updateUser({
           email: formData.email,
           name: `${formData.firstname} ${formData.lastname}`, // Include the full name
           userStatus: true, // Mark the user as logged in
         });
-        console.log('Success response from backend:', responseData);
-        setSuccess(responseData.message);
-        navigate('/'); // Redirect to the home page or dashboard
-      } else {
-        console.error('Error response from backend:', responseData);
-        setError(responseData.message);
-      }
-    } catch (err) {
-      console.error('Fetch request failed:', err);
-      setError('An error occurred. Please try again later.');
-    }
     const userIdValue = await getUserId();
-    console.log(userIdValue);
+    console.log(`el id aho ${userIdValue}`);
     updateUser({
       email: formData.email,
       name: `${formData.firstname} ${formData.lastname}`,
@@ -106,12 +107,25 @@ const SignUp = () => {
     });
     for(const item of cart){
       const response = await fetch(
-        `http://localhost:8080/api/customers/add-to-cart?productId=${item.productId}&color=${item.color}&size=${item.size}&quantity=${item.quantity}&userId=${userIdValue}`,
+        `http://localhost:8080/api/cart/add-to-cart?productId=${item.productId}&color=${item.productColor}&size=${item.productSize}&quantity=${item.quantity}&userId=${userIdValue}`,
         {
           method: 'POST',
         }
       );
     }
+    setSuccess('True');
+        navigate('/'); // Redirect to the home page or dashboard
+      }
+        
+      } else {
+        console.error('Error response from backend: Failed to sign up' );
+        setError('False');
+      }
+    } catch (err) {
+      console.error('Fetch request failed:', err);
+      setError('An error occurred. Please try again later.');
+    }
+    
   };
 
   return (

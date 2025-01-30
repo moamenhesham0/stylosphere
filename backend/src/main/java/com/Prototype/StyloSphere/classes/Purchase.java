@@ -2,38 +2,24 @@ package com.Prototype.StyloSphere.classes;
 
 
 import jakarta.persistence.*;
-
-import jakarta.persistence.Table;
-
-import java.time.LocalDate;
-
+import java.util.Date;
 @Entity
 @Table(name = "PurchaseHistory")
 public class Purchase extends Order {
     
-    private Long customerId;
-    private LocalDate timeStamp;
+    private Date timeStamp;
     
     public Purchase(Long givenCustomerId, Long productId, String productColor, String productSize, int quantity) {
-        super(productId, productColor, productSize, quantity);
-        this.customerId = givenCustomerId;
-        this.timeStamp = LocalDate.now();
+        super(productId, givenCustomerId, productColor, productSize, quantity);
+        this.timeStamp = new Date();
     }
     public Purchase(){
     }
-    public void setCustomerId(Long givenCustomerId)
-    {
-        this.customerId = givenCustomerId;
-    }
-    public Long getCustomerId()
-    {
-        return this.customerId;
-    }
    
-    public LocalDate getPurchaseDate()
+
+    
+    public Date getPurchaseDate()
     {
         return this.timeStamp;
     }
-
-    
 }

@@ -27,7 +27,7 @@ public class Product {
     private String description;
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
-    private int quantity ;
+    private int quantity;
     private double DiscountedPrice;
     private int SalesCount;
     private Set<String> sizes = new HashSet<>();

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../style/mainPageStyle/sinningInStyle.css';
 import { useUser } from './user/UserContext';
-import { useLocalCart } from '../context/localCartContext';
+import { useLocalCart } from './cart/localCartContext';
 const SignIn = () => {
   const {user} = useUser();
   const {updateLocalCart , clearLocalCart} = useLocalCart();
@@ -12,6 +12,20 @@ const SignIn = () => {
   const navigate = useNavigate();
   const { updateUser } = useUser(); // Access `updateUser` from context
 
+
+  const saveLogInstance = async() =>{
+    const browser = navigator.userAgent;
+    const platform = browser.includes("Win")   ? "Windows" :
+                     browser.includes("Mac")   ? "MacOS"   :
+                     browser.includes("Linux") ? "Linux"   :
+                                                 "Unknown" ;
+                                                 
+    const url = new URL(`http://localhost:8080/api/log-history/add-log-instance?userId=${user.userId}&device=${platform}&browser=${browser}`)
+    const response = await fetch(url, {method:'POST'});
+    
+    const data = await response.json();
+    console.log(data);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,10 +52,15 @@ const SignIn = () => {
           image: data.user.userImage,
           userId: data.user.id,
         });
-        console.log(data.user); // Debugging: check response structure
+        // Save user log in instance.
+        await saveLogInstance();
+
+        // clear non-registered user cart
         clearLocalCart();
+
+        
         const cartResponse = await fetch(
-          `http://localhost:8080/api/customers/retrieve-cart?userId=${data.user.id}`,
+          `http://localhost:8080/api/cart/retrieve-cart?userId=${data.user.id}`,
           {
             method: 'GET',
           }
@@ -49,7 +68,10 @@ const SignIn = () => {
 
         if (cartResponse.ok) {
           const cartData = await cartResponse.json();
-          updateLocalCart(cartData); // Update local cart context
+          // Assuming cartData is an array of Order objects
+          cartData.forEach(order => {
+            updateLocalCart(order);  // Update local cart for each order
+          });
         }
         console.log(user.email); // Debugging: check response structure
 

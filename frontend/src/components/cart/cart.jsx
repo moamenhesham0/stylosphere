@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "../style/mainPageStyle/cartStyle.css";
-import { useLocalCart } from "../context/localCartContext";
-import {useUser } from './user/UserContext';
+import "./cartStyle.css";
+import { useLocalCart } from "./localCartContext";
+import {useUser } from '../user/UserContext';
+import { getItemId,deleteItem, updateQuantity, applyPromoCode, completePayment } from './cartApi';
+
 const ShoppingCart = () => {
-  const { cart , clearLocalCart} = useLocalCart();
+  const { cart , clearLocalCart , updateItemQuantity , deleteCartItem} = useLocalCart();
   const {user} = useUser();
   const [products, setProducts] = useState({});
   const [paymentWindow, setPaymentWindow] = useState(false);
@@ -36,11 +38,54 @@ const ShoppingCart = () => {
     setErrors({});
   };
 
+/* HANDLE CART ACTIONS */
+  const handleGetId = async(item) =>
+  {
+    console.log(user.userId);
+    const id = await getItemId(item , user.userId);
+    return id;
+  }
+
+  const handleDelete = async (item) => {
+    console.log(user.userId);
+    if(user.userId > 0){
+      const id = await handleGetId(item);
+      await deleteItem(id);
+    }
+    deleteCartItem(item.productId , item.productSize , item.productColor);
+  };
+
+  const handleUpdateQuantity = async (item, quantity) => {
+    item.quantity = quantity;
+    
+    console.log(cart);
+    if(user.userId > 0){
+      const id = await handleGetId(item);
+      console.log(`id = ${id}`); 
+      await updateQuantity(id, quantity);
+    }
+
+    updateItemQuantity(item.productId , item.productSize , item.productColor , quantity);
+  };
+  
+  const handleApplyPromoCode = async (productId, promoCode) => {
+    await applyPromoCode(productId, promoCode);
+  };
+  
+  const handleCompletePayment = async () => {
+    const cartItems = cart
+    await completePayment(cartItems, user.userId);
+    clearLocalCart();
+  };
+
+  /* HANDLE Payment Actions */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
+  /* CREDIT CARD */
   const handleCreditCard = (e) => {
     e.preventDefault();
 
@@ -59,12 +104,14 @@ const ShoppingCart = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      completePayment();
+      handleCompletePayment();
       alert("Credit Card Payment Successful!");
       closePaymentWindow();
     }
   };
 
+
+  /* PAYPAL */
   const handlePayPal = (e) => {
     e.preventDefault();
 
@@ -78,41 +125,13 @@ const ShoppingCart = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      completePayment();
+      handleCompletePayment();
       alert("PayPal Payment Successful!");
       closePaymentWindow();
     }
   };
 
-  const completePayment = async () => {
-    try {
-      await Promise.all(
-        cart.map(async (item) => {
-          try {
-            // Construct the URL with query parameters
-            const url = `http://localhost:8080/api/purchase/save-purchase?customerId=${user.id}&productId=${item.productId}&productColor=${encodeURIComponent(
-              item.productColor
-            )}&productSize=${encodeURIComponent(item.productSize)}&quantity=${item.quantity}`;
-  
-            const response = await fetch(url, {
-              method: 'POST', // Still a POST request, but using query params instead of body
-            });
-  
-            if (!response.ok) {
-              throw new Error(`Failed to save purchase for product ${item.productId}`);
-            }
-          } catch (error) {
-            console.error(`Error saving purchase for product ${item.productId}:`, error);
-          }
-        })
-      );
-  
-      clearLocalCart();
-      console.log('Payment completed successfully and cart cleared.');
-    } catch (error) {
-      console.error('Error during completePayment:', error);
-    }
-  };
+ 
   
 
   const renderPaymentForm = () => {
@@ -234,10 +253,10 @@ const ShoppingCart = () => {
       fetchProducts();
     }
   }, [cart]);
-  useEffect(() => {
-    console.log('Cartssssssssssss:', cart);
-    console.log('Cartssssssssssss:',products[cart[0]?.productId]?.image[0].image);
-}, [cart, products]);
+
+
+
+
   return (
     <div className="container">
       <div className="cart">
@@ -255,15 +274,15 @@ const ShoppingCart = () => {
               </div>
               <div className="cart-item-quantity">
                 <span>{item.productColor}</span>
-                <button className="quantity-btn">-</button>
+                <button className="quantity-btn" onClick={()=> item.quantity-1 === 0? handleDelete(item): handleUpdateQuantity(item , item.quantity-1) }>-</button>
                 <span>{item.quantity}</span>
-                <button className="quantity-btn">+</button>
+                <button className="quantity-btn" onClick={()=>handleUpdateQuantity(item , item.quantity+1)}>+</button>
               </div>
               <div className="cart-item-price">
                 ${products[item.productId]?.price?.toFixed(2)}
               </div>
               <div className="cart-item-remove">
-                <button className="remove-btn">x</button>
+                <button className="remove-btn" onClick={()=> handleDelete(item)}>x</button>
               </div>
             </div>
           ))
