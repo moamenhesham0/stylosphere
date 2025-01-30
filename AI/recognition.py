@@ -28,7 +28,9 @@ def preprocess_image(img):
 def extract_features(img):
     img_array = preprocess_image(img)
     features = model.predict(img_array)
-    return features.flatten()
+    features = features.flatten()
+    features = features / np.linalg.norm(features)  # Normalize
+    return features
 
 # Decode base64 string to an image
 def decode_base64_image(base64_str):
@@ -41,12 +43,43 @@ def decode_base64_image(base64_str):
     except (base64.binascii.Error, UnidentifiedImageError) as e:
         raise ValueError(f"Invalid base64 image data: {str(e)}")
 
+def histogram_intersection(h1, h2):
+    return np.sum(np.minimum(h1, h2)) / np.sum(h1)
+
+
 # Find similar items
-def find_similar_items(query_features, catalog_data, top_n=5):
-    catalog_features = np.array([data['features'] for data in catalog_data])
-    similarities = cosine_similarity([query_features], catalog_features).flatten()
-    top_indices = np.argsort(similarities)[::-1][:top_n]
-    return [catalog_data[i]['product'] for i in top_indices]
+# 0.85 is the limit
+def find_similar_items(query_features, catalog_data, threshold=0.65):
+    similarities = []
+    for data in catalog_data:
+        catalog_features = data['features']
+        # Compute histogram intersection for color features only
+        similarity = histogram_intersection(query_features, catalog_features)
+        similarities.append(similarity)
+    
+    similarities = np.array(similarities)
+    print(f"Similarities: {similarities}")  # Debug
+    sorted_indices = np.argsort(similarities)[::-1]
+    return [catalog_data[i]['product'] for i in sorted_indices if similarities[i] >= threshold]
+
+
+def extract_color_features(img, bins=16):
+    # Extract color histogram features from an image
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    img_array = np.array(img)
+    hist_r = np.histogram(img_array[:, :, 0], bins=bins, range=(0, 256))[0]
+    hist_g = np.histogram(img_array[:, :, 1], bins=bins, range=(0, 256))[0]
+    hist_b = np.histogram(img_array[:, :, 2], bins=bins, range=(0, 256))[0]
+    color_features = np.concatenate([hist_r, hist_g, hist_b])
+    return color_features / np.sum(color_features)  # Normalize
+
+def combine_features(resnet_features, color_features, resnet_weight=0.15, color_weight=0.85):
+    combined_features = np.concatenate([
+        resnet_features * resnet_weight,
+        color_features * color_weight
+    ])
+    return combined_features
 
 @app.route('/compare', methods=['POST'])
 def compare_images():
@@ -66,7 +99,12 @@ def compare_images():
         except ValueError as ve:
             return jsonify({'error': str(ve)}), 400
 
-        query_features = extract_features(query_image)
+        # Extract ResNet50 features
+        query_resnet_features = extract_features(query_image)
+        # Extract color features
+        query_color_features = extract_color_features(query_image)
+        # Combine features
+        query_combined_features = combine_features(query_resnet_features, query_color_features)
 
         # Process catalog images
         catalog_data = []
@@ -74,7 +112,7 @@ def compare_images():
         for idx, product in enumerate(products):
             try:
                 img_base64_holder = product.get('image')
-                img_base64= img_base64_holder[0].get('image')
+                img_base64 = img_base64_holder[0].get('image')
                 if isinstance(img_base64, list) and img_base64:
                     img_base64 = img_base64[0]
 
@@ -83,8 +121,13 @@ def compare_images():
                     continue
 
                 catalog_image = decode_base64_image(img_base64)
-                features = extract_features(catalog_image)
-                catalog_data.append({'product': product, 'features': features})
+                # Extract ResNet50 features
+                catalog_resnet_features = extract_features(catalog_image)
+                # Extract color features
+                catalog_color_features = extract_color_features(catalog_image)
+                # Combine features
+                catalog_combined_features = combine_features(catalog_resnet_features, catalog_color_features)
+                catalog_data.append({'product': product, 'features': catalog_combined_features})
 
             except ValueError as ve:
                 invalid_products.append(idx + 1)
@@ -95,7 +138,7 @@ def compare_images():
             return jsonify({'error': 'No valid catalog images fetched', 'invalid_products': invalid_products}), 400
 
         # Find similar products
-        similar_products = find_similar_items(query_features, catalog_data)
+        similar_products = find_similar_items(query_combined_features, catalog_data)
 
         return jsonify({'similar_products': similar_products})
 
@@ -106,15 +149,3 @@ if __name__ == '__main__':
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow info and warning messages
     app.run(debug=True)
-
-
-
-
-
-
-
-
-
-
-
-

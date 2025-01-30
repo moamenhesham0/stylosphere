@@ -18,6 +18,7 @@ const ProductPage = () => {
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [imgIndex, setimgIndex] = useState("1");
 
   useEffect(() => {
     if (!product?.id) return;
@@ -139,18 +140,27 @@ const ProductPage = () => {
     <div className="product-page">
       <div className="product-container">
         <div className="product-image-wrapper">
-        {product.image.map(image =>
-          <img
-            src={`data:image/jpeg;base64,${image.image}`}
-            alt={product.name}
-            className="product-image-inner"
-          />
-        )}
-        </div>
+        <img
+    src={`data:image/jpeg;base64,${product.image[imgIndex-1].image}`}
+    alt={product.name}
+    className="main-product-image"
+  />
+  <div className="thumbnail-container">
+{product.image.map((image, index) => (
+    <img
+      key={index}
+      src={`data:image/jpeg;base64,${image.image}`}
+      alt={`${product.name} ${index + 1}`}
+      className="product-thumbnail"
+      onClick={() => setimgIndex(index+1)}
+    />
+  ))}
+  </div>
+</div>
         <div className="product-info-wrapper">
           <h1 className="product-name-inner">{product.name}</h1>
           <p className="product-price-inner">${product.price}</p>
-          <p className="product-description">{product.description}</p>
+          <h5 className="product-description">{product.description}</h5>
 
           <div className="product-options">
             <div className="color-selection">

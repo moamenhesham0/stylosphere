@@ -23,6 +23,7 @@ public class Product {
     private Long id;
 
     private String name;
+    @Column(length = 5000)
     private String description;
     private Set<String> tags = new HashSet<>(); // Initialize tags with a HashSet
     private double price;
