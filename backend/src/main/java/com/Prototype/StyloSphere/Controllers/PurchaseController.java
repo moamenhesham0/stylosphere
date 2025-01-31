@@ -181,4 +181,9 @@ public class PurchaseController {
         return ResponseEntity.ok(purchases);
     }
 
+   @GetMapping("/totalIncome")
+    public double getTotalIncome() {
+        return purchaseService.calculateTotalIncome();
+    }
+
 }

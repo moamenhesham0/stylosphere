@@ -53,12 +53,29 @@ function Dash() {
 
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/customers/sumUsers")  // Update the URL if needed
-          .then((response) => response.json())   // Convert response to JSON
-          .then((data) => setCustomers(data))    // Store in state
-          .catch((error) => console.error("Error fetching user count:", error));
-      }, []);
+        fetch("http://localhost:8080/api/customers/sumUsers")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Customer Data:", data); // Log the data here
+                setCustomers(data); // Assuming data is just a number, otherwise access the correct property
+            })
+            .catch((error) => console.error("Error fetching user count:", error));
+    }, []);
+    
 
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/purchase/totalIncome")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log()
+                setIncome(data || 0);  // Assuming 'data.total' holds the income value
+            })
+            .catch((error) => console.error("Error fetching total income:", error));
+    }, []);
+    
+    
+    
  
 
     // useEffect(() => {

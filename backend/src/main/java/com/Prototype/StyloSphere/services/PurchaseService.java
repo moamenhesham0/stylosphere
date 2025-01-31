@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Prototype.StyloSphere.repositories.*;
+import com.Prototype.StyloSphere.classes.Product;
 import com.Prototype.StyloSphere.classes.Purchase;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ public class PurchaseService {
     @Autowired
     private PurchaseRepository purchaseRepository;
 
-    
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -157,6 +159,21 @@ public class PurchaseService {
                 map.put("totalQuantity", record[1]);
                 return map;
             }).collect(Collectors.toList());
+        }
+        public double calculateTotalIncome() {
+             List<Purchase> purchases = purchaseRepository.findAll();
+            double totalIncome = 0.0;
+
+            for (Purchase purchase : purchases) {
+                Product product = productRepository.findById(purchase.getProductId()).orElse(null);
+                if (product != null) {
+                    totalIncome += product.getPrice() * purchase.getQuantity();
+                    System.out.println("totalIncome" + totalIncome);
+                } else {
+                    System.out.println("Product not found for ID: " + purchase.getProductId());
+                }
+            }
+            return totalIncome;
         }
      
     
