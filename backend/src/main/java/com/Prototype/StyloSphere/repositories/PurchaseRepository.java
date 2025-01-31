@@ -44,6 +44,32 @@ List<Object[]> findIncomeData(@Param("startDate") LocalDate startDate,
                               @Param("timePattern") String timePattern);
 
 
+
+
+
+@Query("SELECT YEAR(p.timeStamp) AS year, SUM(p.quantity) AS totalQuantity " +
+       "FROM Purchase p " +
+       "GROUP BY YEAR(p.timeStamp) " +
+       "ORDER BY YEAR(p.timeStamp)")
+List<Object[]> getYearlySales();
+
+@Query("SELECT YEAR(p.timeStamp) AS year, MONTH(p.timeStamp) AS month, SUM(p.quantity) AS totalQuantity " +
+       "FROM Purchase p " +
+       "GROUP BY YEAR(p.timeStamp), MONTH(p.timeStamp) " +
+       "ORDER BY YEAR(p.timeStamp), MONTH(p.timeStamp)")
+List<Object[]> getMonthlySales();
+
+@Query("SELECT DAY(p.timeStamp) AS day, SUM(p.quantity) AS totalQuantity " +
+       "FROM Purchase p " +
+       "WHERE YEAR(p.timeStamp) = YEAR(CURRENT_DATE) " +
+       "AND MONTH(p.timeStamp) = MONTH(CURRENT_DATE) " +
+       "GROUP BY DAY(p.timeStamp) " +
+       "ORDER BY DAY(p.timeStamp)")
+List<Object[]> getDailySales();
+
+                                                       
+
+
 }
     
 

@@ -1,3 +1,6 @@
+.content{
+  overflow : auto
+  }
 .page-admin{
     padding: 50px;
 }

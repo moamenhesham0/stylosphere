@@ -87,4 +87,7 @@ public class UserService {
     public void saveComplain(Complain complaint) {
         complaintRepository.save(complaint);
     }
+    public int sumOurUsers() {
+        return (int)userRepository.countUsersWithNullAdminLevel();
+    }
 }

@@ -9,6 +9,7 @@ import com.Prototype.StyloSphere.classes.Purchase;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
 @Service
 public class PurchaseService {
 
@@ -127,5 +128,36 @@ public class PurchaseService {
             throw new RuntimeException("Error occurred while fetching income data", e);
         }
     }
+        public List<Map<String, Object>> getSalesByYear() {
+        List<Object[]> results = purchaseRepository.getYearlySales();
+        return results.stream().map(record -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("year", record[0]);
+            map.put("totalQuantity", record[1]);
+            return map;
+        }).collect(Collectors.toList());
+        }
+
+        public List<Map<String, Object>> getSalesByMonth() {
+            List<Object[]> results = purchaseRepository.getMonthlySales();
+            return results.stream().map(record -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("year", record[0]);
+                map.put("month", record[1]);
+                map.put("totalQuantity", record[2]);
+                return map;
+            }).collect(Collectors.toList());
+        }
+
+        public List<Map<String, Object>> getSalesByDay() {
+            List<Object[]> results = purchaseRepository.getDailySales();
+            return results.stream().map(record -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("date", record[0]);
+                map.put("totalQuantity", record[1]);
+                return map;
+            }).collect(Collectors.toList());
+        }
+     
     
 }

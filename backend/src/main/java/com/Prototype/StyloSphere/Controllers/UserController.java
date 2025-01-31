@@ -161,4 +161,11 @@ public ResponseEntity<Boolean> checkPassword(@RequestParam Long userId , @Reques
 }
 
 
+@GetMapping("sumUsers")
+public int sumOurUsers(){
+    
+    return userService.sumOurUsers();
+}
+
+
 }
