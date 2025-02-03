@@ -19,6 +19,7 @@ const ProductPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [imgIndex, setimgIndex] = useState("1");
+  
 
   useEffect(() => {
     if (!product?.id) return;
@@ -69,20 +70,44 @@ const ProductPage = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      
+      const newComment = await response.json();
+      
       setReviews((prevReviews) => [
         ...prevReviews,
-        { sender: user.userId, message: comment },
+        { 
+          id: newComment.id, // Changed from _id to id to match Java backend
+          sender: newComment.sender,
+          message: newComment.message,
+          productId: newComment.productId,
+          createdAt: newComment.createdAt
+        },
       ]);
-
+      
       setUserNames((prevUserNames) => ({
         ...prevUserNames,
         [user.userId]: user.name || "Unknown User",
       }));
-
-      setComment("");
+      
+      setComment(""); // Clear comment input
     } catch (error) {
       console.error("Error posting comment:", error);
+    }
+  };
+
+  const deleteComment = async (commentId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/message/delete-comment?id=${commentId}`, {
+        method: "DELETE",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      setReviews((prevReviews) => prevReviews.filter((review) => review.id !== commentId));
+    } catch (error) {
+      console.error("Error deleting comment:", error);
     }
   };
 
@@ -94,7 +119,7 @@ const ProductPage = () => {
       quantity: quantity,
     };
 
-    updateLocalCart(order);
+    updateLocalCart(order,product.quantity);
 
     if (user.id < 0) return;
     console.log(user.userId);
@@ -110,15 +135,20 @@ const ProductPage = () => {
         throw new Error(`Failed to add product to cart. Status: ${response}`);
       }
 
-      
+      setIsModalOpen(true); // Show the modal
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      setIsModalOpen(true); // Show the modal
+      
     }
   };
+  
+  
 
   const handleQuantityChange = (change) => {
-    setQuantity((prev) => Math.max(1, prev + change));
+    setQuantity((prevQuantity) => {
+      const newQuantity = prevQuantity + change;
+      return newQuantity > product.quantity ? product.quantity : newQuantity < 1 ? 1 : newQuantity;
+    });
   };
 
   const handleContinueShopping = () => {
@@ -136,6 +166,15 @@ const ProductPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleEditProduct = () => {
+    // Function to handle editing the product
+    console.log("Edit product clicked");
+    // Add your edit product logic here
+  };
+
+  
+
   return (
     <div className="product-page">
       <div className="product-container">
@@ -161,7 +200,10 @@ const ProductPage = () => {
           <h1 className="product-name-inner">{product.name}</h1>
           <p className="product-price-inner">${product.price}</p>
           <h5 className="product-description">{product.description}</h5>
-
+          <p className="product-quantity">Available Quantity: {product.quantity}</p>
+          {/* <p className="product-brand">brand: {product.brand}</p>
+          <p className="product-category">category: {Array.isArray(product.tags) ? product.tags.join(', ') : product.tags}</p>
+          <p className="product-style">style: {Array.isArray(product.styles) ? product.styles.join(', ') : product.styles}</p> */}
           <div className="product-options">
             <div className="color-selection">
               <p>Select Color:</p>
@@ -177,21 +219,31 @@ const ProductPage = () => {
               </div>
             </div>
 
-            {/* <div className="size-selection">
-              <p>Select Size:</p>
-              <select
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-                className="size-dropdown"
-              >
-                {product.sizes.map((sz, index) => (
-                  <option key={index} value={sz}>
-                    {sz}
-                  </option>
-                ))}
-              </select>
-            </div> */}
-
+            <div className="size-selector-container">
+              <div className="size-toolbar">
+                <div className="size-dropdown">
+                  <nav role="navigation" className="primary-navigation">
+                    <ul>
+                      <li>Size <span>{size}</span>
+                        <ul className="dropdown">
+                          {product?.sizes?.map((sizeOption) => (
+                            <li 
+                              key={sizeOption} 
+                              onClick={() => {
+                                setSize(sizeOption);
+                                
+                              }}
+                            >
+                              <a>{sizeOption}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
             <div className="quantity-selector">
               <p>Quantity:</p>
               <div className="quantity-buttons">
@@ -202,9 +254,15 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <button className="add-to-cart-button" onClick={addProductToCart}>
-            Add to Cart
-          </button>
+          {user.type !== "admin" ? (
+            <button className="add-to-cart-button" onClick={addProductToCart}>
+              Add to Cart
+            </button>
+          ) : (
+            <button className="add-to-cart-button" onClick={handleEditProduct}>
+              Edit Product
+            </button>
+          )}
         </div>
       </div>
 
@@ -233,6 +291,11 @@ const ProductPage = () => {
     <div key={index} className="review-item">
       <p className="review-user">{userNames[review.sender] || "Loading..."}</p>
       <p className="review-text">{review.message}</p>
+      {(user.type === "admin" || user.userId === review.sender) && (
+        <button className="delete-comment-button" onClick={() => deleteComment(review.id)}>
+          <FaTimes />
+        </button>
+      )}
     </div>
   ))
 ) : (

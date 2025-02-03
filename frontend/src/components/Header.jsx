@@ -59,8 +59,10 @@ function Header() {
 
             <div className="nav">
                 <div className='shop-cart'>
-                <Link to="/shop" className="nav-item">Shop</Link>
-                <Link to="/cart" className="nav-item">Cart</Link>
+                    <Link to="/shop" className="nav-item">Shop</Link>
+                    {user.type !== "admin" && (
+                        <Link to="/cart" className="nav-item">Cart</Link>
+                    )}
                 </div>
                 {userLogin ? (
                     (

@@ -2,7 +2,7 @@ package com.Prototype.StyloSphere.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.Prototype.StyloSphere.repositories.ProductRepository;
 import com.Prototype.StyloSphere.repositories.OrderRepository;
 import com.Prototype.StyloSphere.repositories.UserRepository;
 import com.Prototype.StyloSphere.classes.*;
@@ -16,19 +16,28 @@ public class OrderService {
     private UserRepository<Customer> customerRepository;
     @Autowired
     private OrderRepository orderRepository;
-
+    @Autowired
+    private ProductRepository productRepository;
 
     public void saveOrder(Order order) {
     Optional<Order> existingOrder = orderRepository.findByProductIdAndCustomerIdAndColorAndSize(
             order.getProductId(), order.getCustomerId(), order.getProductColor(), order.getProductSize());
-    
+    final int maxQuantity = productRepository.findById(order.getProductId()).get().getQuantity();
+
     if (existingOrder.isEmpty()) {
-        // If no existing order is found, save the new order
+        // For new order, cap at max quantity
+        if (order.getQuantity() > maxQuantity) {
+            order.setQuantity(maxQuantity);
+        }
         orderRepository.save(order);
     } else {
-        // If an existing order is found, update its quantity
+        // For existing order, cap total at max quantity
         Order existing = existingOrder.get();
-        existing.setQuantity(existing.getQuantity() + order.getQuantity());
+        int newQuantity = existing.getQuantity() + order.getQuantity();
+        if (newQuantity > maxQuantity) {
+            newQuantity = maxQuantity;
+        }
+        existing.setQuantity(newQuantity);
         orderRepository.save(existing);
     }
 }

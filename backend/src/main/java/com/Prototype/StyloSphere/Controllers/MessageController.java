@@ -5,6 +5,7 @@ package com.Prototype.StyloSphere.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,14 +49,24 @@ public class MessageController {
         return ResponseEntity.ok(comments);
     }
     @PostMapping("/add-comment")
-    public ResponseEntity<String> addComment(@RequestParam Long productId, @RequestParam String message, @RequestParam Long sender)
+    public ResponseEntity<Comment> addComment(@RequestParam Long productId, @RequestParam String message, @RequestParam Long sender) 
     {
         Comment comment = new Comment(productId, message, sender);
         try {
-            commentService.save(comment);
-            return ResponseEntity.ok("Comment added successfully");
+            Comment savedComment = commentService.save(comment);
+            return ResponseEntity.ok(savedComment);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to add comment");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/delete-comment")
+    public ResponseEntity<String> deleteComment(@RequestParam Long id) {
+        try {
+            commentService.deleteComment(id);
+            return ResponseEntity.ok("Comment deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to delete comment");
         }
     }
 }
