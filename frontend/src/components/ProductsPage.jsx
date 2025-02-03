@@ -434,7 +434,7 @@ const sendImageToAI = async (base64Image, products) => {
             <div className='banner' src = './assets/banner.png'>
             </div>
 
-            {isFilterOpen && <FilterWindow onClose={handleCloseFilter} setProducts={setProducts} />}
+            {isFilterOpen && <FilterWindow onClose={handleCloseFilter} setProducts={setProducts}  setCurrentPage={setCurrentPage} />}
             {clothingType && <div className="clothing-type">Clothing Type: {clothingType}</div>}
 
 

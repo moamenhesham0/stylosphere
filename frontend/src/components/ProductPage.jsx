@@ -4,7 +4,7 @@ import "../style/productPageStyle/ProductPageStyle.css";
 import { useUser } from "./user/UserContext";
 import { useLocalCart } from "./cart/localCartContext";
 import{ FaTimes } from 'react-icons/fa';
-
+import Del_icon from 'frontend/public/assets/button icons/del_icon.svg';
 const ProductPage = () => {
   const location = useLocation();
   const { product } = location.state || {};
@@ -293,7 +293,7 @@ const ProductPage = () => {
       <p className="review-text">{review.message}</p>
       {(user.type === "admin" || user.userId === review.sender) && (
         <button className="delete-comment-button" onClick={() => deleteComment(review.id)}>
-          <FaTimes />
+          <img src={Del_icon} alt="Delete" className="delete-icon" />
         </button>
       )}
     </div>
