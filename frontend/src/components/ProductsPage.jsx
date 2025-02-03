@@ -391,6 +391,11 @@ const sendImageToAI = async (base64Image, products) => {
         setCurrentPage(pageNumber);
     };
 
+    const calculateDiscount = (originalPrice, discountedPrice) => {
+        if (discountedPrice === 0) return 0;
+        return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
+    };
+
     return (
         <div className="products-page">
             <div className="search-bar-container">
@@ -461,23 +466,52 @@ const sendImageToAI = async (base64Image, products) => {
                         {products.map(product => (
                             <div key= {product.id}className="product-item" onClick={() => navigate(`/product/${product.id}`, { state: { product } })}>
                                 <div className="product-image">
-                                {product.images && (
-                                        <div className="product-image">
-                                            <img
-                                                src={`data:image/jpeg;base64,${product.image[0].image}`}
-                                                alt={`Product ${product.id} Image`}
-                                                title={`Product ${product.id} Image`}
-                                            />
+                                    {product.discountedPrice > 0 && (
+                                        <div className="discount-badge">
+                                           - {calculateDiscount(product.price, product.discountedPrice)}%
                                         </div>
+                                    )}
+                                {product.images && (
+                                       <div className="product-image">
+                                       {product.quantity > 0 ? (
+                                           <img
+                                               src={`data:image/jpeg;base64,${product.image[0].image}`}
+                                               alt={`Product ${product.id} Image`}
+                                               title={`Product ${product.id} Image`}
+                                               className="in-stock-image"
+                                           />
+                                       ) : (
+                                           <>
+                                               <img
+                                                   src={`data:image/jpeg;base64,${product.image[0].image}`}
+                                                   alt={`Product ${product.id} Image`}
+                                                   title={`Product ${product.id} Image`}
+                                                   className="out-of-stock-image"
+                                               />
+                                               <div className="out-of-stock-overlay">
+                                                   <span>Out of Stock</span>
+                                               </div>
+                                           </>
+                                       )}
+                                   </div>
                                     )}
                                 </div>
                                 <div className="product-info">
                                     <div className='product-name'>
-                                        {product.name.length > 35 ? `${product.name.substring(0, 35)}...` : product.name}
-                                    </div>
+                                            {product.name.length > 35 ? `${product.name.substring(0, 35)}...` : product.name}
+                                        </div>
                                         <AddShoppingCartIcon onClick style={{float: 'right', fontSize: 30, color: '#c3ad71' }} />
                                         <FavoriteBorderIcon onClick style={{float: 'right', fontSize: 30, color: '#c3ad71' ,paddingRight:10}} />
-                                    <p>${product.price}</p>
+                                        <div className="price-container">
+                                            {product.discountedPrice > 0 ? (
+                                                <>
+                                                    <p className="original-price">${product.price}</p>
+                                                    <p className="discounted-price">${product.discountedPrice}</p>
+                                                </>
+                                            ) : (
+                                                <p>${product.price}</p>
+                                            )}
+                                        </div>
                                 </div>
                             </div>
                         

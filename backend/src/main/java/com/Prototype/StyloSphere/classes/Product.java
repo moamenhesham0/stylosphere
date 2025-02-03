@@ -47,7 +47,7 @@ public class Product {
     
     public Product() {
     }
-    public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity, double discountedPrice, int salesCount, Set<String> sizes, Set<String> styles, String brand) {
+    public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity, double discountedPrice, Set<String> sizes, Set<String> styles, String brand) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -56,7 +56,7 @@ public class Product {
         this.colors = colors;
         this.quantity = quantity;
         this.DiscountedPrice = discountedPrice;
-        this.SalesCount = salesCount;
+        this.SalesCount = 0;    /// intialize as zero ya3m
         this.sizes = sizes;
         this.styles = styles;
         this.brand = brand;
