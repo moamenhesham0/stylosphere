@@ -56,16 +56,20 @@ const ShoppingCart = () => {
   };
 
   const handleUpdateQuantity = async (item, quantity) => {
-    item.quantity = quantity;
+    const product = products[item.productId];
+    const MAX_QUANTITY = product ? product.quantity : 0; 
+
+    const newQuantity = quantity > MAX_QUANTITY ? MAX_QUANTITY : quantity;
+    item.quantity = newQuantity;
     
     console.log(cart);
     if(user.userId > 0){
       const id = await handleGetId(item);
       console.log(`id = ${id}`); 
-      await updateQuantity(id, quantity);
+      await updateQuantity(id, newQuantity);
     }
 
-    updateItemQuantity(item.productId , item.productSize , item.productColor , quantity);
+    updateItemQuantity(item.productId , item.productSize , item.productColor , newQuantity,products);
   };
   
   const handleApplyPromoCode = async (productId, promoCode) => {
@@ -347,5 +351,3 @@ const ShoppingCart = () => {
 };
 
 export default ShoppingCart;
-
-

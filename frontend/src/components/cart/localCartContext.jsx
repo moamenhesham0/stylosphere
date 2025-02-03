@@ -17,7 +17,7 @@ export const LocalCartProvider = ({ children }) => {
   }, [cart]);
 
   // Function to add or update an item in the cart
-  const updateLocalCart = (newCartItem) => {
+  const updateLocalCart = (newCartItem, MAX_QUANTITY) => {
     setCart((prevCart) => {
       // Check if the item already exists in the cart
       const existingItemIndex = prevCart.findIndex(
@@ -30,9 +30,18 @@ export const LocalCartProvider = ({ children }) => {
       if (existingItemIndex !== -1) {
         // Update the quantity of the existing item
         const updatedCart = [...prevCart];
+        let finalQuantity;
+        const combinedQuantity = updatedCart[existingItemIndex].quantity + newCartItem.quantity;
+
+        if (combinedQuantity > MAX_QUANTITY) {
+          alert(`You've reached the maximum quantity limit of ${MAX_QUANTITY} for this item in your cart`);
+          finalQuantity = MAX_QUANTITY;
+        } else {
+          finalQuantity = combinedQuantity;
+        }
         updatedCart[existingItemIndex] = {
           ...updatedCart[existingItemIndex],
-          quantity: updatedCart[existingItemIndex].quantity + newCartItem.quantity,
+          quantity: finalQuantity,
         };
         return updatedCart;
       }
@@ -47,6 +56,8 @@ export const LocalCartProvider = ({ children }) => {
     setCart([]);
     localStorage.removeItem('cart');
   };
+
+  // Function to delete an item from the cart
   const deleteCartItem = (productId, productSize, productColor) => {
     setCart((prevCart) => {
       // Filter out the item based on all features (productId, productSize, productColor)
@@ -61,7 +72,7 @@ export const LocalCartProvider = ({ children }) => {
   };
 
   // Function to update the quantity of an existing item
-  const updateItemQuantity = (productId, productSize, productColor, newQuantity) => {
+  const updateItemQuantity = (productId, productSize, productColor, newQuantity, products) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.map((item) => {
         if (
@@ -69,8 +80,14 @@ export const LocalCartProvider = ({ children }) => {
           item.productSize === productSize &&
           item.productColor === productColor
         ) {
-          // Update the quantity
-          return { ...item, quantity: newQuantity };
+          const product = products[productId];
+          const MAX_QUANTITY = product ? product.quantity : 0;
+          
+          
+
+          // Update the quantity ensuring it does not exceed the original quantity
+          const finalQuantity = newQuantity > MAX_QUANTITY ? MAX_QUANTITY : newQuantity;
+          return { ...item, quantity: finalQuantity };
         }
         return item;
       });
@@ -79,7 +96,7 @@ export const LocalCartProvider = ({ children }) => {
   };
 
   return (
-    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart , updateItemQuantity , deleteCartItem }}>
+    <LocalCartContext.Provider value={{ cart, updateLocalCart, clearLocalCart, updateItemQuantity, deleteCartItem }}>
       {children}
     </LocalCartContext.Provider>
   );
