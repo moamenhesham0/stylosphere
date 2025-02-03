@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa'; // For the close button icon
 import '../style/productsPageStyle/FilterWindow.css';
 
-const FilterWindow = ({ onClose, setProducts }) => {
+const FilterWindow = ({ onClose, setProducts, setCurrentPage }) => {
     // State for selected options
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedStyles, setSelectedStyles] = useState([]);
@@ -69,6 +69,7 @@ const FilterWindow = ({ onClose, setProducts }) => {
                     ...product,
                     images: Array.isArray(product.images) ? product.images : []
                 })));
+                setCurrentPage(1);
             } else {
                 console.error('Fetched data is not an array:', result);
             }

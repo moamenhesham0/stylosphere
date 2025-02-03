@@ -394,3 +394,9 @@
   text-decoration: none;
   display: block;
 }
+
+.delete-icon {
+  width: 20px;
+  height: 20px;
+  filter: currentColor;
+}
