@@ -58,7 +58,6 @@ public class AdminController {
             @RequestParam("colors") String colors,
             @RequestParam("images") MultipartFile[] images,
             @RequestParam("discountedPrice") double discountedPrice,
-            @RequestParam("salesCount") int salesCount,
             @RequestParam("sizes") String sizes,
             @RequestParam("styles") String styles,
             @RequestParam("brand") String brand) {
@@ -84,7 +83,7 @@ public class AdminController {
             Set<String> sizeSet = Arrays.stream(sizes.split(",")).map(String::trim).collect(Collectors.toSet());
             Set<String> styleSet = Arrays.stream(styles.split(",")).map(String::trim).collect(Collectors.toSet());
 
-            Product product = new Product(name, description, price, imageList, tagSet, colorSet, quantity, discountedPrice, salesCount, sizeSet, styleSet, brand);
+            Product product = new Product(name, description, price, imageList, tagSet, colorSet, quantity, discountedPrice, sizeSet, styleSet, brand);
             Product savedProduct = productRepository.save(product);
     }
 

@@ -8,7 +8,11 @@ const ProductHandler = () => {
         tags: '',
         price: '',
         quantity: '',
-        colors: ''
+        colors: '',
+        discountPrice:'',
+        sizes:'',
+        styles:'',
+        brand:''
     });
     const [imageFiles, setImageFiles] = useState([]);
     const [products, setProducts] = useState([]);
@@ -33,6 +37,10 @@ const ProductHandler = () => {
         imageFiles.forEach((file) => {
             formData.append('images', file);
         });
+        formData.append('discountedPrice', product.discountPrice);
+        formData.append('sizes', product.sizes);
+        formData.append('styles', product.styles);
+        formData.append('brand', product.brand);
 
         try {
             const response = await fetch('http://localhost:8080/api/admin/add-product', {
@@ -103,7 +111,6 @@ const ProductHandler = () => {
 
     const generateDataUrl = (image) => {
           if (!image) return '';
-        console.log('Image:', image);
         return `data:image/jpeg;base64,${image}`;
     };
 
@@ -118,7 +125,13 @@ const ProductHandler = () => {
                     <input type="number" name="price" value={product.price} onChange={handleChange} placeholder="Price" required className="form-input small-input" />
                     <input type="number" name="quantity" value={product.quantity} onChange={handleChange} placeholder="Quantity" required className="form-input small-input" />
                 </div>
+                <div className="form-row">
+                    <input type="number" name="discountPrice" value={product.discountPrice} onChange={handleChange} placeholder="Discount Price" required className="form-input small-input" />
+                    <input type="text" name="brand" value={product.brand} onChange={handleChange} placeholder="Brand" required className="form-input small-input" />
+                </div>
                 <input type="text" name="colors" value={product.colors} onChange={handleChange} placeholder="Colors (comma separated)" required  className="form-input"/>
+                <input type="text" name="sizes" value={product.sizes} onChange={handleChange} placeholder="Sizes (comma separated)" required  className="form-input"/>
+                <input type="text" name="styles" value={product.styles} onChange={handleChange} placeholder="Styles (comma separated)" required  className="form-input"/>
                 <input type="file" multiple onChange={handleImageChange} required className="file-input"/>
                 <button type="submit" className="submit-button" >Add Product</button>
             </form>
