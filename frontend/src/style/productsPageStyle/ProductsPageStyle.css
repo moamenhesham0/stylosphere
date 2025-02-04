@@ -5,6 +5,10 @@
     background-color: #dcdcdc;
 }
 
+.products-page.filter-open {
+    overflow:scroll;
+}
+
 nav {
     &.primary-navigation {
     background: white;
@@ -193,7 +197,6 @@ nav {
 
 .sorting-toolbar {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 20px;
 }
 
@@ -756,18 +759,25 @@ nav {
 /* Filter Button Styles */
 .filter-button {
     margin-left: 15px;
-    padding: 16px 32px; /* Increased button size */
-    background: linear-gradient(45deg, #8B4513, #FFD700);
-    color: #ffffff;
+    margin-right: 15px;
+    padding-left: 30px; /* Increased button size */
+    padding-right: 30px; /* Increased button size */
+    /* background: linear-gradient(45deg, #8B4513, #FFD700); */
+    /* color: #ffffff; */
     border: none;
     border-radius: 10px; /* Larger radius */
-    font-size: 18px; /* Larger button font */
+    font-size: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: arvo;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    background: white;
+    /* transition: background-color 0.3s ease, transform 0.2s ease; */
 }
 
 .filter-button:hover {
-    background-color: #e6b800; /* Darker shade for hover */
+    /* background-color: #e6b800; Darker shade for hover */
     transform: scale(1.05); /* Slight scale effect on hover */
 }
 

@@ -9,6 +9,7 @@ body {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
+    height: 100vh;
 }
 
 .header {
@@ -47,7 +48,8 @@ body {
 }
 
 .cart {
-    margin-top: 40px;
+  
+    /* margin-top: 40px; */
 }
 
 .cart h2 {
@@ -266,4 +268,31 @@ body {
     top: -30px;
     position: relative;
   }
-  
+
+.cart-container {
+  flex: 1;
+  width: 80%;
+  margin: 0 auto;
+    margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.cart {
+  min-height: 231px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.page-wrapper {
+  min-height: 231px;
+  display: flex;
+  flex-direction: column;
+}

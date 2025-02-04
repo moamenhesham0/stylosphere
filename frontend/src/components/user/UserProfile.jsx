@@ -1,6 +1,10 @@
 import './UserProfileStyle.css';
 import React, { useEffect, useState } from "react";
 import { useUser } from './UserContext';
+import { useNavigate } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa'; // For the close button icon
+
+
 
 import { updateUserEmail,
          updateUserName , 
@@ -19,6 +23,8 @@ import { updateUserEmail,
 function UserProfile() {
   /* Local user storage*/
   const { user, updateUser } = useUser();
+  const navigate = useNavigate();
+
 
 
 
@@ -464,33 +470,69 @@ function UserProfile() {
 
         {/*wish list*/}
         {showData === "whishList" && (
-          <div className="wishlist-info">
-            <h2>Wishlist</h2>
+          <div className="purchase-history-container">
+            <h2>Wish List</h2>
+            <div className="search-sort-container">
+              <input
+                type="text"
+                placeholder="Search wishlist..."
+                className="search-input"
+                onChange={(e) => {
+                  const searchValue = e.target.value.toLowerCase();
+                  const filtered = wishList.filter(product => 
+                    product.name.toLowerCase().includes(searchValue)
+                  );
+                  setWishList(filtered);
+                }}
+              />
+              <div className="sort-container">
+                <select 
+                  className="sort-select"
+                  onChange={(e) => {
+                    const sorted = [...wishList].sort((a, b) => {
+                      switch(e.target.value) {
+                        case 'name':
+                          return a.name.localeCompare(b.name);
+                        case 'price':
+                          return a.price - b.price;
+                        default:
+                          return 0;
+                      }
+                    });
+                    setWishList(sorted);
+                  }}
+                >
+                  <option value="">Sort by</option>
+                  <option value="name">Name</option>
+                  <option value="price">Price</option>
+                </select>
+              </div>
+            </div>
+
             {wishList.length > 0 ? (
               <ul className="wishlist-items">
                 {wishList.map((product) => (
                   <li key={product.id} className="wishlist-item">
-                    <div 
-                      className="product-link" 
-                      onClick={() => window.location.href = `http://localhost:5173/product/${product.id}`}
-                    >
-                      <img 
-                        src={`data:image/jpeg;base64,${product.image[0].image}`} 
-                        alt={product.name} 
+                      <button className="closebutton" onClick={() => handleRemoveFromWishlist(product.id)}>
+                          <FaTimes />
+                      </button>
+                    <div className="wishlist-product-details">
+                      <img
+                        src={`data:image/jpeg;base64,${product.image[0].image}`}
+                        alt={product.name}
+                        onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
                       />
-                      <h3>{product.name}</h3>
+                      <div className="wishlist-product-info">
+                        <h3>{product.name}</h3>
+                        <p className="price">${product.price}</p>
+
+                      </div>
                     </div>
-                    <button 
-                      className="remove-button"
-                      onClick={() => handleRemoveFromWishlist(product.id)}
-                    >
-                      Remove
-                    </button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>Your wishlist is empty.</p>
+              <p className="empty-wishlist">Your wishlist is empty.</p>
             )}
           </div>
         )}

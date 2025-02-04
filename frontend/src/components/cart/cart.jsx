@@ -262,57 +262,58 @@ const ShoppingCart = () => {
 
 
   return (
-    <div className="container">
-      <div className="cart">
-        <h2>Shopping Cart</h2>
-        {cart.length > 0 ? (
-          cart.map((item, index) => (
-           
-            <div className="cart-item" key={index}>
-              <img
-                src={`data:image/jpeg;base64,${products[item.productId]?.image[0].image}`}
-                alt={products[item.productId]?.name}
-              />
-              <div className="cart-item-details">
-                <h3>{products[item.productId]?.name}</h3>
+    <div className="page-wrapper">
+      <div className="cart-container">
+        <div className="cart">
+          <h2>Shopping Cart</h2>
+          {cart.length > 0 ? (
+            cart.map((item, index) => (
+              <div className="cart-item" key={index}>
+                <img
+                  src={`data:image/jpeg;base64,${products[item.productId]?.image[0].image}`}
+                  alt={products[item.productId]?.name}
+                />
+                <div className="cart-item-details">
+                  <h3>{products[item.productId]?.name}</h3>
+                </div>
+                <div className="cart-item-quantity">
+                  <span>{item.productColor}</span>
+                  <button className="quantity-btn" onClick={()=> item.quantity-1 === 0? handleDelete(item): handleUpdateQuantity(item , item.quantity-1) }>-</button>
+                  <span>{item.quantity}</span>
+                  <button className="quantity-btn" onClick={()=>handleUpdateQuantity(item , item.quantity+1)}>+</button>
+                </div>
+                <div className="cart-item-price">
+                  ${products[item.productId]?.price?.toFixed(2)}
+                </div>
+                <div className="cart-item-remove">
+                  <button className="remove-btn" onClick={()=> handleDelete(item)}>x</button>
+                </div>
               </div>
-              <div className="cart-item-quantity">
-                <span>{item.productColor}</span>
-                <button className="quantity-btn" onClick={()=> item.quantity-1 === 0? handleDelete(item): handleUpdateQuantity(item , item.quantity-1) }>-</button>
-                <span>{item.quantity}</span>
-                <button className="quantity-btn" onClick={()=>handleUpdateQuantity(item , item.quantity+1)}>+</button>
-              </div>
-              <div className="cart-item-price">
-                ${products[item.productId]?.price?.toFixed(2)}
-              </div>
-              <div className="cart-item-remove">
-                <button className="remove-btn" onClick={()=> handleDelete(item)}>x</button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>Your cart is empty</p>
-        )}
+            ))
+          ) : (
+            <p>Your cart is empty</p>
+          )}
 
-        {cart.length > 0 && (
-          <div className="cart-summary">
-            <h3>Subtotal</h3>
-            <h3>
-              $
-              {cart.reduce((total, item) => {
-                const productPrice = products[item.productId]?.price || 0;
-                return total + productPrice * item.quantity;
-              }, 0).toFixed(2)}
-            </h3>
-          </div>
-        )}
-       <button
-  className="checkout-btn"
-  onClick={cart.length > 0 ? openPaymentWindow : null}
-  disabled={cart.length === 0} // Disable the button if the cart is empty
->
-  CHECKOUT
-</button>
+          {cart.length > 0 && (
+            <div className="cart-summary">
+              <h3>Subtotal</h3>
+              <h3>
+                $
+                {cart.reduce((total, item) => {
+                  const productPrice = products[item.productId]?.price || 0;
+                  return total + productPrice * item.quantity;
+                }, 0).toFixed(2)}
+              </h3>
+            </div>
+          )}
+          {cart.length > 0 && <button
+            className="checkout-btn"
+            onClick={cart.length > 0 ? openPaymentWindow : null}
+            disabled={cart.length === 0} // Disable the button if the cart is empty
+          >
+            CHECKOUT
+          </button>}
+        </div>
       </div>
 
       {paymentWindow && (

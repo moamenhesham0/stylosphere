@@ -408,68 +408,6 @@ textarea:focus {
 
 }
 
-
-.footer {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start; 
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 35px 20px 50px;
-    box-sizing: border-box;
-    padding-top: 60px; 
-}
-
-.footer-left {
-    max-width: 300px;
-    width: 300px;
-    text-align: left;
-}
-
-.footer-left h2 {
-    margin: 0 0 10px;
-    font-size: 38.0032px;
-}
-
-.footer-left p {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.footer-left a {
-    text-decoration: underline;
-    color: #000000;
-}
-
-.footer-right {
-    display: flex;
-    flex-direction: row; 
-    gap: 45px; 
-    max-width: 600px; 
-    width: 600px;
-    text-align: left;
-    padding-left: 60%;
-
-}
-
-.footer-section h3 {
-    margin: 0 0 10px;
-    font-size: 23.3344px;
-    font-family: var(--site-title-font-font-family);
-}
-
-.footer-section p {
-    line-height: 24px;
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.footer-section a {
-    text-decoration: underline;
-    color: #000000;
-}
-
 /* Responsive Styles */
 @media (max-width: 768px) {
     .footer {

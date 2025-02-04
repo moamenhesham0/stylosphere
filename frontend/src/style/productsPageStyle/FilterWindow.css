@@ -52,6 +52,14 @@ body {
 .section {
     margin-bottom: 20px;
 }
+.section input[type="number"] {
+    width: 32px;
+    border: none; /* Remove borders */
+    font-size: 19px;
+    font-weight: bold; /* Make text bold */
+    padding:0%;
+
+}
 
 .section h3 {
     margin-bottom: 10px;
@@ -188,6 +196,23 @@ body {
     text-align: left;
 }
 
+.price-input {
+    width: 60px; /* Adjusted width */
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold; /* Make text bold */
+    margin-right: 10px;
+    border-radius: 5px;
+    text-align: center;
+    /* Remove up and down arrows */
+    -moz-appearance: textfield;
+}
+
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
 .show-results {
     display: block;

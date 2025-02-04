@@ -657,4 +657,85 @@
         padding: 16px 50px 16px 25px;
         font-size: 1rem;
       }
-    
+
+.wishlist-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.closebutton {
+  background: none;
+  border: none;
+  margin-left: 940px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.closebutton:hover {
+  color: #ffcc01; /* Gold color on hover */
+}
+
+.wishlist-item {
+  border: 1px solid #eee;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.wishlist-item:hover {
+  box-shadow: 0 2px 8px #c3ad71;
+}
+
+.wishlist-product-details {
+  display: flex;
+  gap: 20px;
+}
+
+.wishlist-product-details img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.wishlist-product-info {
+  flex: 1;
+}
+
+.wishlist-product-info h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.price {
+  font-size: 1.1em;
+  color: #c3ad71;
+  font-weight: bold;
+}
+
+.remove-from-wishlist {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-wishlist:hover {
+  background-color: #cc0000;
+}
+
+.empty-wishlist {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}

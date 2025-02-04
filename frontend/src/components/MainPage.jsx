@@ -4,6 +4,7 @@ import mainPagepng from '../images/mainPageImg/mainPage.png';
 import aboutuspng from '../images/mainPageImg/aboutUs2.png';
 import '../style/mainPageStyle/MainPageStyle.css';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer'; // Import the Footer component
 
 function MainPage() {
     const [formData, setFormData] = useState({
@@ -184,7 +185,7 @@ function MainPage() {
                 </div>
             </div>
 
-            <footer className="footer">
+            {/* <footer className="footer">
                 <div className="footer-left">
                     <h2>StyloSphere</h2>
                     <p>muhannd, ahmedAli, Moamen, farag and yousef </p>
@@ -211,7 +212,7 @@ function MainPage() {
                         </p>
                     </div>
                 </div>
-            </footer>
+            </footer> */}
         </div>
     );
 }

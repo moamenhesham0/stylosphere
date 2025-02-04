@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaTimes } from 'react-icons/fa'; // For the close button icon
 import '../style/productsPageStyle/FilterWindow.css';
 
@@ -10,6 +10,21 @@ const FilterWindow = ({ onClose, setProducts, setCurrentPage }) => {
     const [selectedColors, setSelectedColors] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 600]);
+
+    const filterWindowRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (filterWindowRef.current && !filterWindowRef.current.contains(event.target) && !event.target.classList.contains('filter-button')) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [onClose]);
 
     // Toggle selection for categories, styles, brands, and sizes
     const toggleSelection = (list, setList, item) => {
@@ -82,7 +97,7 @@ const FilterWindow = ({ onClose, setProducts, setCurrentPage }) => {
     };
 
     return (
-        <div className="filter-window">
+        <div className="filter-window" ref={filterWindowRef}>
             <button className="close-button" onClick={onClose}>
                 <FaTimes />
             </button>
@@ -184,7 +199,12 @@ const FilterWindow = ({ onClose, setProducts, setCurrentPage }) => {
                         className="price-range-1"
                     />
                     <div className="price-display">
-                        ${priceRange[0]} - ${priceRange[1]}
+                        ${priceRange[0]} - $
+                        <input
+                            type="number"
+                            value={priceRange[1]}
+                            onChange={handlePriceRangeChange}
+                            className="price-input"></input>
                     </div>
                 </div>
             </div>

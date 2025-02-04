@@ -5,6 +5,9 @@ import { useUser } from "./user/UserContext";
 import { useLocalCart } from "./cart/localCartContext";
 import{ FaTimes } from 'react-icons/fa';
 import Del_icon from 'frontend/public/assets/button icons/del_icon.svg';
+import Footer from './Footer'; // Import the Footer component
+
+
 const ProductPage = () => {
   const location = useLocation();
   const { product } = location.state || {};
@@ -134,7 +137,6 @@ const ProductPage = () => {
       if (!response.ok) {
         throw new Error(`Failed to add product to cart. Status: ${response}`);
       }
-
       setIsModalOpen(true); // Show the modal
     } catch (error) {
       console.error("Error adding product to cart:", error);
@@ -319,6 +321,7 @@ const ProductPage = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

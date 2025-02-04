@@ -6,10 +6,9 @@ import '../style/productsPageStyle/ProductsPageStyle.css';
 import FilterWindow from './FilterWindow'; // Import the FilterWindow component
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+import {useUser} from './user/UserContext';
 
-const ProductsPage = () => {
+const ProductsPage = ({ isFilterOpen, setIsFilterOpen }) => {
     const navigate = useNavigate();
     const [sortType, setSortType] = useState();
     const [sortName, setSortName] = useState();
@@ -17,27 +16,19 @@ const ProductsPage = () => {
     const [searchInput, setSearchInput] = useState('');
     const [image, setImage] = useState(null);
     const [clothingType, setClothingType] = useState('');
-    const [price, setPrice] = useState(100);
     const [selectedTags, setSelectedTags] = useState([]);
     const [products, setProducts] = useState([]);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const tags = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
     const [selectedColors, setSelectedColors] = useState([]);
-    const [sliderValue, setSliderValue] = useState(0);
-    const [sliderThumbColor, setSliderThumbColor] = useState('white');
-    const [colorPopup, setColorPopup] = useState(null);
     const colorOptions = ['red', 'blue', 'green', 'yellow', 'pink', 'orange','purple', 'brown', 'black', 'white'];
-    const [isFilterVisible, setIsFilterVisible] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 18;
-
-        
+    const [wishlistItems, setWishlistItems] = useState(new Set());
+    const {user} = useUser();
     const [loading, setLoading] = useState(false); // Add loading state
 
 
     // Create a gradient spectrum background
-    const gradient = colorOptions.join(', ');
-    
+
     const toggleFilter = () => {
         setIsFilterOpen(!isFilterOpen);
     };
@@ -46,32 +37,11 @@ const ProductsPage = () => {
         setIsFilterOpen(false);
     };
 
-    const getClosestColor = (value) => {
-        const index = Math.round(value / (200 / (colorOptions.length - 1)));
-        return colorOptions[index];
-    };
-
-    const handleSliderChange = (e) => {
-        const value = e.target.value;
-        setSliderValue(value);
-        const closestColor = getClosestColor(value);
-        setColorPopup(closestColor);
-        const sliderThumbColor = closestColor;
-        setSliderThumbColor(sliderThumbColor);
-        setTimeout(() => setColorPopup(null), 1000);
-        if (!selectedColors.includes(closestColor)) {
-            setSelectedColors([...selectedColors, closestColor]);
-        }
-    };
 
     useEffect(() => {
         setProducts(sortedProducts);
     }, [sortType , sortOrder]);
     // Function to determine closest color based on slider value
-
-    const removeColor = (colorToRemove) => {
-        setSelectedColors(selectedColors.filter(color => color !== colorToRemove));
-    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -81,16 +51,26 @@ const ProductsPage = () => {
                 image: product.images && product.images.length > 0 ? product.images : null
             })));
         };
-        fetchProducts();
-    }, []);
+        
+        const fetchWishlist = async () => {
+            if (user && user.userId) {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/wishlist/get-wishlist?customerId=${user.userId}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch wishlist');
+                    }
+                    const wishlistProducts = await response.json();
+                    const wishlistIds = new Set(wishlistProducts.map(product => product.id));
+                    setWishlistItems(wishlistIds);
+                } catch (error) {
+                    console.error('Error fetching wishlist:', error);
+                }
+            }
+        };
 
-    const convertImageStringToBase64 = (imageString) => {
-        if (imageString.startsWith('data:image')) {
-            return imageString;
-        } else {
-            return `data:image/jpeg;base64,${imageString}`;
-        }
-    };
+        fetchProducts();
+        fetchWishlist();
+    }, [user]);
 
     const retrieveProducts = async () => {
         try {
@@ -186,67 +166,6 @@ const ProductsPage = () => {
         }
     };
 
-    // const handleInputChange = async (e) => {
-    //     const inputValue = e.target.value;
-    //     setSearchInput(inputValue);
-    //     if (inputValue === '') {
-    //         try {
-    //             const baseList = await getBaseList();
-    //             setProducts(baseList.map(product => ({
-    //                 ...product,
-    //                 images: Array.isArray(product.images) ? product.images : []
-    //             })));
-    //         } catch (error) {
-    //             console.error('Error fetching base list:', error);
-    //         }
-    //     }
-    // };
-
-    // const handleSearch = async () => {
-    //     try {
-    //         const response = await fetch(`http://localhost:8080/api/products/search?query=${searchInput}`, {
-    //             method: 'GET'
-    //         });
-    //         const result = await response.json();
-    //         if (Array.isArray(result)) {
-    //             setProducts(result.map(product => ({
-    //                 ...product,
-    //                 images: Array.isArray(product.images) ? product.images : []
-    //             })));
-    //         } else {
-    //             console.error('Fetched data is not an array:', result);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching newproducts:', error);
-    //     }
-    // };
-
-    // const getBaseList = async () => {
-    //     try {
-    //         const response = await fetch('http://localhost:8080/api/products/all');
-    //         const result = await response.json();
-    //         if (Array.isArray(result)) {
-    //             return result;
-    //         } else {
-    //             console.error('Fetched data is not an array:', result);
-    //             return [];
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching newproducts:', error);
-    //         return [];
-    //     }
-    // };
-
-    const handleTagClick = (tag) => {
-        setSelectedTags((prevTags) =>
-            prevTags.includes(tag)
-                ? prevTags.filter((t) => t !== tag)
-                : [...prevTags, tag]
-        );
-    };
-
-    // Send image to Flask API to detect clothing type
-   // Function to convert an image file to Base64
 const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -340,17 +259,6 @@ const sendImageToAI = async (base64Image, products) => {
         ? sortProductsByPrice(sortOrder)
         : sortProductsByName(sortOrder);
 
-    const [product, setProduct] = useState({
-        name: '',
-        description: '',
-        tags: '',
-        price: '',
-        quantity: '',
-        colors: ''
-    });
-    const [imageFiles, setImageFiles] = useState([]);
-    const [newproducts, setnewproducts] = useState([]);
-
     useEffect(() => {
         const getnewproducts = async () => {
             try {
@@ -370,6 +278,48 @@ const sendImageToAI = async (base64Image, products) => {
         };
         getnewproducts();
     }, []);
+
+    const handleWishlistClick = async (e, productId) => {
+        e.stopPropagation(); // Prevent product item click event
+        
+        const customerId = user.userId; // Assuming you store customerId in localStorage
+        console.log('customerId:', customerId);
+        if (!customerId) {
+            alert('Please login to add items to wishlist');
+            return;
+        }
+
+        try {
+            const endpoint = wishlistItems.has(productId) 
+                ? '/api/wishlist/remove-from-wishlist'
+                : '/api/wishlist/add-to-wishlist';
+                
+            const response = await fetch(`http://localhost:8080${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `customerId=${customerId}&productId=${productId}`
+            });
+
+            if (response.ok) {
+                setWishlistItems(prevItems => {
+                    const newItems = new Set(prevItems);
+                    if (newItems.has(productId)) {
+                        newItems.delete(productId);
+                    } else {
+                        newItems.add(productId);
+                    }
+                    return newItems;
+                });
+            } else {
+                alert('Failed to update wishlist');
+            }
+        } catch (error) {
+            console.error('Error updating wishlist:', error);
+            alert('Error updating wishlist');
+        }
+    };
 
     // Calculate the products to display based on the current page
     const indexOfLastProduct = currentPage * productsPerPage;
@@ -430,9 +380,6 @@ const sendImageToAI = async (base64Image, products) => {
                     {image && <p>Image uploaded successfully!</p>}
                 </div>
 
-                <button className="filter-button" onClick={toggleFilter}>
-                    Filter
-                </button>
             </div>
                         {/* Loading bar */}
                         {loading && <div className="loading-bar"></div>}
@@ -445,6 +392,9 @@ const sendImageToAI = async (base64Image, products) => {
 
                 <div className="product-list-container">
                     <div className="sorting-toolbar">
+                <button className="filter-button" onClick={toggleFilter}>
+                    Filter
+                </button>
                         <div className="sort-dropdown">
                         <nav role="navigation" className="primary-navigation">
                             <ul>
@@ -500,8 +450,17 @@ const sendImageToAI = async (base64Image, products) => {
                                     <div className='product-name'>
                                             {product.name.length > 35 ? `${product.name.substring(0, 35)}...` : product.name}
                                         </div>
-                                        <AddShoppingCartIcon onClick style={{float: 'right', fontSize: 30, color: '#c3ad71' }} />
-                                        <FavoriteBorderIcon onClick style={{float: 'right', fontSize: 30, color: '#c3ad71' ,paddingRight:10}} />
+                                        {wishlistItems.has(product.id) ? (
+                                        <FavoriteIcon 
+                                            onClick={(e) => handleWishlistClick(e, product.id)}
+                                            style={{float: 'right', fontSize: 30, color: '#c3ad71', paddingRight:10, cursor: "pointer"}}
+                                        />
+                                    ) : (
+                                        <FavoriteBorderIcon 
+                                            onClick={(e) => handleWishlistClick(e, product.id)}
+                                            style={{float: 'right', fontSize: 30, color: '#c3ad71', paddingRight:10, cursor: "pointer"}}
+                                        />
+                                    )}
                                         <div className="price-container">
                                             {product.discountedPrice > 0 ? (
                                                 <>

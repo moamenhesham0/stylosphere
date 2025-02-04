@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import ProductsPage from './components/ProductsPage';
 import ProductPage from './components/ProductPage';
@@ -16,19 +16,21 @@ import BestSellersPage from './components/BestSellersPage';
 import ProductHandler from './components/admin/ProductHandler';
 import Complaints from './components/admin/Complaints';
 import LearnMorePage from './components/LearnMorePage';
-const AppContent = () => {
+import Footer from './components/Footer';
+
+
+const AppContent = ({ isFilterOpen, setIsFilterOpen }) => {
     const location = useLocation();
     const isAdminRoute = location.pathname.startsWith('/admin');
 
     return (
-        
         <>
             {!isAdminRoute && <Header />}
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/learnmore" element={<LearnMorePage />} />
                 <Route path="/sale" element={<BestSellersPage />} />
-                <Route path="/shop" element={<ProductsPage />} />
+                <Route path="/shop" element={<ProductsPage isFilterOpen={isFilterOpen} setIsFilterOpen={setIsFilterOpen} />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
@@ -42,20 +44,16 @@ const AppContent = () => {
                     <Route path="Complaints" element={<Complaints />} />
                 </Route>
             </Routes>
+            <Footer />
         </>
     );
 };
 
-const App = () => {
+const App = ({ isFilterOpen, setIsFilterOpen }) => {
     return (
-        
         <Router>
-            
-            <AppContent />
-            
+            <AppContent isFilterOpen={isFilterOpen} setIsFilterOpen={setIsFilterOpen} />
         </Router>
-      
-        
     );
 };
 
