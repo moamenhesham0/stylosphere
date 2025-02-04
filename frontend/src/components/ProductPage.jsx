@@ -206,15 +206,20 @@ const ProductPage = () => {
           <p className="product-style">style: {Array.isArray(product.styles) ? product.styles.join(', ') : product.styles}</p> */}
           <div className="product-options">
             <div className="color-selection">
-              <p>Select Color:</p>
-              <div className="color-options">
+              <h3>Select Color:</h3>
+              <div className="options">
                 {product.colors.map((clr, index) => (
-                  <button
+                  <div
                     key={index}
-                    className={`color-button ${color === clr ? "selected" : ""}`}
-                    style={{ backgroundColor: clr }}
+                    className={`color-option ${color === clr ? 'selected' : ''}`}
                     onClick={() => setColor(clr)}
-                  ></button>
+                  >
+                    <div
+                      className="color-circle"
+                      style={{ backgroundColor: clr }}
+                    ></div>
+                    <span className="color-name">{clr}</span>
+                  </div>
                 ))}
               </div>
             </div>

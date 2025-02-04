@@ -473,3 +473,48 @@
   z-index: 2;
   backdrop-filter: blur(2px);
 }
+.section {
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.color-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+  border: 1px solid #ccc;
+}
+
+.color-option:hover {
+  background-color: rgba(255, 204, 1, 0.1);
+}
+
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.color-option.selected {
+  background-color: #ffcc01;
+  border-color: #ffcc01;
+  color: #000;
+}
+
+.color-name {
+  font-size: 16px;
+  font:bold;
+  color: #333;
+  text-transform: capitalize;
+}
