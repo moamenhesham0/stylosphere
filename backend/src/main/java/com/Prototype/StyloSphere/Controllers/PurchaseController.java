@@ -3,6 +3,7 @@ package com.Prototype.StyloSphere.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/purchase")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -22,7 +24,6 @@ public class PurchaseController {
     
     @Autowired
     private PurchaseService purchaseService;
-
 
     @PostMapping("/save-purchase")
     public ResponseEntity<String> savePurchase(@RequestParam Long customerId , 
@@ -186,4 +187,46 @@ public class PurchaseController {
         return purchaseService.calculateTotalIncome();
     }
 
+    @GetMapping("/all-orders")
+    public ResponseEntity<List<Purchase>> getAllOrders() {
+        try {
+            List<Purchase> orders = purchaseService.getAllOrders();
+            if (orders.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(orders);
+        } catch(Exception e) {
+            System.err.println("Error in getAllOrders: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/update-status")
+    public ResponseEntity<String> updateShipmentStatus(
+        @RequestParam Long orderId,
+        @RequestParam String status
+    ) {
+        try {
+            purchaseService.updateShipmentStatus(orderId, status);
+            return ResponseEntity.ok("Status updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update status: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete-item")
+    public ResponseEntity<String> deleteOrderItem(@RequestParam Long orderId) {
+        if (orderId == null) {
+            return ResponseEntity.badRequest().body("OrderId cannot be null");
+        }
+        
+        try {
+            purchaseService.deletePurchase(orderId);
+            return ResponseEntity.ok("Item deleted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid order ID: " + orderId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to delete item: " + e.getMessage());
+        }
+    }
 }

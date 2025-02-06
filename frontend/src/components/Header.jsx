@@ -63,6 +63,9 @@ function Header() {
                     {user.type !== "admin" && (
                         <Link to="/cart" className="nav-item">Cart</Link>
                     )}
+                    {user.type === "admin" && (
+                        <Link to="/orders" className="nav-item">Orders</Link>
+                    )}
                 </div>
                 {userLogin ? (
                     (

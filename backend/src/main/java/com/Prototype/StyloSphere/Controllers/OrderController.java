@@ -49,7 +49,6 @@ public ResponseEntity<List<Order>> getCartItems(@RequestParam Long userId)
     return ResponseEntity.ok(orderService.getCartItems(userId));
 }
 
-
 @PostMapping("/update-quantity")
 public ResponseEntity<String> updateQuantity(@RequestParam Long id , @RequestParam int newQuantity)
 {

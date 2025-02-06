@@ -17,6 +17,7 @@ import ProductHandler from './components/admin/ProductHandler';
 import Complaints from './components/admin/Complaints';
 import LearnMorePage from './components/LearnMorePage';
 import Footer from './components/Footer';
+import Orders from './components/admin/Orders';
 
 
 const AppContent = ({ isFilterOpen, setIsFilterOpen }) => {
@@ -36,6 +37,7 @@ const AppContent = ({ isFilterOpen, setIsFilterOpen }) => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/userProfile" element={<UserProfile />} />
+                <Route path="Orders" element={<Orders />} />
                 <Route path="/admin" element={<AdminPage />}>
                     <Route path="ProfileAdmin" element={<ProfileAdmin />} />
                     <Route path="Permission" element={<Permission />} />

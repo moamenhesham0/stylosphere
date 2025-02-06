@@ -7,6 +7,7 @@ import FilterWindow from './FilterWindow'; // Import the FilterWindow component
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useUser} from './user/UserContext';
+import { use } from 'react';
 
 const ProductsPage = ({ isFilterOpen, setIsFilterOpen }) => {
     const navigate = useNavigate();
@@ -450,7 +451,7 @@ const sendImageToAI = async (base64Image, products) => {
                                     <div className='product-name'>
                                             {product.name.length > 35 ? `${product.name.substring(0, 35)}...` : product.name}
                                         </div>
-                                        {wishlistItems.has(product.id) ? (
+                                        {user.type === "customer" && (wishlistItems.has(product.id) ? (
                                         <FavoriteIcon 
                                             onClick={(e) => handleWishlistClick(e, product.id)}
                                             style={{float: 'right', fontSize: 30, color: '#c3ad71', paddingRight:10, cursor: "pointer"}}
@@ -460,7 +461,7 @@ const sendImageToAI = async (base64Image, products) => {
                                             onClick={(e) => handleWishlistClick(e, product.id)}
                                             style={{float: 'right', fontSize: 30, color: '#c3ad71', paddingRight:10, cursor: "pointer"}}
                                         />
-                                    )}
+                                    ))}
                                         <div className="price-container">
                                             {product.discountedPrice > 0 ? (
                                                 <>

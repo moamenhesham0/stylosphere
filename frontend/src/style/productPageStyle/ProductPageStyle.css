@@ -115,12 +115,12 @@
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: border-color 0.3s;
+  /* transition: border-color 0.3s; */
 }
 
-.color-button:hover, .color-button.selected {
+/* .color-button:hover, .color-button.selected {
   border-color: #333;
-}
+} */
 
 .size-dropdown {
   padding: 5px 10px;
@@ -485,19 +485,19 @@
   gap: 10px;
 }
 
-.color-option {
+.color-option1 {
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   padding: 5px;
   border-radius: 20px;
-  transition: background-color 0.3s;
-  border: 1px solid #ccc;
+  /* transition: background-color 0.3s; */
+  border: 1px solid #8f8f8f;
 }
 
 .color-option:hover {
-  background-color: rgba(255, 204, 1, 0.1);
+  /* background-color: rgba(255, 204, 1, 0.1); */
 }
 
 .color-circle {
@@ -505,13 +505,21 @@
   height: 30px;
   border-radius: 50%;
   border: 2px solid transparent;
-  transition: border-color 0.3s;
+
 }
 
-.color-option.selected {
-  background-color: #817c00;
-  border-color: #817c00;
-  color: #000000;
+.color-circle.selected {
+  /* border-color: #686326;
+  border-width: 4px; */
+  transition: border-color 0.3s;
+
+}
+.color-option1.selected {
+  border-color: #686326;
+  border-width: 3px;
+  color: #000;
+  transition: border-color 0.3s;
+
 }
 
 .color-name {

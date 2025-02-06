@@ -5,6 +5,7 @@ import { useUser } from "./user/UserContext";
 import { useLocalCart } from "./cart/localCartContext";
 import{ FaTimes } from 'react-icons/fa';
 import Footer from './Footer'; // Import the Footer component
+import Del_icon from 'frontend/public/assets/button icons/del_icon.svg';
 
 
 const ProductPage = () => {
@@ -212,12 +213,12 @@ const ProductPage = () => {
                 {product.colors.map((clr, index) => (
                   <div
                     key={index}
-                    className={`color-option ${color === clr ? 'selected' : ''}`}
+                    className={`color-option1 ${color === clr ? 'selected' : ''}`}
                     onClick={() => setColor(clr)}
                   >
                     <div
-                      className="color-circle"
-                      style={{ backgroundColor: clr }}
+                    className={`color-circle ${color === clr ? 'selected' : ''}`}
+                    style={{ backgroundColor: clr }}
                     ></div>
                     <span className="color-name">{clr}</span>
                   </div>

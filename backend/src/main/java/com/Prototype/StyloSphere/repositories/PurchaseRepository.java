@@ -16,6 +16,8 @@ public interface PurchaseRepository extends JpaRepository<Purchase , Long> {
     @Query("SELECT p FROM Purchase p WHERE p.customerId = :customerId AND TYPE(p) = Purchase")
     List<Purchase> findByCustomerId(Long customerId);
 
+    @Query("SELECT p FROM Purchase p WHERE TYPE(p) = Purchase")
+    List<Purchase> findAll();
 
     @Query("SELECT p FROM Purchase p WHERE p.timeStamp = :timeStamp AND TYPE(p) = Purchase")
     List<Purchase> findByTimeStamp(Date timeStamp);
@@ -67,9 +69,12 @@ List<Object[]> getMonthlySales();
        "ORDER BY DAY(p.timeStamp)")
 List<Object[]> getDailySales();
 
+@Query("SELECT p FROM Purchase p WHERE TYPE(p) = Purchase ORDER BY p.timeStamp DESC")
+List<Purchase> findAllOrdersByTimestampDesc();
+
                                                        
 
 
 }
-    
+
 

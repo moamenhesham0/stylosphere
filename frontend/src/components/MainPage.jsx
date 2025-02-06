@@ -86,6 +86,7 @@ const MainPage = () => {
             const data = await response.json();
             console.log('Success:', data);
             setMessageStatus("Message successfully sent!");
+            setTimeout(() => setMessageStatus(""), 3000)
             // Optionally reset the form
             setFormData({
                 name: "",
@@ -525,35 +526,6 @@ const MainPage = () => {
                     </form>
                 </div>
             </div>
-
-            {/* <footer className="footer">
-                <div className="footer-left">
-                    <h2>StyloSphere</h2>
-                    <p>muhannd, ahmedAli, Moamen, farag and yousef </p>
-                    <br />
-                    <p>Made by Muhannd</p>
-                    <br />
-                    <p>AI Made by ahmedAli & moamen</p>
-                </div>
-                <div className="footer-right">
-                    <div className="footer-section">
-                        <h3>Location</h3>
-                        <p>
-                            123 Demo Street
-                            <br />
-                            New York, NY 12345
-                        </p>
-                    </div>
-                    <div className="footer-section">
-                        <h3>Contact</h3>
-                        <p>
-                            <a href="mailto:email@example.com">muhanndsayed24@gmail.com</a>
-                            <br />
-                            (555) 555-5555
-                        </p>
-                    </div>
-                </div>
-            </footer> */}
         </div>
     );
 }

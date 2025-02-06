@@ -8,6 +8,8 @@ import java.util.Date;
 public class Purchase extends Order {
     
     private Date timeStamp;
+    private String shipmentStatus = "PENDING";
+
     
     public Purchase(Long givenCustomerId, Long productId, String productColor, String productSize, int quantity) {
         super(productId, givenCustomerId, productColor, productSize, quantity);
@@ -16,10 +18,17 @@ public class Purchase extends Order {
     public Purchase(){
     }
    
-
-    
     public Date getPurchaseDate()
     {
         return this.timeStamp;
     }
+
+    public String getShipmentStatus() {
+        return shipmentStatus;
+    }
+
+    public void setShipmentStatus(String shipmentStatus) {
+        this.shipmentStatus = shipmentStatus;
+    }
+
 }

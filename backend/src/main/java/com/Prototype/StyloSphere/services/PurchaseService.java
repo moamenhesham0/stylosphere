@@ -176,5 +176,31 @@ public class PurchaseService {
             return totalIncome;
         }
      
-    
+        public List<Purchase> getAllOrders() {
+            try {
+                return purchaseRepository.findAllOrdersByTimestampDesc();
+            } catch (Exception e) {
+                System.err.println("Error fetching orders: " + e.getMessage());
+                return new ArrayList<>();
+            }
+        }
+
+        public void updateShipmentStatus(Long orderId, String status) {
+            Purchase purchase = purchaseRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+            
+            // Validate status
+            String upperStatus = status.toUpperCase();
+            if (!isValidStatus(upperStatus)) {
+                throw new IllegalArgumentException("Invalid status: " + status);
+            }
+            
+            purchase.setShipmentStatus(upperStatus);
+            purchaseRepository.save(purchase);
+        }
+        
+        private boolean isValidStatus(String status) {
+            return Arrays.asList("PENDING", "SHIPPED", "DELIVERED", "CANCELLED")
+                .contains(status);
+        }
 }

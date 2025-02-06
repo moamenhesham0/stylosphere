@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.Prototype.StyloSphere.classes.Order;
+import com.Prototype.StyloSphere.classes.Purchase;
+
 import java.util.*;
 
 @Repository

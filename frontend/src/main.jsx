@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import { UserProvider } from './components/user/UserContext';
 import { LocalCartProvider } from './components/cart/localCartContext';
+import React from "react";
+import ReactDOM from "react-dom/client";
 
 const Main = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);

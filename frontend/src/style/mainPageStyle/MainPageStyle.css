@@ -422,6 +422,25 @@ textarea:focus {
         margin-bottom: 20px; /* Add spacing between sections */
     }
 }
+
+@keyframes fade {
+
+    0% { opacity: 1; }
+
+    70% { opacity: 1; }
+
+    100% { opacity: 0; }
+
+}
+
+
+
+.status-message {
+
+    animation: fade 3s backwards;
+    animation: fade 3s forwards;
+
+}
 .status-message {
     margin-left: 10px;
     font-size: 14px;
