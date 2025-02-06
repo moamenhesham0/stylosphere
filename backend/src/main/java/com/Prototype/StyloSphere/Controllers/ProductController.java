@@ -96,7 +96,7 @@ public ResponseEntity<List<Product>> filterProducts(@RequestBody Map<String, Lis
     @GetMapping("/best-sellers")
     public ResponseEntity<List<Product>> getBestSellers() {
         try {
-            List<Product> bestSellers = productService.getTopBestSellers(5); // Top 5
+            List<Product> bestSellers = productService.getTopBestSellers(10); // Top 5
             return ResponseEntity.ok(bestSellers);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());

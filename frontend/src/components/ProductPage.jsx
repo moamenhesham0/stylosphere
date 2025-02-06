@@ -4,7 +4,6 @@ import "../style/productPageStyle/ProductPageStyle.css";
 import { useUser } from "./user/UserContext";
 import { useLocalCart } from "./cart/localCartContext";
 import{ FaTimes } from 'react-icons/fa';
-import Del_icon from 'frontend/public/assets/button icons/del_icon.svg';
 import Footer from './Footer'; // Import the Footer component
 
 
@@ -228,27 +227,28 @@ const ProductPage = () => {
 
             <div className="size-selector-container">
               <div className="size-toolbar">
-                <div className="size-dropdown">
-                  <nav role="navigation" className="primary-navigation">
-                    <ul>
-                      <li>Size <span>{size}</span>
-                        <ul className="dropdown">
-                          {product?.sizes?.map((sizeOption) => (
-                            <li 
-                              key={sizeOption} 
-                              onClick={() => {
-                                setSize(sizeOption);
-                                
-                              }}
-                            >
-                              <a>{sizeOption}</a>
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
+                  <h3>Select Size:</h3>
+                  <div className="size-dropdown">
+                    <nav role="navigation" className="primary-navigation">
+                      <ul>
+                        <li>Size <span>{size}</span>
+                          <ul className="dropdown">
+                            {product?.sizes?.map((sizeOption) => (
+                              <li 
+                                key={sizeOption} 
+                                onClick={() => {
+                                  setSize(sizeOption);
+                                  
+                                }}
+                              >
+                                <a>{sizeOption}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
               </div>
             </div>
             <div className="quantity-selector">
@@ -300,7 +300,7 @@ const ProductPage = () => {
       <p className="review-text">{review.message}</p>
       {(user.type === "admin" || user.userId === review.sender) && (
         <button className="delete-comment-button" onClick={() => deleteComment(review.id)}>
-          <img src={Del_icon} alt="Delete" className="delete-icon" />
+          <img src="/assets/button icons/del_icon.svg" alt="delete" />
         </button>
       )}
     </div>
