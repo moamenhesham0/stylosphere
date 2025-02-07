@@ -13,6 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "products")
@@ -44,7 +47,10 @@ public class Product {
     
     private Set<String> colors;
 
-    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    @JsonIgnore
+    private List<ProductVariant> productVariant = new ArrayList<>();
+
     public Product() {
     }
     public Product(String name, String description, double price, List<Image> images, Set<String> tags, Set<String> colors, int quantity, double discountedPrice, Set<String> sizes, Set<String> styles, String brand) {
@@ -62,6 +68,25 @@ public class Product {
         this.brand = brand;
     }
 
+    
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+    public List<Image> getImages() {
+        return images;
+    }
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    public void setColors(Set<String> colors) {
+        this.colors = colors;
+    }
+    public List<ProductVariant> getProductVariant() {
+        return productVariant;
+    }
+    public void setProductVariant(List<ProductVariant> productVariant) {
+        this.productVariant = productVariant;
+    }
     public Long getId() {
         return this.id;
     }

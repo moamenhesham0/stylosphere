@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Prototype.StyloSphere.classes.Image;
 import com.Prototype.StyloSphere.classes.Product;
+import com.Prototype.StyloSphere.classes.ProductVariant;
 import com.Prototype.StyloSphere.repositories.PurchaseRepository;
 import com.Prototype.StyloSphere.services.PurchaseService;
 import com.Prototype.StyloSphere.repositories.ProductRepository;
@@ -48,44 +51,81 @@ public class AdminController {
         return ResponseEntity.ok(bestSellers);
     }
 
-    @PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void addProduct(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("tags") String tags,
-            @RequestParam("price") double price,
-            @RequestParam("quantity") int quantity,
-            @RequestParam("colors") String colors,
-            @RequestParam("images") MultipartFile[] images,
-            @RequestParam("discountedPrice") double discountedPrice,
-            @RequestParam("sizes") String sizes,
-            @RequestParam("styles") String styles,
-            @RequestParam("brand") String brand) {
+@PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<String> addProduct(
+        @RequestParam("name") String name,
+        @RequestParam("description") String description,
+        @RequestParam("tags") String tags,
+        @RequestParam("price") double price,
+        @RequestParam("colors") String colors,
+        @RequestParam("sizes") String sizes,
+        @RequestParam("styles") String styles,
+        @RequestParam("brand") String brand,
+        @RequestParam("discountPrice") double discountedPrice,
+        @RequestParam("variantImagesList") List<MultipartFile[]> variantImagesList,
+        @RequestParam("variantQuantities") String variantQuantities
+) {
+        System.out.println("discountkl"+discountedPrice);
+        System.out.println("brandkl"+brand);
+        System.out.println("sizeskl"+sizes);
+    try {
+        Set<String> tagSet = Arrays.stream(tags.split(",")).map(String::trim).collect(Collectors.toSet());
+        Set<String> styleSet = Arrays.stream(styles.split(",")).map(String::trim).collect(Collectors.toSet());
 
-            List<Image> imageList = new ArrayList<>();
-            if (images != null && images.length > 0) {
-                for (MultipartFile file : images) {
-                    try {
-                        Image img = new Image();
-                        img.setimage(file.getBytes());
-                        img.setAttName(file.getOriginalFilename());
-                        img.setAttType(file.getContentType());
-                        img.setAttSize(file.getSize() / 1024.0f); 
-                        imageList.add(img);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to process attachment: " + file.getOriginalFilename(), e);
-                    }
+        List<String> sizeList = Arrays.asList(sizes.split(","));
+        List<String> colorList = Arrays.asList(colors.split(","));
+        List<Integer> quantityList = Arrays.stream(variantQuantities.split(","))
+                .map(String::trim).map(Integer::parseInt).collect(Collectors.toList());
+
+        if (sizeList.size() != colorList.size() || sizeList.size() != variantImagesList.size() || sizeList.size() != quantityList.size()) {
+            return ResponseEntity.badRequest().body("Sizes, colors, images, and quantities count must match.");
+        }
+
+        List<ProductVariant> variants = new ArrayList<>();
+        List<Image> productImages = new ArrayList<>();
+        int totalQuantity = 0; // Sum of all variant quantities
+
+        Product product = new Product(name, description, price, new ArrayList<>(), tagSet, new HashSet<>(colorList),
+                0, discountedPrice, new HashSet<>(sizeList), styleSet, brand);
+
+        for (int i = 0; i < sizeList.size(); i++) {
+            String size = sizeList.get(i).trim();
+            String color = colorList.get(i).trim();
+            int quantity = quantityList.get(i);
+            MultipartFile[] variantImages = variantImagesList.get(i);
+
+            List<Image> variantImageList = new ArrayList<>();
+            for (MultipartFile file : variantImages) {
+                Image img = new Image();
+                img.setimage(file.getBytes());
+                img.setAttName(file.getOriginalFilename());
+                img.setAttType(file.getContentType());
+                img.setAttSize(file.getSize() / 1024.0f);
+                variantImageList.add(img);
+                if (i == 0) {
+                    productImages.add(img);  /// only the first images in the list will be ut
                 }
-            }    
+            }
 
-            Set<String> tagSet = Arrays.stream(tags.split(",")).map(String::trim).collect(Collectors.toSet());
-            Set<String> colorSet = Arrays.stream(colors.split(",")).map(String::trim).collect(Collectors.toSet());
-            Set<String> sizeSet = Arrays.stream(sizes.split(",")).map(String::trim).collect(Collectors.toSet());
-            Set<String> styleSet = Arrays.stream(styles.split(",")).map(String::trim).collect(Collectors.toSet());
+            
 
-            Product product = new Product(name, description, price, imageList, tagSet, colorSet, quantity, discountedPrice, sizeSet, styleSet, brand);
-            Product savedProduct = productRepository.save(product);
+            ProductVariant variant = new ProductVariant(size, color, quantity, product, variantImageList);
+            variants.add(variant);
+
+            totalQuantity += quantity; 
+        }
+
+        product.setImages(productImages);
+        product.setProductVariant(variants);
+        product.setQuantity(totalQuantity); // Assign total sum
+
+        productRepository.save(product);
+
+        return ResponseEntity.ok("Product added successfully.");
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing images: " + e.getMessage());
     }
+}
 
    
     @GetMapping("/products")

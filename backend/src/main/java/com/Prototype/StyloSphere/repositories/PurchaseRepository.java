@@ -26,8 +26,6 @@ public interface PurchaseRepository extends JpaRepository<Purchase , Long> {
     @Query("SELECT p FROM Purchase p WHERE p.productId = :productId AND TYPE(p) = Purchase")
     List<Purchase> findByProductId(Long productId);
 
-    @Query("SELECT p.productId AS productId, SUM(p.quantity) AS totalSales FROM Purchase p GROUP BY p.productId ORDER BY totalSales DESC")
-    List<Map<String, Object>> findBestSellers();
 
     @Query(value = "SELECT PRODUCT_ID, SUM(QUANTITY) as totalQuantity " +
                    "FROM PURCHASE_HISTORY " +
@@ -36,6 +34,16 @@ public interface PurchaseRepository extends JpaRepository<Purchase , Long> {
            nativeQuery = true)
     List<Object[]> findTopSellingProducts();
 
+    @Query(value = "SELECT p.productId AS productId, " +
+       "pr.name AS productName, " +
+       "SUM(p.quantity) AS totalSales " +
+       "FROM Purchase p " +
+       "JOIN Product pr ON p.productId = pr.id " +
+       "GROUP BY p.productId, pr.name " +
+       "ORDER BY totalSales DESC " +
+       "LIMIT 3", 
+       nativeQuery = true)
+List<Map<String, Object>> findBestSellers();
 
     @Query("SELECT FUNCTION('TO_CHAR', ph.timeStamp, :timePattern), SUM(ph.quantity) " +
        "FROM Purchase ph " +
