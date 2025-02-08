@@ -62,7 +62,7 @@ function Header() {
                     <Link to="/" state={{ scrollTo: "contact-us", delayScroll: 300 }} className="nav-item">Contact us</Link>
                     <Link to="/" className="logo-text"><img src="/assets/brandIcon.svg" alt="StyloSphere Logo" /></Link>
                     <Link to="/shop" className="nav-item">Shop</Link>
-                    <Link to={user.type === 'admin'? '/orders' : "/cart"} className="nav-item">{user.type === 'admin'? Orders : <ShoppingBag />}</Link>
+                    <Link to={user.type === 'admin'? '/orders' : '/cart'} className="nav-item">{user.type === 'admin'? <>Orders</> : <ShoppingBag />}</Link>
                 </nav>
             </div>
             
