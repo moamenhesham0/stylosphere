@@ -5,7 +5,8 @@ import '../style/headerStyle/HeaderStyle.css';
 import { Avatar } from '@mui/material';
 import ShoppingBag from '@mui/icons-material/ShoppingBag';
 import { useLocalCart } from './cart/localCartContext';
-import { FaFacebookF, FaTwitter, FaInstagram, FaYelp } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { BsTwitterX } from "react-icons/bs";
 
 function Header() {
     const { user, clearUser } = useUser();
@@ -49,9 +50,9 @@ function Header() {
             <div className="header-left">
                 <div className="social-icons">
                     <FaFacebookF className="icon" />
-                    <FaTwitter className="icon" />
+                    <BsTwitterX className="icon" />
                     <FaInstagram className="icon" />
-                    <FaYelp className="icon" />
+                    <FaLinkedin className="icon" />
                 </div>
             </div>
             

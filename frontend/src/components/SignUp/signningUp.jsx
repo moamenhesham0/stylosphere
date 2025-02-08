@@ -8,7 +8,7 @@ import { signUpProcess,
          addToRegisteredUserCart} from './signUpAPI';
 
 const SignUp = () => {
-  const { updateUser } = useUser(); // Ensure updateUser is destructured
+  const { user,updateUser } = useUser(); // Ensure updateUser is destructured
   const {cart} = useLocalCart();
   const navigate = useNavigate(); // Initialize the navigate hook
 
@@ -48,11 +48,13 @@ const SignUp = () => {
 
 
   /*ADD LOCAL CART TO THE BACKEND*/
-  const handleAddToBackendCart = async()=>
+  const handleAddToBackendCart = async(userId)=>
   {
     if(cart.length >0)
     {
-      await addToRegisteredUserCart(cart);
+      const cartItems = cart;
+      console.log(cartItems);
+      await addToRegisteredUserCart(cartItems , userId);
     }
   };
 
@@ -90,7 +92,7 @@ const SignUp = () => {
       return;
     }
 
-    if(formData.password != formData.confirmPassword)
+    if(formData.password !== formData.confirmPassword)
     {
       setErrorMessage('Passwords don\'t match');
       return;
@@ -106,7 +108,7 @@ const SignUp = () => {
       
       const userId = await signUpProcess(formData)
   
-      if (userId === -1) {
+      if (userId === -1 || !userId) {
         setErrorMessage('Entered email is already registered.');
         return;
       }
@@ -119,7 +121,10 @@ const SignUp = () => {
         userId: userId
       });
 
-      await handleAddToBackendCart();
+      if(!(userId === -1 || !userId)){
+        await handleAddToBackendCart(userId);
+      }
+      
       
       navigate('/');
   };
@@ -202,5 +207,4 @@ const SignUp = () => {
     </div>
   );
 };
-
 export default SignUp;

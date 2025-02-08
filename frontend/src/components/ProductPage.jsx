@@ -124,7 +124,7 @@ const ProductPage = () => {
 
     updateLocalCart(order,product.quantity);
 
-    if (user.id < 0) return;
+    if (user.userId < 0 || !user.userId) return;
     console.log(user.userId);
     try {
       const response = await fetch(

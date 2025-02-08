@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./cartStyle.css";
 import { useLocalCart } from "./localCartContext";
-import {useUser } from '../user/UserContext';
+import { useUser } from '../user/UserContext';
+import { useNavigate } from 'react-router-dom';
 import { getItemId,deleteItem, updateQuantity, applyPromoCode, completePayment } from './cartApi';
 
 const ShoppingCart = () => {
@@ -10,6 +11,7 @@ const ShoppingCart = () => {
   const [products, setProducts] = useState({});
   const [paymentWindow, setPaymentWindow] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("creditCard");
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     cardNumber: "",
@@ -308,7 +310,7 @@ const ShoppingCart = () => {
           )}
           {cart.length > 0 && <button
             className="checkout-btn"
-            onClick={cart.length > 0 ? openPaymentWindow : null}
+            onClick={() => user.userId !== -1 ? (cart.length > 0 ? openPaymentWindow() : null) : navigate('/signup')}
             disabled={cart.length === 0} // Disable the button if the cart is empty
           >
             CHECKOUT

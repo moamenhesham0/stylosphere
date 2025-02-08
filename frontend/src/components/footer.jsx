@@ -1,8 +1,8 @@
 import React from 'react';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import '../style/footer.css';
 import { useUser } from './user/UserContext';
-
+import { BsTwitterX } from "react-icons/bs";
 
 const Footer = () => {
       const { user , updateUser , clearUser } = useUser();
@@ -35,7 +35,7 @@ const Footer = () => {
           <h3>Follow Us</h3>
           <div className="social-icons">
             <a href="https://www.facebook.com"><FaFacebook /></a>
-            <a href="https://www.twitter.com"><FaTwitter /></a>
+            <a href="https://www.twitter.com"><BsTwitterX /></a>
             <a href="https://www.instagram.com"><FaInstagram /></a>
             <a href="https://www.linkedin.com"><FaLinkedin /></a>
           </div>

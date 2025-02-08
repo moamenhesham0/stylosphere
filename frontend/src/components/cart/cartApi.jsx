@@ -86,7 +86,7 @@ export const completePayment = async (cart, userId) => {
           const response = await fetch(url, {
             method: 'POST',
           });
-
+          console.log(url);
           if (!response.ok) {
             throw new Error(`Failed to save purchase for product ${item.productId}`);
           }

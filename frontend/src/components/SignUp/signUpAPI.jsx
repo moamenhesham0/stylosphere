@@ -16,14 +16,15 @@ export const signUpProcess = async(formData)=>
 }
 
 
-export const addToRegisteredUserCart = async(cart) =>
+export const addToRegisteredUserCart = async(cart , userId) =>
 {
-    for(const item of cart){
-    await fetch(
-        `http://localhost:8080/api/cart/add-to-cart?productId=${item.productId}&color=${item.productColor}&size=${item.productSize}&quantity=${item.quantity}&userId=${user.userId}`,
+  await Promise.all(
+    cart.map(async (item) => 
+      fetch(
+        `http://localhost:8080/api/cart/add-to-cart?productId=${item.productId}&color=${item.productColor}&size=${item.productSize}&quantity=${item.quantity}&userId=${userId}`,
         {
-        method: 'POST',
+          method: 'POST',
         }
-    );
-    }
+      )
+    ));
 };
