@@ -58,7 +58,7 @@ function Header() {
             {/* Center: Logo / Brand Name with Navigation */}
             <div className="header-center">
                 <nav className="nav-menu">
-                    <Link to="/learnmore" className="nav-item">About</Link>
+                    <Link to="/" state={{ scrollTo: "learn-more", delayScroll: 300 }} className="nav-item">About</Link>
                     <Link to="/" state={{ scrollTo: "contact-us", delayScroll: 300 }} className="nav-item">Contact us</Link>
                     <Link to="/" className="logo-text"><img src="/assets/brandIcon.svg" alt="StyloSphere Logo" /></Link>
                     <Link to="/shop" className="nav-item">Shop</Link>

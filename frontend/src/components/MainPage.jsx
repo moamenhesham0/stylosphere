@@ -441,7 +441,7 @@ const MainPage = () => {
               
             </div>
 
-            <div className="page-main-two">
+            <div className="page-main-two" id='learn-more' >
                 <div className="page-main-two-img">
                     <img src={aboutuspng} alt="About Us" />
                 </div>
