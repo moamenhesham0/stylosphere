@@ -23,6 +23,13 @@ public class UserService {
     {
         return userRepository.findByEmail(email);
     }
+    public void deleteUserImage(Long id)
+    {
+        User user = userRepository.findById(id).get();
+        user.setUserImage(null);
+        userRepository.save(user);
+        return;
+    }
 
     public boolean addAdmin(String email , String password ,String adminLevel)
     {

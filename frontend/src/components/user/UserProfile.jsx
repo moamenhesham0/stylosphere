@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa'; // For the close button icon
-
+import { Avatar } from '@mui/material';
 
 
 
@@ -18,7 +18,8 @@ import { updateUserEmail,
          fetchWishList,
          removeFromWishList,
          sendImageToBackend,
-         fetchLogHistory } from './UserApi';
+         fetchLogHistory,
+         deletUserImage } from './UserApi';
 
 
 
@@ -65,6 +66,7 @@ function UserProfile() {
   const [editEmail, setEditEmail] = useState(false);
   const [editPhone, setEditPhone] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
+  const deleteImage = userPhoto != '';
   const isEditing = (editName || editEmail || editPhone || editAddress);
 
   /* New data states */
@@ -95,7 +97,7 @@ function UserProfile() {
   const [itemsPerPage] = useState({ outerPurchaseHistory :3, 
                                     innerPurchaseHistory :3,
                                     logHistory : 8,
-                                    wishList : 3                        });
+                                    wishList : 7                        });
 
   /* Fetching data */
   useEffect(() => {
@@ -165,7 +167,7 @@ function UserProfile() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result.split(',')[1];
-        sendImageToBackend(base64Image , userEmail);
+        sendImageToBackend(base64Image, userEmail);
         setUserPhoto(base64Image);
         updateUser({
           ...user,
@@ -174,7 +176,27 @@ function UserProfile() {
       };
       reader.readAsDataURL(file);
     }
+  
+    // Reset input value to allow re-uploading the same image
+    event.target.value = "";
   };
+  
+
+
+  const handleImageDeletion = async () => {
+    await deletUserImage(user.userId);
+    updateUser({
+      ...user,
+      image: "",
+    });
+    setUserPhoto("");
+  
+    // Small delay before resetting file input
+    setTimeout(() => {
+      document.getElementById("imageUpload").value = "";
+    }, 100);
+  };
+  
 
   
 
@@ -734,7 +756,7 @@ function UserProfile() {
 
             {wishList.length > 0 ? (
               <ul className="wishlist-items">
-                {wishList.map((product) => (
+                {currentItems.wishList.map((product) => (
                   <li key={product.id} className="wishlist-item">
                       <button className="closebutton" onClick={() => handleRemoveFromWishlist(product.id)}>
                           <FaTimes />
@@ -882,10 +904,16 @@ function UserProfile() {
           className="profileUser-image"
           onClick={() => document.getElementById('imageUpload').click()}  // Trigger file input click on image click
           >
+          {userPhoto?
           <img
-            src={userPhoto ? `data:image/jpeg;base64,${userPhoto}` : "/assets/profilePic.svg"}
-            alt="/assets/profilePic.svg"
-          />
+            src={`data:image/jpeg;base64,${userPhoto}`}
+          /> : <Avatar className='Avatar'>{user.name.charAt(0).toUpperCase()}</Avatar>}
+          {deleteImage? <button className='clear-profile-image' onClick={(event) => {
+                                                                          event.stopPropagation(); 
+                                                                          handleImageDeletion();
+                                                                        }}>
+          Delete Image
+          </button> : <></>}
         </div>
 
         {/* Hidden file input for image upload */}

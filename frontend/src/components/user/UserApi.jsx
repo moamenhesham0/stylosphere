@@ -145,6 +145,26 @@ export const updateUserAddress = async (userId, address) => {
     }
   };
 
+/*DELETE USER */
+export const deletUserImage = async (userId) => {
+  const url = `${BASE_URL}/delete-image?userId=${userId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update password. Status: ${response.status}`);
+    }
+
+    return await response.text();
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw error;
+  }
+};
+
 /* Fetch purchase history */
 export const fetchPurchaseHistory = async (userId) => {
   const url = `${purchase_URL}/user-purchases?userId=${userId}`;

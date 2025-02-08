@@ -71,11 +71,17 @@ function Header() {
                 {userLogin ? (
                     <div className="profile-menu" ref={menuRef}>
                         <div className="profile-icon" onClick={toggleMenu}>
-                            <Avatar src={user?.image ? `data:image/jpeg;base64,${user.image}` : "/assets/profilePic.svg"} className="profile-pic" />
+                        {user?.image?
+                            <Avatar src={`data:image/jpeg;base64,${user.image}`} className="profile-pic" />
+                                :
+                            <Avatar className="profile-pic">{user.name.charAt(0).toUpperCase()}</Avatar>
+                        }
+                            
+                            
                         </div>
                         {isOpen && (
                             <div className="dropdown-menu">
-                                <Link to={user.type === 'admin' ? '/admin/ProfileAdmin' : '/userProfile'} className="dropdown-item" onClick={() => setIsOpen(false)}>Profile</Link>
+                                <div className="dropdown-item" onClick={() => {navigate(user.type === 'admin' ? '/admin/ProfileAdmin' : '/userProfile'); setIsOpen(false);}}>Profile</div>
                                 <div className="dropdown-item" onClick={() => { logOut(); setIsOpen(false); }}>Log Out</div>
                             </div>
                         )}

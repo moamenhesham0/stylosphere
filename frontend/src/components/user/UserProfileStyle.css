@@ -65,31 +65,60 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
   }
+
+  .profileUser-image .Avatar,
   .profileUser-image img {
     position: relative;
     border-radius: 50%;
     border: 3px solid #7a711f;
     width: 120px;
     height: 120px;
+    font-size: 3rem;
     object-fit: cover;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.5s, filter 0.5s, box-shadow 0.5s;
     cursor: pointer;
   }
-
+  
+   
+  .profileUser-image .Avatar:hover, 
   .profileUser-image img:hover {
     transform: scale(1.1);
-    filter: brightness(0.7); /* Darkens the image on hover */
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Adds a deeper shadow on hover */
-    animation: float 3s ease-in-out infinite; /* Adds floating animation on hover */
-  }
-  
-  .profileUser-image img:active {
-    transform: scale(0.95); /* Slightly scales down the image on click */
-    filter: brightness(0.9); /* Slightly brightens the image on click */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Resets shadow on click */
+    filter: brightness(0.7);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
     animation: float 3s ease-in-out infinite;
+  }
+
+  .profileUser-image .Avatar:active,
+  .profileUser-image img:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  
+
+  .clear-profile-image {
+    padding: 8px 32px;
+    background-color: #f8d7da;
+    margin-left: 5px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    color: #dc3545;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.5s ease;
+  }
+
+  .clear-profile-image:hover {
+    background-color: #f5a7af;
+    transform: translateY(-1px);
   }
 
   @media (max-width: 768px) {
@@ -103,6 +132,9 @@
     .profileUser-image img {
       width: 80px;
       height: 80px;
+    }
+    .profileUser-image {
+      flex-direction: column;
     }
   }
 

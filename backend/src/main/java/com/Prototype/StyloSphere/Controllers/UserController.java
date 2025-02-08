@@ -166,6 +166,16 @@ public ResponseEntity<Boolean> checkPassword(@RequestParam Long userId , @Reques
     Customer user = customerService.getCustomerById(userId);
     return ResponseEntity.ok(user.getPassword().equals(password));
 }
+@PostMapping("/delete-image")
+public ResponseEntity<String> deleteUserImage(@RequestParam Long userId)
+{
+    try {
+        userService.deleteUserImage(userId);
+    } catch (Exception e) {
+        return ResponseEntity.ok("Failed to delete user image");
+    }
+    return ResponseEntity.ok("User image deleted successfully");
+}
 
 
 @GetMapping("sumUsers")
