@@ -22,6 +22,7 @@ export const UserProvider = ({ children }) => {
 
   const clearUser = () => {
     setUser({ email: '', name: '', type: '', phone:'' , address:'' ,admin_level: '', userStatus: false, image: '', userId: -1 });
+    localStorage.removeItem('user'); // Remove user from localStorage
   };
 
   return (

@@ -19,6 +19,7 @@ public class PurchaseService {
 
     @Autowired
     private ProductRepository productRepository;
+    
 
     @Autowired
     private OrderRepository orderRepository;
@@ -30,6 +31,10 @@ public class PurchaseService {
     public void savePurchase(Purchase purchase , Long customerId)
     {
         purchaseRepository.save(purchase);
+        Product product = productRepository.findById(purchase.getProductId()).get();
+        product.setQuantity(product.getQuantity()-purchase.getQuantity());
+        product.setSalesCount(product.getSalesCount()+purchase.getQuantity());
+        productRepository.save(product);
         orderRepository.deleteByCustomerId(customerId);
     }
     public List<Purchase> getPurchasesByCustomerId(Long customerId)

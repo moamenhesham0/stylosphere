@@ -39,20 +39,20 @@ public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Strin
         return ResponseEntity.ok(Map.of("user", user  , "status" , "SUCCESS"));
     } else {
         // Return JSON status for failed sign-in
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("status", "FAILURE"));
+        return ResponseEntity.ok(Map.of("status", "FAILURE"));
     }
 }
 
 //sign up
 @PostMapping("/signup")
-public ResponseEntity<Boolean> signUp(@RequestBody Customer user) {
-    Boolean success = false;
+public ResponseEntity<Long> signUp(@RequestBody Customer user) {
+    Long customerId = -1L;
     try{
-    success = userService.signUp(user);
+    customerId = userService.signUp(user);
     }catch(Exception e){
-        return ResponseEntity.badRequest().body(false); 
+        return ResponseEntity.badRequest().body(customerId); 
     }
-    return ResponseEntity.ok(success);
+    return ResponseEntity.ok(customerId);
 }
 
 @PostMapping("/photo-upload")
@@ -119,12 +119,19 @@ public ResponseEntity<String> updateName(@RequestParam Long userId , @RequestPar
 }
 
 @PostMapping("/update-email")
-public ResponseEntity<String> updateEmail(@RequestParam Long userId , @RequestParam String email)
+public ResponseEntity<Boolean> updateEmail(@RequestParam Long userId , @RequestParam String email)
 {
     Customer user = customerService.getCustomerById(userId);
-    user.setEmail(email);
-    userService.saveUser(user);
-    return ResponseEntity.ok("Email updated successfully");
+    User existingEmailUser = userService.getUser(email);
+    if(existingEmailUser != null)
+    {
+        user.setEmail(email);
+        userService.saveUser(user);
+        return ResponseEntity.ok(true);
+    }
+    else
+        return ResponseEntity.ok(false);
+    
 }
 
 @PostMapping("/update-password")

@@ -68,13 +68,13 @@ public class UserService {
         return user != null && user.getPassword().equals(password);
     }
 
-    public boolean signUp(Customer customer) {
+    public Long signUp(Customer customer) {
         if (userRepository.findByEmail(customer.getEmail()) != null) {
-            return false; 
+            return -1L; 
         }
         
         userRepository.save(customer); 
-        return true;    
+        return customer.getId();    
     }
 
     public void deleteAdmin(String email) {

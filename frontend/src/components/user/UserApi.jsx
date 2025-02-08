@@ -1,7 +1,7 @@
 const BASE_URL = "http://localhost:8080/api/customers";
 const purchase_URL = "http://localhost:8080/api/purchase";
 const wishlist_URL = "http://localhost:8080/api/wishlist";
-
+const logHistory_URL = "http://localhost:8080/api/log-history"
 // Saves User Image in backend
 export const sendImageToBackend = (base64Image , userEmail) => {
   fetch(`${BASE_URL}/photo-upload`, {
@@ -227,3 +227,20 @@ export const removeFromWishList = async (userId , productId)=>
       throw error;
     }
 }
+
+export const fetchLogHistory = async (userId)=>{
+  const url = `${logHistory_URL}/get-customer-log-history?userId=${userId}`
+
+  try {
+      const response = await fetch(url, {method:'GET'});
+
+      if (!response.ok) {
+          throw new Error(`Failed to fetch wishlist. Status: ${response.status}`);
+      }
+
+      return await response.json();
+  } catch (error) {
+      console.error("Error fetching wishlist:", error);
+      throw error;
+  }
+};

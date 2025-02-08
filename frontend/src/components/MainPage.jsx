@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header'; // Import the Header component
 import mainPagepng from '../images/mainPageImg/mainPage.png';
 import aboutuspng from '../images/mainPageImg/aboutUs2.png';
@@ -14,6 +14,7 @@ import {useUser} from './user/UserContext';
 
 const MainPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [bestSellers, setBestSellers] = useState([]);
     const [discountedProducts, setDiscountedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,6 +29,23 @@ const MainPage = () => {
         lastName: "",
     });
     const [messageStatus, setMessageStatus] = useState(""); // State for displaying success or error message
+
+    useEffect(() => {
+        if (location.state?.scrollTo) {
+          const { scrollTo, delayScroll } = location.state;
+      
+          setTimeout(() => {
+            const element = document.getElementById(scrollTo);
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth" });
+            }
+            // Clear the location state after scrolling
+            navigate(location.pathname, { replace: true, state: {} });
+          }, delayScroll);
+        }
+        
+      }, [location, navigate]);
+      
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -427,7 +445,7 @@ const MainPage = () => {
                 <div className="page-main-two-img">
                     <img src={aboutuspng} alt="About Us" />
                 </div>
-                <div className="page-main-two-right">
+                <div className="page-main-two-right" >
                     <div className="page-main-two-head">
                         <h1>
                             Who
@@ -450,7 +468,7 @@ const MainPage = () => {
                 </div>
             </div>
 
-            <div className="page-main-three">
+            <div className="page-main-three" id='contact-us'  >
                 <div className="page-main-three-contactus">
                     <div className="page-main-three-contactus-title">
                         <h1>Contact Us</h1>

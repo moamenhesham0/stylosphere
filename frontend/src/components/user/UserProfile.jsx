@@ -6,6 +6,7 @@ import { FaTimes } from 'react-icons/fa'; // For the close button icon
 
 
 
+
 import { updateUserEmail,
          updateUserName , 
          updateUserAddress , 
@@ -16,16 +17,16 @@ import { updateUserEmail,
          fetchProducts,
          fetchWishList,
          removeFromWishList,
-         sendImageToBackend } from './UserApi';
+         sendImageToBackend,
+         fetchLogHistory } from './UserApi';
 
 
 
 function UserProfile() {
   /* Local user storage*/
   const { user, updateUser } = useUser();
+
   const navigate = useNavigate();
-
-
 
 
   /*User Data*/
@@ -53,7 +54,7 @@ function UserProfile() {
   /* Purchase History */
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [purchaseHistoryProducts, setPurchaseHistoryProducts] = useState({});
-  const [shownPurchaseHistory , setShownPurchaseHistory] = useState([]);
+  
 
 
 
@@ -80,7 +81,21 @@ function UserProfile() {
   const [newPassword , setNewPassword] = useState('');
   const [confirmNewPassword , setConfirmNewPassword] = useState('');
 
+  //Log History
+  const [logHistory , setLogHistory] = useState([]);
 
+
+  /*PAGES*/
+  const [currentPage , setCurrentPage] = useState({  outerPurchaseHistory :1, 
+                                        innerPurchaseHistory :1,
+                                        logHistory : 1,
+                                        wishList : 1                        });
+
+  //ITEMS PER PAGE
+  const [itemsPerPage] = useState({ outerPurchaseHistory :3, 
+                                    innerPurchaseHistory :3,
+                                    logHistory : 8,
+                                    wishList : 3                        });
 
   /* Fetching data */
   useEffect(() => {
@@ -101,9 +116,15 @@ function UserProfile() {
       const fetchedWishList = await fetchWishList(user.userId);
       setWishList(fetchedWishList);
     };
+    const getLogHistory = async () =>{
+      const fetchedLogHistory = await fetchLogHistory(user.userId);
+      setLogHistory(fetchedLogHistory);
+    }; 
 
     getPurchaseHistory();
     getWishList();
+    getLogHistory();
+    console.log(logHistory);
 
     
   }, [showData]);
@@ -126,6 +147,13 @@ function UserProfile() {
     setConfirmNewPassword('');
     setNewPassword('');
 
+    /*Paging RESET*/
+    setCurrentPage({
+      outerPurchaseHistory: 1,
+      innerPurchaseHistory: 1,
+      logHistory: 1,
+      wishList: 1
+    });
   }, [showData]);
 
 
@@ -195,27 +223,48 @@ function UserProfile() {
     }
     return true;
   };
+
+
   const handleEmailUpdate = async() => {
+
+    /// check if the entered email is same as current.
     if(newEmail === userEmail){
       setErrorMessage('Email is the same as the current one');
       return;
     }
+
+    /// check if the entered email is empty/white spaces
     if(newEmail === '' || newEmail.trim() === '') {
       setNewEmail(userEmail);
       setErrorMessage('Email cannot be empty');
       return;
     }
+
+    /// check if the entered email is a valid formated email.
     if(!emailFormatValidation()){
       setErrorMessage('Invalid email format');
       return;
     }
-    updateUser({
-      ...user,
-      email: newEmail
-    })
-    setUserEmail(newEmail);
-    await updateUserEmail(user.userId, newEmail);
-    handleEmailCancel(true);
+
+    /// API call:
+    /// -sets the email in the backend and sends true.
+    /// -sends false and doesnt update it in the back. 
+    const emailChangeValidation = await updateUserEmail(user.userId, newEmail);
+
+    if(emailChangeValidation === 'true')
+    {
+      updateUser({
+        ...user,
+        email: newEmail
+      })
+      setUserEmail(newEmail);
+      
+      handleEmailCancel(true);
+    }
+    else
+    {
+      setErrorMessage('This email is registered in another account.');
+    }
   };
 
   const handleEmailCancel = (success = false) => {
@@ -225,6 +274,8 @@ function UserProfile() {
     handleErrorMessageCancel();
   };
 
+
+  
   // Phone
   const handlePhoneUpdate = async() => {
     if(newPhone === userPhone){
@@ -346,7 +397,157 @@ function UserProfile() {
   }
 
 
+  /*PURCHASE HISTORY*/
+  const groupedPurchaseHistory = Object.entries(
+    purchaseHistory.reduce((acc, item) => {
+      const date = item.purchaseDate;
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(item);
+      return acc;
+    }, {})
+  ).sort((a, b) => new Date(b[0]) - new Date(a[0]));
 
+
+  /*PAGINATION */
+
+  // Get current items for each section
+  const getCurrentItems = (items, page, itemsPerPageCount) => {
+    const indexOfLastItem = page * itemsPerPageCount;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPageCount;
+    return items.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  // Calculate total pages for each section
+  const getTotalPages = (totalItems, itemsPerPageCount) => {
+    return Math.ceil(totalItems / itemsPerPageCount);
+  };
+
+  // Page change handlers
+  const handlePageChange = (section, pageNumber) => {
+    setCurrentPage(prev => ({
+      ...prev,
+      [section]: pageNumber
+    }));
+  };
+
+  // Get current items for each section
+  const currentItems = {
+    logHistory: getCurrentItems(logHistory, currentPage.logHistory, itemsPerPage.logHistory),
+    wishList: getCurrentItems(wishList, currentPage.wishList, itemsPerPage.wishList),
+    outerPurchaseHistory: getCurrentItems(groupedPurchaseHistory, currentPage.outerPurchaseHistory, itemsPerPage.outerPurchaseHistory)
+  };
+
+  // Get total pages for each section
+  const totalPages = {
+    logHistory: getTotalPages(logHistory.length, itemsPerPage.logHistory),
+    wishList: getTotalPages(wishList.length, itemsPerPage.wishList), 
+    outerPurchaseHistory: getTotalPages(groupedPurchaseHistory.length, itemsPerPage.outerPurchaseHistory)
+  };
+
+  const PaginationControls = ({section}) => {
+    const getPageNumbers = () => {
+      const totalPageCount = totalPages[section];
+      const currentPageNum = currentPage[section];
+      const pageNumbers = [];
+
+      if (totalPageCount <= 7) {
+        // If total pages are 7 or less, show all pages
+        for (let i = 1; i <= totalPageCount; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        // Always show first page
+        pageNumbers.push(1);
+
+        if (currentPageNum <= 3) {
+          // Near the start
+          pageNumbers.push(2, 3, 4, '...', totalPageCount - 1, totalPageCount);
+        } else if (currentPageNum >= totalPageCount - 2) {
+          // Near the end
+          pageNumbers.push('...', totalPageCount - 3, totalPageCount - 2, totalPageCount - 1, totalPageCount);
+        } else {
+          // Middle - show current page, one before, and one after
+          pageNumbers.push(
+            '...',
+            currentPageNum - 1,
+            currentPageNum,
+            currentPageNum + 1,
+            '...',
+            totalPageCount
+          );
+        }
+      }
+
+      return pageNumbers;
+    };
+
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (e) => {
+      let value = e.target.value;
+      if (value === '') {
+        setInputValue('');
+        return;
+      }
+
+      let numValue = parseInt(value);
+      if (numValue < 1) {
+        setInputValue('1');
+      } else if (numValue > totalPages[section]) {
+        setInputValue(totalPages[section].toString());
+      } else {
+        setInputValue(numValue.toString());
+      }
+    };
+
+    return (
+      <div className="pagination-controls">
+      <button 
+        onClick={() => handlePageChange(section, currentPage[section] - 1)}
+        disabled={currentPage[section] === 1}
+      >
+        Previous
+      </button>
+      
+      {getPageNumbers().map((pageNum, index) => (
+        <button
+        key={index}
+        onClick={() => pageNum !== '...' && handlePageChange(section, pageNum)}
+        className={currentPage[section] === pageNum ? 'active' : ''}
+        disabled={pageNum === '...'}
+        >
+        {pageNum}
+        </button>
+      ))}
+
+      <button 
+        onClick={() => handlePageChange(section, currentPage[section] + 1)}
+        disabled={currentPage[section] === totalPages[section]}
+      >
+        Next
+      </button>
+
+      <div className="go-to-page">
+        <input
+          type="number"
+          min={1}
+          max={totalPages[section]}
+          placeholder="Go to page"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && inputValue) {
+              handlePageChange(section, parseInt(inputValue));
+              setInputValue('');
+            }
+          }}
+        />
+      </div>
+      </div>
+    );
+  };
 
   const ErrorMessage = () => {
     if (!errorMessage) return null;
@@ -403,72 +604,94 @@ function UserProfile() {
 
 
         {/*Security*/}
-        {showData === "securityCredentials" && (
-          <div className="security-info">
-            <h1>Security Credentials</h1>
-            <div className='security-item'>
-            <h2>Password</h2>
-            <p>********</p>
+          {showData === "securityCredentials" && (
+            <div className="security-info">
+              <h1>Security Credentials</h1>
+              <div className='security-item'>
+              <h2>Password</h2>
+              <p>********</p>
 
-            {!changePasswordWindow?
-            (
-              <button onClick={()=> setChangePasswordWindow(true)}>Change Password</button>
-            )
-            :
-            (
-              <>
-              <div className='change-password-overlay'></div>
-              <div className="change-password-window">
+              {!changePasswordWindow?
+              (
+                <button onClick={()=> setChangePasswordWindow(true)}>Change Password</button>
+              )
+              :
+              (
+                <>
+                <div className='change-password-overlay'></div>
+                <div className="change-password-window">
 
-              
-                {
-                  !currentPasswordConfirmed ? (
-                    <>
-                      <input
-                        type="password"
-                        placeholder="Current Password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                      />
-                      <button onClick={()=> handleConfirmCurrentPassword()}>Confirm</button>
-                    </>
-                    ) 
-                    : 
-                    (
-                      <>
-                        <input
-                          type="password"
-                          placeholder="New Password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                        />
-                        <input
-                          type="password"
-                          placeholder="Confirm New Password"
-                          value={confirmNewPassword}
-                          onChange={(e) => setConfirmNewPassword(e.target.value)}
-                        />  
-                        <button onClick={()=> handleChangePassword()}>Change Password</button>
-                      </>
-                    )
-                  }
-
-
-                  <button onClick={()=> handlePasswordChangeCancel()}>Cancel</button>
-                  <ErrorMessage/>
-              </div>
-              </>
-            )}
+                
+            {
+              !currentPasswordConfirmed ? (
+                <>
+                  <input
+              type="password"
+              placeholder="Current Password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                  <button onClick={()=> handleConfirmCurrentPassword()}>Confirm</button>
+                </>
+                ) 
+                : 
+                (
+                  <>
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Confirm New Password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+              />  
+              <button onClick={()=> handleChangePassword()}>Change Password</button>
+                  </>
+                )
+              }
 
 
-          </div>
-          </div>
-        )}
+              <button onClick={()=> handlePasswordChangeCancel()}>Cancel</button>
+              <ErrorMessage/>
+                </div>
+                </>
+              )}
+            </div>
+
+            <div className='log-history'>
+              <h2>Login History</h2>
+              {logHistory.length > 0 ? (
+                <>
+                <ul className="log-history-list">
+                <li>Date</li>
+                <li>Device</li>
+                <li>Browser</li>
+            {currentItems.logHistory.map((log, index) => (
+              <li key={index} className="log-history-item">
+                <span className="log-date">{new Date(log.timeStamp).toLocaleString()}</span>
+                <span className="log-device">{log.device}</span>
+                <span className="log-browser">{log.browser}</span>
+              </li>
+            ))}
+                
+                </ul>
+                <PaginationControls section="logHistory"/>
+                </>
+              ) : (
+                <p>No login history available</p>
+              )}
+            </div>
+            </div>
+          )}
 
 
 
 
-        {/*wish list*/}
+          {/*wish list*/}
         {showData === "whishList" && (
           <div className="purchase-history-container">
             <h2>Wish List</h2>
@@ -530,6 +753,7 @@ function UserProfile() {
                     </div>
                   </li>
                 ))}
+                <PaginationControls section="wishList"/>
               </ul>
             ) : (
               <p className="empty-wishlist">Your wishlist is empty.</p>
@@ -560,7 +784,7 @@ function UserProfile() {
                     const sorted = [...purchaseHistory].sort((a, b) => {
                       switch(e.target.value) {
                       case 'date':
-                        return new Date(b.timeStamp) - new Date(a.timeStamp);
+                      return new Date(b.purchaseDate) - new Date(a.purchaseDate);
                       case 'quantity':
                         return b.quantity - a.quantity;
                       case 'price':
@@ -582,52 +806,85 @@ function UserProfile() {
                     const select = document.querySelector('.sort-select');
                     select.selectedIndex = 0;
                     const original = [...purchaseHistory].sort((a, b) => 
-                      new Date(b.timeStamp) - new Date(a.timeStamp)
+                      new Date(b.purchaseDate) - new Date(a.purchaseDate)
                     );
                     setPurchaseHistory(original);
                     }}
-                  >
+                    >
                     ✕
-                  </button>
-                  </div>
-                </div>
+                    </button>
+                    </div>
+                    </div>
 
-                {purchaseHistory.length > 0 ? (
-                  <ul className="purchase-history-list">
-                  {purchaseHistory.map((item, index) => (
-                    <li key={index} className="purchase-item">
-                    <div className="purchase-details">
+                    {purchaseHistory.length > 0 ? (
+                    <div className="purchase-history-list">
+                    {currentItems.outerPurchaseHistory.map(([date, items]) => (
+                      <div key={date} className="purchase-date-group">
+                      <div 
+                      className="date-header" 
+                      aria-expanded="false"
+                      onClick={(e) => {
+                      const content = document.getElementById(`date-content-${date}`);
+                      const header = e.currentTarget;
+                      const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                      header.setAttribute('aria-expanded', !isExpanded);
+                      content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                      }}
+                      >
+                      <h3><strong>Purchase Date :</strong> {new Date(date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                      })}</h3>
+                      <p><strong>Estimated Arrival:</strong> {new Date(new Date(date).getTime() + 7*24*60*60*1000).toLocaleDateString()}</p>
+                      <p><strong>Status:</strong> Delivered</p>
+                      <p><strong>Total:</strong> ${items.reduce((sum, item) => sum + (purchaseHistoryProducts[item.productId]?.price * item.quantity), 0).toFixed(2)}</p>
+                      <span>{items.length} items</span>
+                      <span className="toggle-icon">▼</span>
+                      </div>
+                      <div id={`date-content-${date}`} style={{display: 'none'}}>
+                      {items.map((item, index) => (
+                      <div key={index} className="purchase-item" onClick={() => navigate(`/product/${item.productId}`, { state: { product: purchaseHistoryProducts[item.productId] } })}>
+                      <div className="purchase-details">
                       <img
                       src={`data:image/jpeg;base64,${purchaseHistoryProducts[item.productId]?.image[0].image}`}
                       alt={purchaseHistoryProducts[item.productId]?.name}
                       />
                       <h3>{purchaseHistoryProducts[item.productId]?.name}</h3>
-                      <p><strong>Date:</strong> {item.purchaseDate}</p>
                       <p><strong>Quantity:</strong> {item.quantity}</p>
                       <p><strong>Price:</strong> ${purchaseHistoryProducts[item.productId]?.price}</p>
                       <p><strong>Color:</strong> {item.productColor}</p>
-                      <p><strong>Size:</strong>  {item.productSize}</p> 
-                    </div>
-                    </li>
-                  ))}
-                  </ul>
-                ) : (
-                  <p>You have no purchase history yet.</p>
-                )}
-                </div>
-              )}
+                      <p><strong>Size:</strong> {item.productSize}</p>
+                      </div>
+                      </div>
+                      ))}
+                      </div>
+                      </div>
+                      ))}
+                      <PaginationControls section="outerPurchaseHistory"/>
+                      </div>
+                      ) : (
+                      <p>You have no purchase history yet.</p>
+                      )}
+                      </div>
+                      )}
 
-              {/*Profile Data*/}
+
+
+
+                      {/*Profile Data*/}
           {showData === "profileData" && (
-                    <div className="user-info">
-
+          <div className="user-info">
           <div
           className="profileUser-image"
           onClick={() => document.getElementById('imageUpload').click()}  // Trigger file input click on image click
           >
           <img
-            src={userPhoto ? `data:image/jpeg;base64,${userPhoto}` : "https://via.placeholder.com/100"}
-            alt="Profile User Picture"
+            src={userPhoto ? `data:image/jpeg;base64,${userPhoto}` : "/assets/profilePic.svg"}
+            alt="/assets/profilePic.svg"
           />
         </div>
 
@@ -800,5 +1057,3 @@ function UserProfile() {
 }
 
 export default UserProfile;
-
-

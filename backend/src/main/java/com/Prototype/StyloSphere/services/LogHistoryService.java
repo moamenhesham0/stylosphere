@@ -14,8 +14,7 @@ public class LogHistoryService {
 
 
     public List<LogInstance> getUserLogHistory(Long userId) {
-        LogId targetLoggerId = new LogId(userId); 
-        List<LogInstance> logHistory = logHistoryRepository.findByUserId(targetLoggerId);
+        List<LogInstance> logHistory = logHistoryRepository.findByUserId(userId);
         
         // Get the date one month ago
         Calendar calendar = Calendar.getInstance();
@@ -30,9 +29,8 @@ public class LogHistoryService {
         return logHistory;
     }
     
-    public List<LogInstance> getAdminLogHistory(Long userId) {
-        LogId targetLoggerId = new LogId(userId); 
-        List<LogInstance> logHistory = logHistoryRepository.findByUserId(targetLoggerId);
+    public List<LogInstance> getAdminLogHistory(Long userId) { 
+        List<LogInstance> logHistory = logHistoryRepository.findByUserId(userId);
         return logHistory;
     }
     

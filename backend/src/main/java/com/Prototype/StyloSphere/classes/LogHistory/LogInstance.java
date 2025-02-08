@@ -1,23 +1,23 @@
 package com.Prototype.StyloSphere.classes.LogHistory;
 
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Date;
+
 @Entity
 @Table(name = "LogHistory")
 public class LogInstance {
-    @EmbeddedId
-    private LogId userId;
-
+    @Id
     private Date timeStamp;
+    
+    private Long userId;
     private String Device;
     private String Browser;
 
-
     public LogInstance(Long userId, String Device, String Browser) {
-        this.userId = new LogId(userId);
-        this.timeStamp = new java.util.Date();
+        this.timeStamp = new Date(); // Current timestamp
+        this.userId = userId;
         this.Device = Device;
         this.Browser = Browser;
     }
@@ -26,14 +26,17 @@ public class LogInstance {
     }
 
     public Long getUserId() {
-        return this.userId.getUserId();
+        return this.userId;
     }
+
     public Date getTimeStamp() {
         return this.timeStamp;
     }
+
     public String getDevice() {
         return this.Device;
     }
+
     public String getBrowser() {
         return this.Browser;
     }

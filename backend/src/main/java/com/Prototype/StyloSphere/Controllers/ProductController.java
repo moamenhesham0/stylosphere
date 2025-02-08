@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -129,9 +128,7 @@ public ResponseEntity<List<Product>> filterProducts(@RequestBody Map<String, Lis
     @GetMapping("/get-product")
     public ResponseEntity<Product> getProduct(@RequestParam Long id)
     {
-        System.out.println("ssskmakas");
         Product product = productService.getProductById(id);
-        System.out.println("myidpro+"+product);
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
