@@ -1,3 +1,9 @@
-
+# DB files
 backend/data base/styloSphereDB.mv.db
 backend/data base/styloSphereDB.trace.db
+
+
+# VS Code config folder
+/.vscode
+
+commit.txt
